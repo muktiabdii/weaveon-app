@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "423598728511",
+    "project_id": "weaveon-8c4cc",
+    "storage_bucket": "weaveon-8c4cc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423598728511:android:d7dcf6c7280e926f45df8a",
+        "android_client_info": {
+          "package_name": "com.example.weaveon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoJ_LAcVpFoq88BBlSuuDkt88EBE8kG4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
