@@ -48,6 +48,7 @@ fun OtpVerificationDialog(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .width(364.dp)
             .background(Color(0xAA000000)), // semi-transparent background
         contentAlignment = Alignment.Center
     ) {
