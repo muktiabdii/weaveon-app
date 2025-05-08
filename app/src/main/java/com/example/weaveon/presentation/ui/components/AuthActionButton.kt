@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.theme.Secondary05
+import com.example.weaveon.presentation.ui.theme.Secondary09
 
 @Composable
 fun SubmitButton(
@@ -34,7 +35,7 @@ fun SubmitButton(
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = Secondary05,
-            contentColor = Color.Black,
+            contentColor = Secondary09,
         )
     ) {
         Text(

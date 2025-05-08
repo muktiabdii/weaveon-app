@@ -57,7 +57,7 @@ fun SubmitButton(
                 text = text,
                 style = TextStyle(
                     fontSize = 20.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_medium))
+                    fontFamily = FontFamily(Font(R.font.poppins_semibold))
                 )
             )
         }
