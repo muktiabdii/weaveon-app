@@ -1,4 +1,4 @@
-package com.example.weaveon.ui.theme
+package com.example.weaveon.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

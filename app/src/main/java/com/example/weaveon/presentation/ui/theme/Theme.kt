@@ -1,4 +1,4 @@
-package com.example.weaveon.ui.theme
+package com.example.weaveon.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
