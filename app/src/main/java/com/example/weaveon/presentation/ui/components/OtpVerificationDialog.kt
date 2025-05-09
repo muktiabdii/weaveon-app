@@ -62,10 +62,10 @@ fun OtpVerificationDialog(
         ) {
             // Icon
             Image(
-                painter = painterResource(id = R.drawable.ic_profile), // ganti dengan ikon kamu
+                painter = painterResource(id = R.drawable.ic_profile_3d), // ganti dengan ikon kamu
                 contentDescription = "User Icon",
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(100.dp)
                     .clip(RoundedCornerShape(12.dp))
             )
 

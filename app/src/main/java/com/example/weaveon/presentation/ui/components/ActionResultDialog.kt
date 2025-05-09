@@ -51,12 +51,12 @@ fun ActionResultDialog(
             Spacer(modifier = Modifier.height(20.dp))
 
             // Icon success / failure
-            val iconRes = if (isSuccess) R.drawable.ic_google else R.drawable.ic_facebook
+            val iconRes = if (isSuccess) R.drawable.ic_success_3d else R.drawable.ic_facebook
             Image(
                 painter = painterResource(id = iconRes),
                 contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(150.dp)
                     .padding(bottom = 25.dp)
             )
 

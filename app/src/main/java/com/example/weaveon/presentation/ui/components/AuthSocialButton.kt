@@ -38,6 +38,11 @@ fun SubmitButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = Secondary00,
             contentColor = Color.Black,
+        ),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 5.dp,
+            disabledElevation = 0.dp
         )
     ) {
         Row(
@@ -56,7 +61,7 @@ fun SubmitButton(
             Text(
                 text = text,
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 15.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_semibold))
                 )
             )

@@ -36,6 +36,10 @@ fun SubmitButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = Secondary05,
             contentColor = Secondary09,
+        ), elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 5.dp,
+            disabledElevation = 0.dp
         )
     ) {
         Text(
