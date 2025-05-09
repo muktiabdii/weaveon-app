@@ -31,15 +31,17 @@ import com.example.weaveon.presentation.ui.theme.Primary07
 import com.example.weaveon.presentation.ui.theme.Primary09
 
 @Composable
-fun LoginScreen(
-    onLoginClick: () -> Unit = {},
-    onGoogleLoginClick: () -> Unit = {},
-    onFacebookLoginClick: () -> Unit = {},
+fun RegisterScreen(
     onRegisterClick: () -> Unit = {},
+    onGoogleRegisterClick: () -> Unit = {},
+    onFacebookRegisterClick: () -> Unit = {},
+    onLoginClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -99,7 +101,7 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Selamat Datang",
+                    text = "Buat Akun",
                     style = TextStyle(
                         fontSize = 32.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
@@ -110,7 +112,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Silahkan mengisi data dengan akun yang sudah didaftarkan sebelumnya",
+                    text = "Silahkan mengisi data untuk membuat akun",
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
@@ -119,7 +121,32 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Name input
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Nama",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Primary09
+                    ),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                InputFormField(
+                    value = name,
+                    onValueChange = { name = it },
+                    placeholder = "Masukkan Nama Anda",
+                    leadingIcon = R.drawable.ic_profile
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
 
             // Email input
             Column(
@@ -144,26 +171,23 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             // Password input
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
-                // Label "Kata Sandi"
                 Text(
                     text = "Kata Sandi",
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
-                    )
+                    ),
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Input password
                 InputFormField(
                     value = password,
                     onValueChange = { password = it },
@@ -171,35 +195,44 @@ fun LoginScreen(
                     leadingIcon = R.drawable.ic_lock,
                     isPassword = true
                 )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Lupa kata sandi (di bawah password)
-                TextButton(
-                    onClick = { /* Forgot password action */ },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text(
-                        text = "Lupa kata sandi ?",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                            color = Color.Red
-                        )
-                    )
-                }
             }
 
-            Spacer(modifier = Modifier.height(7.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-            // Login button
+            // Confirm Password input
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Konfirmasi Kata Sandi",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Primary09
+                    ),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                InputFormField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    placeholder = "Masukkan Kata Sandi",
+                    leadingIcon = R.drawable.ic_lock,
+                    isPassword = true
+                )
+            }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            // Register button
             SubmitButton(
-                text = "Masuk",
-                onClick = onLoginClick,
+                text = "Daftar",
+                onClick = onRegisterClick,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             // Divider with text
             Row(
@@ -213,7 +246,7 @@ fun LoginScreen(
                 )
 
                 Text(
-                    text = "atau masuk dengan",
+                    text = "atau daftar dengan",
                     modifier = Modifier.padding(horizontal = 8.dp),
                     style = TextStyle(
                         fontSize = 16.sp,
@@ -229,23 +262,23 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Social login buttons
+            // Social register buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 SubmitButton(
                     text = "Google",
-                    onClick = onGoogleLoginClick,
+                    onClick = onGoogleRegisterClick,
                     leadingIcon = R.drawable.ic_google,
                     modifier = Modifier.weight(1f)
                 )
 
                 SubmitButton(
                     text = "Facebook",
-                    onClick = onFacebookLoginClick,
+                    onClick = onFacebookRegisterClick,
                     leadingIcon = R.drawable.ic_facebook,
                     modifier = Modifier.weight(1f)
                 )
@@ -253,16 +286,16 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Register prompt
+            // Login prompt
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = 12.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Belum memiliki akun?",
+                    text = "Sudah memiliki akun?",
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
@@ -270,9 +303,9 @@ fun LoginScreen(
                     )
                 )
 
-                TextButton(onClick = onRegisterClick) {
+                TextButton(onClick = onLoginClick) {
                     Text(
-                        text = "Daftar",
+                        text = "Masuk",
                         style = TextStyle(
                             fontSize = 16.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
@@ -287,6 +320,6 @@ fun LoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    LoginScreen()
+fun RegisterScreenPreview() {
+    RegisterScreen()
 }
