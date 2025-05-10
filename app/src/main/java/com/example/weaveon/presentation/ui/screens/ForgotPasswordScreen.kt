@@ -22,16 +22,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.components.InputFormField
-import com.example.weaveon.presentation.ui.components.SubmitButton
+import com.example.weaveon.presentation.ui.components.AuthActionButton
 import com.example.weaveon.presentation.ui.theme.Base
 import com.example.weaveon.presentation.ui.theme.Primary09
+import com.example.weaveon.presentation.viewmodel.UserViewModel
 
 @Composable
 fun ForgotPasswordScreen(
+    userViewModel: UserViewModel,
     onSubmitClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
+    val isLoading by userViewModel.isLoading.collectAsState()
 
     Box(
         modifier = Modifier
@@ -139,20 +142,15 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(26.dp))
 
             // Submit button
-            SubmitButton(
+            AuthActionButton(
                 text = "Kirim",
                 onClick = onSubmitClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isLoading = isLoading
             )
 
             // Fill remaining space
             Spacer(modifier = Modifier.weight(1f))
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ForgotPasswordScreenPreview() {
-    ForgotPasswordScreen()
 }

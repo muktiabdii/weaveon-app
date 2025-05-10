@@ -1,12 +1,10 @@
 package com.example.weaveon.presentation.ui.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -20,11 +18,12 @@ import com.example.weaveon.presentation.ui.theme.Secondary05
 import com.example.weaveon.presentation.ui.theme.Secondary09
 
 @Composable
-fun SubmitButton(
+fun AuthActionButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isLoading: Boolean = false
 ) {
     Button(
         onClick = onClick,
@@ -32,32 +31,48 @@ fun SubmitButton(
             .fillMaxWidth()
             .height(44.dp),
         shape = RoundedCornerShape(30.dp),
-        enabled = enabled,
+        enabled = enabled && !isLoading,
         colors = ButtonDefaults.buttonColors(
             containerColor = Secondary05,
             contentColor = Secondary09,
-        ), elevation = ButtonDefaults.buttonElevation(
+            disabledContainerColor = Secondary05.copy(alpha = 0.6f),
+            disabledContentColor = Secondary09.copy(alpha = 0.8f)
+        ),
+        elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 4.dp,
             pressedElevation = 5.dp,
             disabledElevation = 0.dp
         )
     ) {
-        Text(
-            text = text,
-            style = TextStyle(
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.poppins_medium))
+        if (isLoading) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .padding(top = 4.dp, end = 8.dp),
+                    strokeWidth = 2.dp
+                )
+                Text(
+                    text = "Loading...",
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium))
+                    )
+                )
+            }
+        } else {
+            Text(
+                text = text,
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.poppins_medium))
+                )
             )
-        )
+        }
     }
 }
 
-@Preview
-@Composable
-private fun PreviewSubmitButton() {
-    SubmitButton(
-        text = "Masuk",
-        onClick = {},
-        modifier = Modifier
-    )
-}

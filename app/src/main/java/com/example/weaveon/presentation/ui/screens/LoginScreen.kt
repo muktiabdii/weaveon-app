@@ -24,14 +24,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.components.InputFormField
-import com.example.weaveon.presentation.ui.components.SubmitButton
+import com.example.weaveon.presentation.ui.components.AuthActionButton
 import com.example.weaveon.presentation.ui.theme.Base
 import com.example.weaveon.presentation.ui.theme.Primary04
-import com.example.weaveon.presentation.ui.theme.Primary07
 import com.example.weaveon.presentation.ui.theme.Primary09
+import com.example.weaveon.presentation.viewmodel.UserViewModel
 
 @Composable
 fun LoginScreen(
+    userViewModel: UserViewModel,
     onForgotPasswordClick: () -> Unit = {},
     onLoginClick: () -> Unit = {},
     onGoogleLoginClick: () -> Unit = {},
@@ -41,6 +42,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val isLoading by userViewModel.isLoading.collectAsState()
 
     Box(
         modifier = Modifier
@@ -192,10 +194,11 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(7.dp))
 
             // Login button
-            SubmitButton(
+            AuthActionButton(
                 text = "Masuk",
                 onClick = onLoginClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isLoading = isLoading
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -235,14 +238,14 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                SubmitButton(
+                AuthActionButton(
                     text = "Google",
                     onClick = onGoogleLoginClick,
                     leadingIcon = R.drawable.ic_google,
                     modifier = Modifier.weight(1f)
                 )
 
-                SubmitButton(
+                AuthActionButton(
                     text = "Facebook",
                     onClick = onFacebookLoginClick,
                     leadingIcon = R.drawable.ic_facebook,
@@ -284,10 +287,4 @@ fun LoginScreen(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen()
 }

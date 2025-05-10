@@ -1,4 +1,5 @@
 package com.example.weaveon.domain.repository
 
-class UserRepository {
+interface UserRepository {
+    fun register(name: String, email: String, password: String, passwordKonfirmation: String, onResult: (Boolean, String?) -> Unit)
 }

@@ -5,25 +5,36 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weaveon.presentation.ui.screens.LoginScreen
 import com.example.weaveon.presentation.ui.theme.WeaveOnTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.weaveon.data.repoimpl.UserRepoImpl
+import com.example.weaveon.domain.usecase.UserUseCase
 import com.example.weaveon.presentation.ui.screens.ForgotPasswordScreen
 import com.example.weaveon.presentation.ui.screens.RegisterScreen
 import com.example.weaveon.presentation.ui.screens.ResetPasswordScreen
+import com.example.weaveon.presentation.viewmodel.UserViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WeaveOnTheme {
+
+                // inisiasi userRepo, userUseCase, dan userViewModel
+                val userRepo = UserRepoImpl()
+                val userUseCase = UserUseCase(userRepo)
+                val userViewModel : UserViewModel = viewModel(factory = UserViewModel.Factory(userUseCase))
+
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "login") {
 
                     composable("login") {
                         LoginScreen(
+                            userViewModel = userViewModel,
                             onForgotPasswordClick = { navController.navigate("forgot-password") },
                             onLoginClick = { /* Handle login */ },
                             onRegisterClick = { navController.navigate("register") },
@@ -35,6 +46,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("register") {
                         RegisterScreen(
+                            userViewModel = userViewModel,
                             onRegisterClick = { navController.navigate("login") },
                             onLoginClick = { navController.navigate("login") },
                             onGoogleRegisterClick = { /* Handle Google register */ },
@@ -45,6 +57,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("forgot-password") {
                         ForgotPasswordScreen(
+                            userViewModel = userViewModel,
                             onSubmitClick = { navController.navigate("reset-password") },
                             onBackClick = { navController.popBackStack() }
                         )
@@ -52,6 +65,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("reset-password") {
                         ResetPasswordScreen(
+                            userViewModel = userViewModel,
                             onResetClick = { navController.navigate("login") },
                             onBackClick = { navController.popBackStack() }
                         )

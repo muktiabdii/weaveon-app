@@ -22,17 +22,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.components.InputFormField
-import com.example.weaveon.presentation.ui.components.SubmitButton
+import com.example.weaveon.presentation.ui.components.AuthActionButton
 import com.example.weaveon.presentation.ui.theme.Base
 import com.example.weaveon.presentation.ui.theme.Primary09
+import com.example.weaveon.presentation.viewmodel.UserViewModel
 
 @Composable
 fun ResetPasswordScreen(
+    userViewModel: UserViewModel,
     onResetClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val isLoading by userViewModel.isLoading.collectAsState()
 
     Box(
         modifier = Modifier
@@ -167,20 +170,15 @@ fun ResetPasswordScreen(
             Spacer(modifier = Modifier.height(26.dp))
 
             // Reset Password button
-            SubmitButton(
+            AuthActionButton(
                 text = "Buat",
                 onClick = onResetClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isLoading = isLoading
             )
 
             // Fill remaining space
             Spacer(modifier = Modifier.weight(1f))
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ResetPasswordScreenPreview() {
-    ResetPasswordScreen()
 }

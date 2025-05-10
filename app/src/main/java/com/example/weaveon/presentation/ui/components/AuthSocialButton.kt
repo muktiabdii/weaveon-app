@@ -21,7 +21,7 @@ import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.theme.Secondary00
 
 @Composable
-fun SubmitButton(
+fun AuthActionButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -73,7 +73,7 @@ fun SubmitButton(
 @Preview
 @Composable
 private fun PreviewSubmitButton() {
-    SubmitButton(
+    AuthActionButton(
         text = "Google",
         onClick = {},
         leadingIcon = R.drawable.ic_google,
