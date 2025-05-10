@@ -44,7 +44,7 @@ fun InputFormField(
             Text(
                 text = placeholder,
                 style = TextStyle(
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_regular))
                 )
             )
@@ -57,20 +57,21 @@ fun InputFormField(
         },
         modifier = modifier
             .fillMaxWidth()
-            .height(55.dp),
+            .height(50.dp),
         shape = RoundedCornerShape(30.dp),
         singleLine = true,
         visualTransformation = visualTransformation,
         keyboardOptions = if (isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions.Default,
         textStyle = TextStyle(
-            fontSize = 14.sp,
+            fontSize = 13.sp,
             fontFamily = FontFamily(
                 Font(R.font.poppins_regular)
             )
         ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedTextColor = Color.Black,
+            focusedTextColor = Primary07,
             unfocusedPlaceholderColor = Primary07,
+            unfocusedTextColor = Primary07,
             focusedBorderColor = Primary07,
             unfocusedBorderColor = Primary07,
             containerColor = Color.White

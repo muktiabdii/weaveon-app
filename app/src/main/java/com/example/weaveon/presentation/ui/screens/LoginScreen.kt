@@ -32,6 +32,7 @@ import com.example.weaveon.presentation.ui.theme.Primary09
 
 @Composable
 fun LoginScreen(
+    onForgotPasswordClick: () -> Unit = {},
     onLoginClick: () -> Unit = {},
     onGoogleLoginClick: () -> Unit = {},
     onFacebookLoginClick: () -> Unit = {},
@@ -53,7 +54,7 @@ fun LoginScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(500.dp)
+                .height(440.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -63,7 +64,7 @@ fun LoginScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp)
+                .height(340.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -72,7 +73,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
-                .padding(top = 16.dp)
+                .padding(top = 6.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -95,13 +96,13 @@ fun LoginScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp),
+                    .padding(top = 42.dp, bottom = 16.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = "Selamat Datang",
                     style = TextStyle(
-                        fontSize = 32.sp,
+                        fontSize = 30.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                         color = Color.Black
                     )
@@ -112,7 +113,7 @@ fun LoginScreen(
                 Text(
                     text = "Silahkan mengisi data dengan akun yang sudah didaftarkan sebelumnya",
                     style = TextStyle(
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = Primary09
                     )
@@ -129,7 +130,7 @@ fun LoginScreen(
                 Text(
                     text = "Email",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -144,7 +145,7 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Password input
             Column(
@@ -155,7 +156,7 @@ fun LoginScreen(
                 Text(
                     text = "Kata Sandi",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     )
@@ -172,17 +173,15 @@ fun LoginScreen(
                     isPassword = true
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
-
                 // Lupa kata sandi (di bawah password)
                 TextButton(
-                    onClick = { /* Forgot password action */ },
+                    onClick = { onForgotPasswordClick() },
                     modifier = Modifier.align(Alignment.End)
                 ) {
                     Text(
                         text = "Lupa kata sandi ?",
                         style = TextStyle(
-                            fontSize = 14.sp,
+                            fontSize = 12.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_medium)),
                             color = Color.Red
                         )
@@ -199,7 +198,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Divider with text
             Row(
@@ -216,7 +215,7 @@ fun LoginScreen(
                     text = "atau masuk dengan",
                     modifier = Modifier.padding(horizontal = 8.dp),
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     )
@@ -229,7 +228,7 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Social login buttons
             Row(
@@ -264,17 +263,19 @@ fun LoginScreen(
                 Text(
                     text = "Belum memiliki akun?",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = Color.Black
                     )
                 )
 
-                TextButton(onClick = onRegisterClick) {
+                TextButton(
+                    onClick = onRegisterClick,
+                    modifier = Modifier.offset(x = (-8).dp)) {
                     Text(
                         text = "Daftar",
                         style = TextStyle(
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                             color = Color.Black
                         )

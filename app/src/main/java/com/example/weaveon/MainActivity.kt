@@ -20,11 +20,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeaveOnTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "reset-password") {
+                NavHost(navController = navController, startDestination = "login") {
 
                     composable("login") {
                         LoginScreen(
-                            onLoginClick = { navController.navigate("home") },
+                            onForgotPasswordClick = { navController.navigate("forgot-password") },
+                            onLoginClick = { /* Handle login */ },
                             onRegisterClick = { navController.navigate("register") },
                             onGoogleLoginClick = { /* Handle Google login */ },
                             onFacebookLoginClick = { /* Handle Facebook login */ },

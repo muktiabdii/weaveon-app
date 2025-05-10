@@ -29,10 +29,11 @@ fun SubmitButton(
     leadingIcon: Int? = null
 ) {
     Button(
+
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(55.dp),
+            .height(42.dp),
         shape = RoundedCornerShape(30.dp),
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
@@ -54,14 +55,14 @@ fun SubmitButton(
                     painter = painterResource(id = leadingIcon),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(35.dp)
+                        .size(28.dp)
                         .padding(end = 8.dp)
                 )
             }
             Text(
                 text = text,
                 style = TextStyle(
-                    fontSize = 15.sp,
+                    fontSize = 12.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_semibold))
                 )
             )

@@ -30,7 +30,7 @@ fun SubmitButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(55.dp),
+            .height(44.dp),
         shape = RoundedCornerShape(30.dp),
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
@@ -45,7 +45,7 @@ fun SubmitButton(
         Text(
             text = text,
             style = TextStyle(
-                fontSize = 20.sp,
+                fontSize = 15.sp,
                 fontFamily = FontFamily(Font(R.font.poppins_medium))
             )
         )

@@ -55,7 +55,7 @@ fun RegisterScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(500.dp)
+                .height(440.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -65,7 +65,7 @@ fun RegisterScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp)
+                .height(340.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -74,7 +74,7 @@ fun RegisterScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
-                .padding(top = 16.dp)
+                .padding(top = 6.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -97,13 +97,13 @@ fun RegisterScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp),
+                    .padding(top = 14.dp, bottom = 16.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = "Buat Akun",
                     style = TextStyle(
-                        fontSize = 32.sp,
+                        fontSize = 30.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                         color = Color.Black
                     )
@@ -114,14 +114,14 @@ fun RegisterScreen(
                 Text(
                     text = "Silahkan mengisi data untuk membuat akun",
                     style = TextStyle(
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = Primary09
                     )
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             // Name input
             Column(
@@ -131,7 +131,7 @@ fun RegisterScreen(
                 Text(
                     text = "Nama",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -156,7 +156,7 @@ fun RegisterScreen(
                 Text(
                     text = "Email",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -181,7 +181,7 @@ fun RegisterScreen(
                 Text(
                     text = "Kata Sandi",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -207,7 +207,7 @@ fun RegisterScreen(
                 Text(
                     text = "Konfirmasi Kata Sandi",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -232,7 +232,7 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Divider with text
             Row(
@@ -249,7 +249,7 @@ fun RegisterScreen(
                     text = "atau daftar dengan",
                     modifier = Modifier.padding(horizontal = 8.dp),
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     )
@@ -262,7 +262,7 @@ fun RegisterScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Social register buttons
             Row(
@@ -297,17 +297,19 @@ fun RegisterScreen(
                 Text(
                     text = "Sudah memiliki akun?",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = Color.Black
                     )
                 )
 
-                TextButton(onClick = onLoginClick) {
+                TextButton(
+                    onClick = onLoginClick,
+                    modifier = Modifier.offset(x = (-8).dp)) {
                     Text(
                         text = "Masuk",
                         style = TextStyle(
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                             color = Color.Black
                         )

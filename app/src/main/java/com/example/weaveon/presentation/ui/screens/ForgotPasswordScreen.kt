@@ -45,7 +45,7 @@ fun ForgotPasswordScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(500.dp)
+                .height(440.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -55,7 +55,7 @@ fun ForgotPasswordScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp)
+                .height(340.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -64,7 +64,7 @@ fun ForgotPasswordScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
-                .padding(top = 16.dp)
+                .padding(top = 6.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -87,13 +87,13 @@ fun ForgotPasswordScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 24.dp),
+                    .padding(top = 42.dp, bottom = 10.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = "Lupa Kata Sandi",
                     style = TextStyle(
-                        fontSize = 32.sp,
+                        fontSize = 30.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                         color = Color.Black
                     )
@@ -104,14 +104,14 @@ fun ForgotPasswordScreen(
                 Text(
                     text = "Silahkan masukkan alamat anda untuk meminta pengaturan ulang kata sandi",
                     style = TextStyle(
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = Primary09
                     )
                 )
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             // Email input
             Column(
@@ -121,7 +121,7 @@ fun ForgotPasswordScreen(
                 Text(
                     text = "Email",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -136,7 +136,7 @@ fun ForgotPasswordScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(26.dp))
 
             // Submit button
             SubmitButton(

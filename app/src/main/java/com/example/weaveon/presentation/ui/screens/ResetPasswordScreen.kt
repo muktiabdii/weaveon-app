@@ -46,7 +46,7 @@ fun ResetPasswordScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(500.dp)
+                .height(440.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -56,7 +56,7 @@ fun ResetPasswordScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp)
+                .height(340.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillBounds
         )
@@ -65,7 +65,7 @@ fun ResetPasswordScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
-                .padding(top = 16.dp)
+                .padding(top = 6.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -88,13 +88,13 @@ fun ResetPasswordScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp),
+                    .padding(top = 42.dp, bottom = 10.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = "Buat Ulang Kata Sandi",
                     style = TextStyle(
-                        fontSize = 32.sp,
+                        fontSize = 30.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                         color = Color.Black
                     )
@@ -105,14 +105,14 @@ fun ResetPasswordScreen(
                 Text(
                     text = "Silahkan masukkan alamat anda untuk meminta pengaturan ulang kata sandi",
                     style = TextStyle(
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = Primary09
                     )
                 )
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             // Password input
             Column(
@@ -122,7 +122,7 @@ fun ResetPasswordScreen(
                 Text(
                     text = "Kata Sandi",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -138,7 +138,7 @@ fun ResetPasswordScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // Confirm Password input
             Column(
@@ -148,7 +148,7 @@ fun ResetPasswordScreen(
                 Text(
                     text = "Konfirmasi Kata Sandi Baru",
                     style = TextStyle(
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Primary09
                     ),
@@ -164,7 +164,7 @@ fun ResetPasswordScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(26.dp))
 
             // Reset Password button
             SubmitButton(
