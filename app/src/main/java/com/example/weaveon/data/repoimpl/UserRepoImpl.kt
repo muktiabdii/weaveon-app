@@ -50,6 +50,21 @@ class UserRepoImpl: UserRepository {
             }
     }
 
+    override fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onResult(true, null)
+                }
+
+                // jika login gagal, kirim pesan error
+                else {
+                    val errorMessage = getLocalizedErrorMessage(task.exception?.message)
+                    onResult(false, errorMessage)
+                }
+            }
+    }
+
     // fungsi untuk mendapatkan pesan error yang sesuai
     private fun getLocalizedErrorMessage(errorMessage: String?): String {
         return when {

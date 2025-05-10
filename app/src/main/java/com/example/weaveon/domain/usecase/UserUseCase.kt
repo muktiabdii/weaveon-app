@@ -6,4 +6,8 @@ class UserUseCase(private val userRepository: UserRepository) {
     fun register(name: String, email: String, password: String, passwordKonfirmation: String, onResult: (Boolean, String?) -> Unit) {
         userRepository.register(name, email, password, passwordKonfirmation, onResult)
     }
+
+    fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+        userRepository.login(email, password, onResult)
+    }
 }

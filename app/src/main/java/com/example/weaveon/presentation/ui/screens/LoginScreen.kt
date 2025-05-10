@@ -1,5 +1,6 @@
 package com.example.weaveon.presentation.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -40,9 +42,18 @@ fun LoginScreen(
     onRegisterClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val email by userViewModel.email.collectAsState()
+    val password by userViewModel.password.collectAsState()
+    val error by userViewModel.error.collectAsState()
     val isLoading by userViewModel.isLoading.collectAsState()
+
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            userViewModel.clearError()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -141,7 +152,7 @@ fun LoginScreen(
 
                 InputFormField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = { userViewModel.setEmail(it) },
                     placeholder = "Masukkan Email Anda",
                     leadingIcon = R.drawable.ic_email
                 )
@@ -169,7 +180,7 @@ fun LoginScreen(
                 // Input password
                 InputFormField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { userViewModel.setPassword(it) },
                     placeholder = "Masukkan Kata Sandi",
                     leadingIcon = R.drawable.ic_lock,
                     isPassword = true
@@ -196,8 +207,13 @@ fun LoginScreen(
             // Login button
             AuthActionButton(
                 text = "Masuk",
-                onClick = onLoginClick,
-                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    userViewModel.login { success ->
+                        if (success) {
+                            onLoginClick()
+                        }
+                    }
+                },
                 isLoading = isLoading
             )
 
