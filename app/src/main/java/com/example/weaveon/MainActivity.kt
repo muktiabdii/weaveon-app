@@ -3,27 +3,57 @@ package com.example.weaveon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.example.weaveon.presentation.ui.screens.LoginScreen
 import com.example.weaveon.presentation.ui.theme.WeaveOnTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.weaveon.presentation.ui.screens.ForgotPasswordScreen
+import com.example.weaveon.presentation.ui.screens.RegisterScreen
+import com.example.weaveon.presentation.ui.screens.ResetPasswordScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             WeaveOnTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .padding(16.dp)
-                    ) {
-                        Greeting(name = "Android")
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = "reset-password") {
+
+                    composable("login") {
+                        LoginScreen(
+                            onLoginClick = { navController.navigate("home") },
+                            onRegisterClick = { navController.navigate("register") },
+                            onGoogleLoginClick = { /* Handle Google login */ },
+                            onFacebookLoginClick = { /* Handle Facebook login */ },
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("register") {
+                        RegisterScreen(
+                            onRegisterClick = { navController.navigate("login") },
+                            onLoginClick = { navController.navigate("login") },
+                            onGoogleRegisterClick = { /* Handle Google register */ },
+                            onFacebookRegisterClick = { /* Handle Facebook register */ },
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("forgot-password") {
+                        ForgotPasswordScreen(
+                            onSubmitClick = { navController.navigate("reset-password") },
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("reset-password") {
+                        ResetPasswordScreen(
+                            onResetClick = { navController.navigate("login") },
+                            onBackClick = { navController.popBackStack() }
+                        )
                     }
                 }
             }
@@ -31,7 +61,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(text = "Hello $name!", modifier = modifier)
-}
