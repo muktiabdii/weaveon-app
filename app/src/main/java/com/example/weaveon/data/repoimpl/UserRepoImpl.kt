@@ -1,5 +1,6 @@
 package com.example.weaveon.data.repoimpl
 
+import android.util.Log
 import com.example.weaveon.data.model.UserData
 import com.example.weaveon.data.source.FirebaseService
 import com.example.weaveon.domain.repository.UserRepository
@@ -64,6 +65,24 @@ class UserRepoImpl: UserRepository {
                 }
             }
     }
+
+    override fun forgotPassword(email: String, onResult: (Boolean, String?) -> Unit) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onResult(true, null)
+                }
+
+                // jika reset password gagal, kirim pesan error
+                else {
+                    onResult(false, "Gagal mengirim kode reset password")
+                }
+            }
+    }
+
+
+
+
 
     // fungsi untuk mendapatkan pesan error yang sesuai
     private fun getLocalizedErrorMessage(errorMessage: String?): String {

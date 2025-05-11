@@ -58,15 +58,7 @@ class MainActivity : ComponentActivity() {
                     composable("forgot-password") {
                         ForgotPasswordScreen(
                             userViewModel = userViewModel,
-                            onSubmitClick = { navController.navigate("reset-password") },
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable("reset-password") {
-                        ResetPasswordScreen(
-                            userViewModel = userViewModel,
-                            onResetClick = { navController.navigate("login") },
+                            onSubmitClick = { navController.navigate("login") },
                             onBackClick = { navController.popBackStack() }
                         )
                     }

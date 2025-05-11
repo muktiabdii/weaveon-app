@@ -1,5 +1,6 @@
 package com.example.weaveon.presentation.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,14 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
+import com.example.weaveon.presentation.ui.components.ActionResultDialog
 import com.example.weaveon.presentation.ui.components.InputFormField
 import com.example.weaveon.presentation.ui.components.AuthActionButton
 import com.example.weaveon.presentation.ui.theme.Base
@@ -33,15 +35,29 @@ fun ForgotPasswordScreen(
     onSubmitClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
-    var email by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val email by userViewModel.email.collectAsState()
+    val error by userViewModel.error.collectAsState()
     val isLoading by userViewModel.isLoading.collectAsState()
+
+    var showDialog by remember { mutableStateOf(false) }
+    var isSuccess by remember { mutableStateOf(false) }
+    var dialogTitle by remember { mutableStateOf("") }
+    var dialogMessage by remember { mutableStateOf("") }
+    var dialogButtonText by remember { mutableStateOf("Kembali") }
+
+    // Menampilkan toast jika ada error
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            userViewModel.clearError()
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = Base,
-            )
+            .background(color = Base)
     ) {
         Image(
             painter = painterResource(id = R.drawable.bg_1),
@@ -72,7 +88,7 @@ fun ForgotPasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // tombol back
+            // Tombol kembali
             IconButton(
                 onClick = { onBackClick() },
                 modifier = Modifier
@@ -86,7 +102,7 @@ fun ForgotPasswordScreen(
                 )
             }
 
-            // Title and subtitle
+            // Judul dan subjudul
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -116,7 +132,7 @@ fun ForgotPasswordScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Email input
+            // Input email
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
@@ -133,7 +149,7 @@ fun ForgotPasswordScreen(
 
                 InputFormField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = { userViewModel.setEmail(it) },
                     placeholder = "Masukkan Email Anda",
                     leadingIcon = R.drawable.ic_email
                 )
@@ -141,16 +157,46 @@ fun ForgotPasswordScreen(
 
             Spacer(modifier = Modifier.height(26.dp))
 
-            // Submit button
+            // Tombol kirim
             AuthActionButton(
                 text = "Kirim",
-                onClick = onSubmitClick,
+                onClick = {
+                    userViewModel.forgotPassword { success ->
+                        isSuccess = success
+                        showDialog = true
+                        if (success) {
+                            dialogTitle = "Berhasil mengirim link reset kata sandi ke email!"
+                            dialogMessage = "Silahkan masuk kembali"
+                            dialogButtonText = "Masuk"
+                        } else {
+                            dialogTitle = "Gagal mengirim link reset kata sandi ke email!"
+                            dialogMessage = "Silahkan coba kembali"
+                        }
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
                 isLoading = isLoading
             )
 
-            // Fill remaining space
+
             Spacer(modifier = Modifier.weight(1f))
+        }
+
+        // Tampilkan dialog hasil
+        if (showDialog) {
+            ActionResultDialog(
+                isSuccess = isSuccess,
+                title = dialogTitle,
+                message = dialogMessage,
+                buttonText = dialogButtonText,
+                onDismissRequest = {
+                    showDialog = false
+                    onSubmitClick()},
+                onButtonClick = {
+                    showDialog = false
+                    onSubmitClick()
+                }
+            )
         }
     }
 }

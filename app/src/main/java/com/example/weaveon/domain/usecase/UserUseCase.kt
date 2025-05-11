@@ -10,4 +10,8 @@ class UserUseCase(private val userRepository: UserRepository) {
     fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
         userRepository.login(email, password, onResult)
     }
+
+    fun forgotPassword(email: String, onResult: (Boolean, String?) -> Unit) {
+        userRepository.forgotPassword(email, onResult)
+    }
 }

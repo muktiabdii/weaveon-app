@@ -48,7 +48,7 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
 
     fun clearError() { _error.value = null }
 
-    // Validasi input khusus register
+    // validasi input khusus register
     private fun validateRegisterInput(): Boolean {
         if (name.value.isBlank() || email.value.isBlank() || password.value.isBlank() || passwordKonfirmation.value.isBlank()) {
             _error.value = "Semua field harus diisi"
@@ -74,7 +74,7 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
         return true
     }
 
-    // Validasi input khusus login
+    // validasi input khusus login
     private fun validateLoginInput(): Boolean {
         if (email.value.isBlank() || password.value.isBlank()) {
             _error.value = "Email dan password harus diisi"
@@ -90,6 +90,21 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
         return true
     }
 
+    // validasi input khusus reset password
+    private fun validateResetPasswordInput(): Boolean {
+        if (email.value.isBlank()) {
+            _error.value = "Email harus diisi"
+            return false
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email.value).matches()) {
+            _error.value = "Email tidak valid"
+            return false
+        }
+
+        _error.value = null
+        return true
+    }
 
     fun register(onResult: (Boolean) -> Unit) {
         if (!validateRegisterInput()) {
@@ -130,6 +145,31 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
             userUseCase.login(
                 email = email.value,
                 password = password.value
+            ) { success, message ->
+                if (success) {
+                    clearAllFields()
+                }
+
+                else {
+                    _error.value = message
+                }
+
+                _isLoading.value = false
+                onResult(success)
+            }
+        }
+    }
+
+    fun forgotPassword(onResult: (Boolean) -> Unit) {
+        if (!validateResetPasswordInput()) {
+            onResult(false)
+            return
+        }
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            userUseCase.forgotPassword(
+                email = email.value
             ) { success, message ->
                 if (success) {
                     clearAllFields()

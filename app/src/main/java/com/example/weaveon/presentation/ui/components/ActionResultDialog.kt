@@ -3,9 +3,9 @@ package com.example.weaveon.presentation.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,9 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
-import com.example.weaveon.presentation.ui.theme.Secondary05
+import com.example.weaveon.presentation.ui.theme.Green
 import com.example.weaveon.presentation.ui.theme.Secondary08
-import com.example.weaveon.presentation.ui.theme.Secondary09
 
 @Composable
 fun ActionResultDialog(
@@ -31,86 +30,79 @@ fun ActionResultDialog(
     title: String,
     message: String,
     buttonText: String,
-    onButtonClick: () -> Unit
+    onButtonClick: () -> Unit,
+    onDismissRequest: () -> Unit
 ) {
-    Surface(
-        modifier = Modifier
-            .width(364.dp)
-            .padding(24.dp),
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {},
+        containerColor = Color(0xFFEAF9F9),
         shape = RoundedCornerShape(16.dp),
-        color = Color(0xFFEAF9F9),
-        shadowElevation = 8.dp
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Icon success / failure
-            val iconRes = if (isSuccess) R.drawable.ic_success_3d else R.drawable.ic_facebook
-            Image(
-                painter = painterResource(id = iconRes),
-                contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
-                modifier = Modifier
-                    .size(150.dp)
-                    .padding(bottom = 25.dp)
-            )
-
-            // Title
-            Text(
-                text = title,
-                textAlign = TextAlign.Center,
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                    color = Color.Black,
-                    lineHeight = 28.sp
-                ),
-            )
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            // Message
-            Text(
-                text = message,
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                    color = Secondary08
-                )
-            )
-
-            Spacer(modifier = Modifier.height(25.dp))
-
-            // Button
-            Button(
-                onClick = onButtonClick,
+        text = {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(43.dp),
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Secondary05,
-                    contentColor = Secondary09
-                )
+                    .padding(top = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val iconRes = if (isSuccess) R.drawable.ic_success_3d else R.drawable.ic_failure_3d
+                Image(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
+                    modifier = Modifier
+                        .size(150.dp)
+                        .padding(bottom = 25.dp)
+                )
+
                 Text(
-                    text = buttonText,
+                    text = title,
+                    textAlign = TextAlign.Center,
                     style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_medium))
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                        color = if (isSuccess) Color.Black else Color.Red,
+                        lineHeight = 28.sp
                     )
                 )
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Text(
+                    text = message,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                        color = Secondary08
+                    ),
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(25.dp))
+
+                Button(
+                    onClick = onButtonClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(43.dp),
+                    shape = RoundedCornerShape(30.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isSuccess) Green else Color.Red,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(
+                        text = buttonText,
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium))
+                        )
+                    )
+                }
             }
         }
-    }
+    )
 }
-
 
 @Preview
 @Composable
@@ -120,6 +112,7 @@ private fun PreviewActionResultDialog() {
         title = "Berhasil memperbarui kata sandi!",
         message = "Silahkan masuk kembali",
         buttonText = "Masuk",
-        onButtonClick = {}
+        onButtonClick = {},
+        onDismissRequest = {}
     )
 }
