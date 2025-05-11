@@ -3,8 +3,6 @@ package com.example.weaveon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weaveon.presentation.ui.screens.LoginScreen
 import com.example.weaveon.presentation.ui.theme.WeaveOnTheme
@@ -13,9 +11,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.weaveon.data.repoimpl.UserRepoImpl
 import com.example.weaveon.domain.usecase.UserUseCase
+import com.example.weaveon.presentation.ui.screens.AccountSettingsScreen
 import com.example.weaveon.presentation.ui.screens.ForgotPasswordScreen
 import com.example.weaveon.presentation.ui.screens.RegisterScreen
-import com.example.weaveon.presentation.ui.screens.ResetPasswordScreen
 import com.example.weaveon.presentation.viewmodel.UserViewModel
 
 class MainActivity : ComponentActivity() {
@@ -30,7 +28,7 @@ class MainActivity : ComponentActivity() {
                 val userViewModel : UserViewModel = viewModel(factory = UserViewModel.Factory(userUseCase))
 
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "login") {
+                NavHost(navController = navController, startDestination = "profile") {
 
                     composable("login") {
                         LoginScreen(
@@ -61,6 +59,10 @@ class MainActivity : ComponentActivity() {
                             onSubmitClick = { navController.navigate("login") },
                             onBackClick = { navController.popBackStack() }
                         )
+                    }
+
+                    composable("profile") {
+                        AccountSettingsScreen()
                     }
                 }
             }
