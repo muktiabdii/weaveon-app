@@ -11,10 +11,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.weaveon.data.repoimpl.UserRepoImpl
 import com.example.weaveon.domain.usecase.UserUseCase
-import com.example.weaveon.presentation.ui.screens.AccountSettingsScreen
+import com.example.weaveon.presentation.ui.screens.ProfileScreen
 import com.example.weaveon.presentation.ui.screens.ForgotPasswordScreen
 import com.example.weaveon.presentation.ui.screens.RegisterScreen
 import com.example.weaveon.presentation.viewmodel.UserViewModel
+import com.example.weaveon.data.repoimpl.ChatbotRepoImpl
+import com.example.weaveon.data.source.GeminiApi
+import com.example.weaveon.domain.usecase.ChatbotUseCase
+import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
+import com.example.weaveon.presentation.ui.screens.ChatbotTestScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +32,13 @@ class MainActivity : ComponentActivity() {
                 val userUseCase = UserUseCase(userRepo)
                 val userViewModel : UserViewModel = viewModel(factory = UserViewModel.Factory(userUseCase))
 
+                // inisiasi chatbotRepo, chatbotUseCase, dan chatbotViewModel
+                val chatbotRepo = ChatbotRepoImpl(applicationContext, GeminiApi.createService())
+                val chatbotUseCase = ChatbotUseCase(chatbotRepo)
+                val chatbotViewModel: ChatbotViewModel = viewModel(factory = ChatbotViewModel.ChatbotViewModelFactory(chatbotUseCase))
+
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "profile") {
+                NavHost(navController = navController, startDestination = "chatbot") {
 
                     composable("login") {
                         LoginScreen(
@@ -62,7 +72,11 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("profile") {
-                        AccountSettingsScreen()
+                        ProfileScreen()
+                    }
+
+                    composable("chatbot") {
+                        ChatbotTestScreen(chatbotViewModel = chatbotViewModel)
                     }
                 }
             }
