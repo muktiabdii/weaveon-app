@@ -17,6 +17,7 @@ import com.example.weaveon.presentation.ui.screens.RegisterScreen
 import com.example.weaveon.presentation.viewmodel.UserViewModel
 import com.example.weaveon.data.repoimpl.ChatbotRepoImpl
 import com.example.weaveon.domain.usecase.ChatbotUseCase
+import com.example.weaveon.presentation.ui.screens.ChatbotScreen
 import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
 import com.example.weaveon.presentation.ui.screens.ChatbotTestScreen
 import com.example.weaveon.presentation.ui.screens.LandingPageChatbot
@@ -75,8 +76,12 @@ class MainActivity : ComponentActivity() {
                         ProfileScreen()
                     }
 
-                    composable("chatbot") {
+                    composable("chatbot-landing") {
                         LandingPageChatbot()
+                    }
+
+                    composable("chatbot") {
+                        ChatbotScreen()
                     }
                 }
             }
