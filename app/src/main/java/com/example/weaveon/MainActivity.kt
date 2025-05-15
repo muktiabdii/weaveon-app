@@ -19,6 +19,7 @@ import com.example.weaveon.data.repoimpl.ChatbotRepoImpl
 import com.example.weaveon.domain.usecase.ChatbotUseCase
 import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
 import com.example.weaveon.presentation.ui.screens.ChatbotTestScreen
+import com.example.weaveon.presentation.ui.screens.LandingPageChatbot
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +76,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("chatbot") {
-                        ChatbotTestScreen(chatbotViewModel = chatbotViewModel)
+                        LandingPageChatbot()
                     }
                 }
             }
