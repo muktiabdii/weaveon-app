@@ -16,7 +16,6 @@ import com.example.weaveon.presentation.ui.screens.ForgotPasswordScreen
 import com.example.weaveon.presentation.ui.screens.RegisterScreen
 import com.example.weaveon.presentation.viewmodel.UserViewModel
 import com.example.weaveon.data.repoimpl.ChatbotRepoImpl
-import com.example.weaveon.data.source.GeminiApi
 import com.example.weaveon.domain.usecase.ChatbotUseCase
 import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
 import com.example.weaveon.presentation.ui.screens.ChatbotTestScreen
@@ -33,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 val userViewModel : UserViewModel = viewModel(factory = UserViewModel.Factory(userUseCase))
 
                 // inisiasi chatbotRepo, chatbotUseCase, dan chatbotViewModel
-                val chatbotRepo = ChatbotRepoImpl(applicationContext, GeminiApi.createService())
+                val chatbotRepo = ChatbotRepoImpl(applicationContext)
                 val chatbotUseCase = ChatbotUseCase(chatbotRepo)
                 val chatbotViewModel: ChatbotViewModel = viewModel(factory = ChatbotViewModel.ChatbotViewModelFactory(chatbotUseCase))
 
