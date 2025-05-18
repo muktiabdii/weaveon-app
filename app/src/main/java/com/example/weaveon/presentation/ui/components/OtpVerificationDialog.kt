@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.Secondary05
 import com.example.weaveon.presentation.ui.theme.Secondary08
 import com.example.weaveon.presentation.ui.theme.Secondary09
@@ -76,7 +77,7 @@ fun OtpVerificationDialog(
                 text = "Verifikasi akun anda",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = NeutralBlack,
                 fontFamily = FontFamily(Font(R.font.poppins_semibold))
             )
 
@@ -96,7 +97,7 @@ fun OtpVerificationDialog(
             Text(
                 text = email,
                 fontSize = 14.sp,
-                color = Color.Black,
+                color = NeutralBlack,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center,
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),

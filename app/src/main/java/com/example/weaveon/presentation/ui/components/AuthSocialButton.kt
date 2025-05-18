@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.weaveon.R
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.Secondary00
 
 @Composable
@@ -38,7 +39,7 @@ fun AuthActionButton(
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = Secondary00,
-            contentColor = Color.Black,
+            contentColor = NeutralBlack,
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 4.dp,

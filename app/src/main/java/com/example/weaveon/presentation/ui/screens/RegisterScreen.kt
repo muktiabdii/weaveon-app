@@ -27,6 +27,7 @@ import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.components.InputFormField
 import com.example.weaveon.presentation.ui.components.AuthActionButton
 import com.example.weaveon.presentation.ui.theme.Base
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.Primary04
 import com.example.weaveon.presentation.ui.theme.Primary09
 import com.example.weaveon.presentation.viewmodel.UserViewModel
@@ -101,7 +102,7 @@ fun RegisterScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "Back",
-                    tint = Color.Black
+                    tint = NeutralBlack
                 )
             }
 
@@ -117,7 +118,7 @@ fun RegisterScreen(
                     style = TextStyle(
                         fontSize = 30.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                        color = Color.Black
+                        color = NeutralBlack
                     )
                 )
 
@@ -318,7 +319,7 @@ fun RegisterScreen(
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                        color = Color.Black
+                        color = NeutralBlack
                     )
                 )
 
@@ -330,7 +331,7 @@ fun RegisterScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                            color = Color.Black
+                            color = NeutralBlack
                         )
                     )
                 }

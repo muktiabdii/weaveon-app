@@ -83,7 +83,7 @@ fun ResetPasswordScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "Back",
-                    tint = Color.Black
+                    tint = NeutralBlack
                 )
             }
 
@@ -99,7 +99,7 @@ fun ResetPasswordScreen(
                     style = TextStyle(
                         fontSize = 30.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                        color = Color.Black
+                        color = NeutralBlack
                     )
                 )
 

@@ -101,7 +101,7 @@ fun LoginScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "Back",
-                    tint = Color.Black
+                    tint = NeutralBlack
                 )
             }
 
@@ -117,7 +117,7 @@ fun LoginScreen(
                     style = TextStyle(
                         fontSize = 30.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                        color = Color.Black
+                        color = NeutralBlack
                     )
                 )
 
@@ -284,7 +284,7 @@ fun LoginScreen(
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                        color = Color.Black
+                        color = NeutralBlack
                     )
                 )
 
@@ -296,7 +296,7 @@ fun LoginScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                            color = Color.Black
+                            color = NeutralBlack
                         )
                     )
                 }

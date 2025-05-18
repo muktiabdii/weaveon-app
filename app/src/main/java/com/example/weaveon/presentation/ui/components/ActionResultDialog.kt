@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.theme.Green
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
+import com.example.weaveon.presentation.ui.theme.Red
 import com.example.weaveon.presentation.ui.theme.Secondary08
 
 @Composable
@@ -61,7 +63,7 @@ fun ActionResultDialog(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                        color = if (isSuccess) Color.Black else Color.Red,
+                        color = if (isSuccess) NeutralBlack else Red,
                         lineHeight = 28.sp
                     )
                 )
