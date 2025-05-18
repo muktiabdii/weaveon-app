@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -24,53 +26,74 @@ import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.domain.model.ChatMessage
 import com.example.weaveon.presentation.ui.components.ChatBubble
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.NeutralWhite
 import com.example.weaveon.presentation.ui.theme.Secondary05
 import com.example.weaveon.presentation.ui.theme.Secondary07
 import com.example.weaveon.presentation.ui.theme.Secondary09
+import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatbotScreen() {
-    // For testing different message lengths
-    val messages = remember {
-        mutableStateListOf(
-            ChatMessage("Hi Bunda! ada yang bisa kami bantu?", false),
-            ChatMessage("Hi aibu!", true),
-            ChatMessage("Tadi pagi Raka tantrum lagi pas mau berangkat terapi, aku buru-buru, dan dia langsung ngamuk", true),
-            ChatMessage("Saya mengerti, Bu. Perubahan mendadak bisa membuat anak merasa tidak nyaman, apalagi jika ia belum siap secara emosional.", false),
-            ChatMessage("Aku jadi merasa bersalah. Takut ini salahku terus", true),
-            ChatMessage("Ibu sudah berusaha dengan sebaik mungkin. Raka mungkin hanya butuh waktu lebih untuk beradaptasi. Cobalah beri waktu bermain sebentar sebelum berangkat. ❤", false),
-            // Add short messages to demonstrate adaptive sizing
-            ChatMessage("Ya", true),
-            ChatMessage("Baik", false),
-            ChatMessage("OK!", true),
-            ChatMessage("Terima kasih", false)
-        )
-    }
+fun ChatbotScreen(
+    chatbotViewModel: ChatbotViewModel
+) {
+    val reply by chatbotViewModel.reply.collectAsState()
+    val isLoading by chatbotViewModel.isLoading.collectAsState()
+    val error by chatbotViewModel.error.collectAsState()
+    val messages = remember { mutableStateListOf<ChatMessage>() }
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     var newMessage by remember { mutableStateOf("") }
+
+    // Tangani loading dan respons
+    LaunchedEffect(isLoading, reply, error) {
+        if (isLoading) {
+            messages.add(ChatMessage(content = "Loading...", isOutgoing = false, isLoading = true))
+            coroutineScope.launch {
+                listState.animateScrollToItem(messages.size - 1)
+            }
+        } else {
+            if (messages.isNotEmpty() && messages.last().isLoading) {
+                messages.removeAt(messages.size - 1) // Kompatibel dengan API 29
+            }
+            // Simpan reply ke variabel lokal untuk menghindari masalah smart cast
+            val replyValue = reply
+            if (replyValue != null) {
+                messages.add(ChatMessage(content = replyValue, isOutgoing = false))
+                coroutineScope.launch {
+                    listState.animateScrollToItem(messages.size - 1)
+                }
+            }
+            if (error != null) {
+                messages.add(ChatMessage(content = "Error: $error", isOutgoing = false))
+                coroutineScope.launch {
+                    listState.animateScrollToItem(messages.size - 1)
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFE9F3F2))
-    ){
+    ) {
         Image(
             painter = painterResource(id = R.drawable.bg_3),
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentScale = androidx.compose.ui.layout.ContentScale.Crop
         )
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             // App Bar
             Surface(
-                shadowElevation = 6.dp, // Tambahkan shadow di sini
+                shadowElevation = 6.dp,
             ) {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -119,6 +142,7 @@ fun ChatbotScreen() {
                     .weight(1f)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
+                state = listState,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
@@ -148,22 +172,23 @@ fun ChatbotScreen() {
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
-                            .border(1.dp, Secondary07, RoundedCornerShape(30.dp)), // Border/stroke
+                            .border(1.dp, Secondary07, RoundedCornerShape(30.dp)),
                         placeholder = {
                             Text(
                                 text = "Ketik pesanmu...",
                                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
                                 color = Secondary05,
                                 fontSize = 13.sp
-                            ) },
+                            )
+                        },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = NeutralWhite,
                             unfocusedContainerColor = NeutralWhite,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
                             unfocusedTextColor = Secondary05,
-                            focusedTextColor = Secondary05,
-                            ),
+                            focusedTextColor = NeutralBlack,
+                        ),
                         shape = RoundedCornerShape(24.dp),
                         singleLine = true
                     )
@@ -171,7 +196,11 @@ fun ChatbotScreen() {
                     IconButton(
                         onClick = {
                             if (newMessage.isNotEmpty()) {
-                                messages.add(ChatMessage(newMessage, true))
+                                messages.add(ChatMessage(content = newMessage, isOutgoing = true))
+                                chatbotViewModel.sendPrompt(newMessage)
+                                coroutineScope.launch {
+                                    listState.animateScrollToItem(messages.size - 1)
+                                }
                                 newMessage = ""
                             }
                         },
@@ -187,11 +216,4 @@ fun ChatbotScreen() {
             }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun ChatbotScreenPreview() {
-    ChatbotScreen()
 }

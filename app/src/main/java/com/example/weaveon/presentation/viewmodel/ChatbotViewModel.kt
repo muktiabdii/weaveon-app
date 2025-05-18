@@ -12,13 +12,29 @@ class ChatbotViewModel(
     private val chatbotUseCase: ChatbotUseCase
 ) : ViewModel() {
 
-    private val _reply = MutableStateFlow("")
-    val reply: StateFlow<String> = _reply
+    private val _reply = MutableStateFlow<String?>(null) // Ubah ke String? untuk mendukung null
+    val reply: StateFlow<String?> = _reply
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
 
     fun sendPrompt(prompt: String) {
+        if (prompt.isEmpty()) return // Hindari pemanggilan dengan prompt kosong
         viewModelScope.launch {
-            val result = chatbotUseCase(prompt)
-            _reply.value = result
+            _isLoading.value = true
+            _reply.value = null // Reset reply sebelum permintaan baru
+            _error.value = null // Reset error sebelum permintaan baru
+            try {
+                val result = chatbotUseCase(prompt)
+                _reply.value = result
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Unknown error"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

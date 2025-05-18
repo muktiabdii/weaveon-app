@@ -19,7 +19,6 @@ import com.example.weaveon.data.repoimpl.ChatbotRepoImpl
 import com.example.weaveon.domain.usecase.ChatbotUseCase
 import com.example.weaveon.presentation.ui.screens.ChatbotScreen
 import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
-import com.example.weaveon.presentation.ui.screens.ChatbotTestScreen
 import com.example.weaveon.presentation.ui.screens.LandingPageChatbot
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 val chatbotViewModel: ChatbotViewModel = viewModel(factory = ChatbotViewModel.ChatbotViewModelFactory(chatbotUseCase))
 
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "chatbot") {
+                NavHost(navController = navController, startDestination = "chatbot-landing") {
 
                     composable("login") {
                         LoginScreen(
@@ -77,11 +76,16 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("chatbot-landing") {
-                        LandingPageChatbot()
+                        LandingPageChatbot(
+                            onAccessKidscover = { /* Navigasi ke kidscover */ },
+                            onSkipKidscover = { navController.navigate("chatbot") }
+                        )
                     }
 
                     composable("chatbot") {
-                        ChatbotScreen()
+                        ChatbotScreen(
+                            chatbotViewModel = chatbotViewModel
+                        )
                     }
                 }
             }
