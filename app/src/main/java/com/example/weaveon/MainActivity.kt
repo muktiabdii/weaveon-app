@@ -16,11 +16,14 @@ import com.example.weaveon.presentation.ui.screens.ForgotPasswordScreen
 import com.example.weaveon.presentation.ui.screens.RegisterScreen
 import com.example.weaveon.presentation.viewmodel.UserViewModel
 import com.example.weaveon.data.repoimpl.ChatbotRepoImpl
+import com.example.weaveon.data.repoimpl.KidscoverRepoImpl
 import com.example.weaveon.domain.usecase.ChatbotUseCase
+import com.example.weaveon.domain.usecase.KidscoverUseCase
 import com.example.weaveon.presentation.ui.screens.ChatbotScreen
 import com.example.weaveon.presentation.ui.screens.FormAnakScreen
 import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
 import com.example.weaveon.presentation.ui.screens.LandingPageChatbot
+import com.example.weaveon.presentation.viewmodel.KidscoverViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,14 +41,19 @@ class MainActivity : ComponentActivity() {
                 val chatbotUseCase = ChatbotUseCase(chatbotRepo)
                 val chatbotViewModel: ChatbotViewModel = viewModel(factory = ChatbotViewModel.ChatbotViewModelFactory(chatbotUseCase))
 
+                // inisiasi kidscoverRepo, kidscoverUseCase, dan kidscoverViewModel
+                 val kidscoverRepo = KidscoverRepoImpl()
+                 val kidscoverUseCase = KidscoverUseCase(kidscoverRepo)
+                 val kidscoverViewModel : KidscoverViewModel = viewModel(factory = KidscoverViewModel.Factory(kidscoverUseCase))
+
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "chatbot-landing") {
+                NavHost(navController = navController, startDestination = "login") {
 
                     composable("login") {
                         LoginScreen(
                             userViewModel = userViewModel,
                             onForgotPasswordClick = { navController.navigate("forgot-password") },
-                            onLoginClick = { /* Handle login */ },
+                            onLoginClick = { navController.navigate("chatbot-landing") },
                             onRegisterClick = { navController.navigate("register") },
                             onGoogleLoginClick = { /* Handle Google login */ },
                             onFacebookLoginClick = { /* Handle Facebook login */ },
@@ -90,7 +98,11 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("kidscover-form") {
-                        FormAnakScreen()
+                        FormAnakScreen(
+                            kidscoverViewModel = kidscoverViewModel,
+                            onBackClick = { navController.popBackStack() },
+                            onNextClick = { navController.navigate("chatbot") }
+                        )
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.example.weaveon.presentation.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -41,23 +43,26 @@ import com.example.weaveon.presentation.ui.components.TopBar
 import com.example.weaveon.presentation.ui.theme.NeutralWhite
 import com.example.weaveon.presentation.ui.theme.Primary09
 import com.example.weaveon.presentation.ui.theme.Secondary09
+import com.example.weaveon.presentation.viewmodel.KidscoverViewModel
 
 @Composable
 fun FormAnakScreen(
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onNextClick: () -> Unit = {},
+    kidscoverViewModel: KidscoverViewModel,
 ) {
-    val name = remember { mutableStateOf("") }
 
-    // State untuk dropdown umur dan gender
+    // state data anak
+    val childName by kidscoverViewModel.childName.collectAsState()
+    val age by kidscoverViewModel.age.collectAsState()
+    val gender by kidscoverViewModel.gender.collectAsState()
+    val answers by kidscoverViewModel.answers.collectAsState()
+    val isLoading by kidscoverViewModel.isLoading.collectAsState()
+    val error by kidscoverViewModel.error.collectAsState()
+
+    // umur dan gender
     val ageOptions = listOf("1-2 tahun", "3-4 tahun", "5-6 tahun", "7-8 tahun", "9-10 tahun")
-    var selectedAgeOption by remember { mutableStateOf("") }
-
     val genderOptions = listOf("Laki-laki", "Perempuan")
-    var selectedGenderOption by remember { mutableStateOf("") }
-
-    // State untuk jawaban pertanyaan radio dan checkbox secara dinamis berdasarkan id question
-    val radioAnswers = remember { mutableStateMapOf<Int, String>() }
-    val checkboxAnswers = remember { mutableStateMapOf<Int, MutableList<String>>() }
 
     Scaffold(
         topBar = {
@@ -110,8 +115,8 @@ fun FormAnakScreen(
                     )
 
                     InputFormField(
-                        value = name.value,
-                        onValueChange = { name.value = it },
+                        value = childName,
+                        onValueChange = { kidscoverViewModel.setChildName(it) },
                         placeholder = "Ketik Nama Anak",
                         leadingIcon = R.drawable.ic_baby
                     )
@@ -137,8 +142,8 @@ fun FormAnakScreen(
                     DropdownField(
                         placeholder = "Pilih umur anak",
                         options = ageOptions,
-                        selectedOption = selectedAgeOption,
-                        onOptionSelected = { selectedAgeOption = it },
+                        selectedOption = age,
+                        onOptionSelected = { kidscoverViewModel.setAge(it) },
                         leadingIcon = R.drawable.ic_doll
                     )
                 }
@@ -163,9 +168,9 @@ fun FormAnakScreen(
                     DropdownField(
                         placeholder = "Pilih jenis kelamin anak",
                         options = genderOptions,
-                        selectedOption = selectedGenderOption,
-                        onOptionSelected = { selectedGenderOption = it },
-                        leadingIcon = if (selectedGenderOption == "Laki-laki") R.drawable.ic_boy else R.drawable.ic_girl
+                        selectedOption = gender,
+                        onOptionSelected = { kidscoverViewModel.setGender(it) },
+                        leadingIcon = if (gender == "Laki-laki") R.drawable.ic_boy else R.drawable.ic_girl
                     )
                 }
 
@@ -173,34 +178,46 @@ fun FormAnakScreen(
 
                 // Loop pertanyaan dari model formQuestions sesuai urutan id
                 formQuestions.sortedBy { it.id }.forEach { question ->
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(Modifier.height(20.dp))
+
                     when (question.type) {
                         is QuestionType.Radio -> {
-                            val selectedOption = radioAnswers[question.id] ?: ""
+                            // Ambil jawaban dari answers map, default ""
+                            val selectedOption = answers[question.title]?.firstOrNull() ?: ""
+
                             RadioGroup(
                                 title = question.title,
                                 question = question,
                                 selectedOption = selectedOption,
                                 onOptionSelected = { selected ->
-                                    radioAnswers[question.id] = selected
+                                    // Update answers di ViewModel
+                                    val updatedAnswers = answers.toMutableMap()
+                                    updatedAnswers[question.title] = listOf(selected)
+                                    kidscoverViewModel.setAnswers(updatedAnswers)
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
                         is QuestionType.Checkbox -> {
-                            val selectedOptions = checkboxAnswers.getOrPut(question.id) { mutableStateListOf() }
+                            // Ambil jawaban list, default emptyList
+                            val selectedOptions = answers[question.title]?.toMutableList() ?: mutableListOf()
+
                             CheckboxGroup(
                                 title = question.title,
                                 question = question,
                                 selectedOptions = selectedOptions,
                                 onOptionSelected = { option, isSelected ->
+                                    val updatedOptions = selectedOptions.toMutableList()
                                     if (isSelected) {
-                                        if (!selectedOptions.contains(option)) {
-                                            selectedOptions.add(option)
-                                        }
-                                    } else {
-                                        selectedOptions.remove(option)
+                                        if (!updatedOptions.contains(option)) updatedOptions.add(option)
                                     }
+
+                                    else {
+                                        updatedOptions.remove(option)
+                                    }
+                                    val updatedAnswers = answers.toMutableMap()
+                                    updatedAnswers[question.title] = updatedOptions
+                                    kidscoverViewModel.setAnswers(updatedAnswers)
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -210,6 +227,17 @@ fun FormAnakScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                ActionButton(
+                    text = "Selanjutnya",
+                    isLoading = isLoading,
+                    onClick = {
+                        kidscoverViewModel.saveChildData { success ->
+                            if (success) {
+                                onNextClick()
+                            }
+                        }
+                    }
+                )
             }
         }
     }

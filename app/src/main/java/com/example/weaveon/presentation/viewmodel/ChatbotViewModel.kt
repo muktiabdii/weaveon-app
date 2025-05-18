@@ -38,9 +38,7 @@ class ChatbotViewModel(
         }
     }
 
-    class ChatbotViewModelFactory(
-        private val chatbotUseCase: ChatbotUseCase
-    ) : ViewModelProvider.Factory {
+    class ChatbotViewModelFactory(private val chatbotUseCase: ChatbotUseCase) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ChatbotViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
