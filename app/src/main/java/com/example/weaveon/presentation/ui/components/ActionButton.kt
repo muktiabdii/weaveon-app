@@ -12,13 +12,12 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.theme.Secondary05
 import com.example.weaveon.presentation.ui.theme.Secondary09
 
 @Composable
-fun AuthActionButton(
+fun ActionButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

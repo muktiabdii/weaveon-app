@@ -24,8 +24,9 @@ import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.components.ActionResultDialog
 import com.example.weaveon.presentation.ui.components.InputFormField
-import com.example.weaveon.presentation.ui.components.AuthActionButton
+import com.example.weaveon.presentation.ui.components.ActionButton
 import com.example.weaveon.presentation.ui.theme.Base
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.Primary09
 import com.example.weaveon.presentation.viewmodel.UserViewModel
 
@@ -158,7 +159,7 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(26.dp))
 
             // Tombol kirim
-            AuthActionButton(
+            ActionButton(
                 text = "Kirim",
                 onClick = {
                     userViewModel.forgotPassword { success ->

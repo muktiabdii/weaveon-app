@@ -22,7 +22,7 @@ import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.Secondary00
 
 @Composable
-fun AuthActionButton(
+fun ActionButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -74,7 +74,7 @@ fun AuthActionButton(
 @Preview
 @Composable
 private fun PreviewSubmitButton() {
-    AuthActionButton(
+    ActionButton(
         text = "Google",
         onClick = {},
         leadingIcon = R.drawable.ic_google,

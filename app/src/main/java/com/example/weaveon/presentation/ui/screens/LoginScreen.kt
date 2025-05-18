@@ -26,8 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.components.InputFormField
-import com.example.weaveon.presentation.ui.components.AuthActionButton
+import com.example.weaveon.presentation.ui.components.ActionButton
 import com.example.weaveon.presentation.ui.theme.Base
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.Primary04
 import com.example.weaveon.presentation.ui.theme.Primary09
 import com.example.weaveon.presentation.viewmodel.UserViewModel
@@ -205,7 +206,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(7.dp))
 
             // Login button
-            AuthActionButton(
+            ActionButton(
                 text = "Masuk",
                 onClick = {
                     userViewModel.login { success ->
@@ -254,14 +255,14 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                AuthActionButton(
+                ActionButton(
                     text = "Google",
                     onClick = onGoogleLoginClick,
                     leadingIcon = R.drawable.ic_google,
                     modifier = Modifier.weight(1f)
                 )
 
-                AuthActionButton(
+                ActionButton(
                     text = "Facebook",
                     onClick = onFacebookLoginClick,
                     leadingIcon = R.drawable.ic_facebook,

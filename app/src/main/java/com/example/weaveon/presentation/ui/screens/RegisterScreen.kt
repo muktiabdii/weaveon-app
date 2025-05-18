@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.presentation.ui.components.InputFormField
-import com.example.weaveon.presentation.ui.components.AuthActionButton
+import com.example.weaveon.presentation.ui.components.ActionButton
 import com.example.weaveon.presentation.ui.theme.Base
 import com.example.weaveon.presentation.ui.theme.NeutralBlack
 import com.example.weaveon.presentation.ui.theme.Primary04
@@ -239,7 +239,7 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             // Register button
-            AuthActionButton(
+            ActionButton(
                 text = "Daftar",
                 onClick = {
                     userViewModel.register { success ->
@@ -289,14 +289,14 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                AuthActionButton(
+                ActionButton(
                     text = "Google",
                     onClick = onGoogleRegisterClick,
                     leadingIcon = R.drawable.ic_google,
                     modifier = Modifier.weight(1f)
                 )
 
-                AuthActionButton(
+                ActionButton(
                     text = "Facebook",
                     onClick = onFacebookRegisterClick,
                     leadingIcon = R.drawable.ic_facebook,

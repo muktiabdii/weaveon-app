@@ -18,6 +18,7 @@ import com.example.weaveon.presentation.viewmodel.UserViewModel
 import com.example.weaveon.data.repoimpl.ChatbotRepoImpl
 import com.example.weaveon.domain.usecase.ChatbotUseCase
 import com.example.weaveon.presentation.ui.screens.ChatbotScreen
+import com.example.weaveon.presentation.ui.screens.FormAnakScreen
 import com.example.weaveon.presentation.viewmodel.ChatbotViewModel
 import com.example.weaveon.presentation.ui.screens.LandingPageChatbot
 
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("chatbot-landing") {
                         LandingPageChatbot(
-                            onAccessKidscover = { /* Navigasi ke kidscover */ },
+                            onAccessKidscover = { navController.navigate("kidscover-form") },
                             onSkipKidscover = { navController.navigate("chatbot") }
                         )
                     }
@@ -86,6 +87,10 @@ class MainActivity : ComponentActivity() {
                         ChatbotScreen(
                             chatbotViewModel = chatbotViewModel
                         )
+                    }
+
+                    composable("kidscover-form") {
+                        FormAnakScreen()
                     }
                 }
             }
