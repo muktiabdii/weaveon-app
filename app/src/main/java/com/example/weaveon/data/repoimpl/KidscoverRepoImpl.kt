@@ -14,11 +14,9 @@ class KidscoverRepoImpl : KidscoverRepository {
         childName: String,
         age: String,
         gender: String,
-        answers: Map<String, List<String>>,
+        answers: Map<Int, List<String>>,
         onResult: (Boolean, String?) -> Unit
     ) {
-        val sanitizedAnswers = answers.mapKeys { (key, _) -> sanitizeKey(key) }
-
         try {
             val userId = auth.currentUser?.uid
             if (userId == null) {
@@ -26,11 +24,14 @@ class KidscoverRepoImpl : KidscoverRepository {
                 return
             }
 
+            // Konversi Int key jadi String dan sanitasi key-nya
+            val sanitizedAnswers = answers.mapKeys { sanitizeKey(it.key.toString()) }
+
             val childData = ChildData(
                 name = childName,
                 age = age,
                 gender = gender,
-                answers = sanitizedAnswers
+                personalization_data = sanitizedAnswers
             )
 
             db.getReference("users")
@@ -47,6 +48,6 @@ class KidscoverRepoImpl : KidscoverRepository {
     }
 
     private fun sanitizeKey(key: String): String {
-        return key.replace("[./#$\\[\\]]".toRegex(), "_")
+        return key.replace("[./#\\[\\]\$]".toRegex(), "_")
     }
 }

@@ -5,6 +5,6 @@ interface KidscoverRepository {
         childName: String,
         age: String,
         gender: String,
-        answers: Map<String, List<String>>,
+        answers: Map<Int, List<String>>,
         onResult: (Boolean, String?) -> Unit)
 }

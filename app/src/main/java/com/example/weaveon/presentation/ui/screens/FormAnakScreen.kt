@@ -183,7 +183,7 @@ fun FormAnakScreen(
                     when (question.type) {
                         is QuestionType.Radio -> {
                             // Ambil jawaban dari answers map, default ""
-                            val selectedOption = answers[question.title]?.firstOrNull() ?: ""
+                            val selectedOption = answers[question.id]?.firstOrNull() ?: ""
 
                             RadioGroup(
                                 title = question.title,
@@ -192,7 +192,7 @@ fun FormAnakScreen(
                                 onOptionSelected = { selected ->
                                     // Update answers di ViewModel
                                     val updatedAnswers = answers.toMutableMap()
-                                    updatedAnswers[question.title] = listOf(selected)
+                                    updatedAnswers[question.id] = listOf(selected)
                                     kidscoverViewModel.setAnswers(updatedAnswers)
                                 },
                                 modifier = Modifier.fillMaxWidth()
@@ -200,7 +200,7 @@ fun FormAnakScreen(
                         }
                         is QuestionType.Checkbox -> {
                             // Ambil jawaban list, default emptyList
-                            val selectedOptions = answers[question.title]?.toMutableList() ?: mutableListOf()
+                            val selectedOptions = answers[question.id]?.toMutableList() ?: mutableListOf()
 
                             CheckboxGroup(
                                 title = question.title,
@@ -216,7 +216,7 @@ fun FormAnakScreen(
                                         updatedOptions.remove(option)
                                     }
                                     val updatedAnswers = answers.toMutableMap()
-                                    updatedAnswers[question.title] = updatedOptions
+                                    updatedAnswers[question.id] = updatedOptions
                                     kidscoverViewModel.setAnswers(updatedAnswers)
                                 },
                                 modifier = Modifier.fillMaxWidth()

@@ -4,5 +4,5 @@ data class ChildData(
     val name: String = "",
     val age: String = "",
     val gender: String = "",
-    val answers: Map<String, List<String>> = emptyMap()
+    val personalization_data: Map<String, List<String>> = emptyMap()
 )
