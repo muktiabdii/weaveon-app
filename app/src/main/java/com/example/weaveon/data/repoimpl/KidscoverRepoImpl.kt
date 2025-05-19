@@ -48,6 +48,6 @@ class KidscoverRepoImpl : KidscoverRepository {
     }
 
     private fun sanitizeKey(key: String): String {
-        return key.replace("[./#\\[\\]\$]".toRegex(), "_")
+        return key.replace("[.]".toRegex(), "")
     }
 }

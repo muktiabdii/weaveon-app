@@ -46,7 +46,7 @@ val formQuestions = listOf(
     ),
     Question(
         id = 4,
-        title = "Berdasarkan pengamatan Anda, anak lebih tertarik pada",
+        title = "Berdasarkan pengamatan Anda, anak lebih tertarik pada...",
         type = QuestionType.Checkbox,
         options = listOf(
             "Gambar / Warna / bentuk (Visual)",
@@ -56,7 +56,7 @@ val formQuestions = listOf(
     ),
     Question(
         id = 5,
-        title = "Anak sensitif terhadap",
+        title = "Anak sensitif terhadap...",
         type = QuestionType.Checkbox,
         options = listOf(
             "Suara keras",
@@ -67,7 +67,7 @@ val formQuestions = listOf(
     ),
     Question(
         id = 6,
-        title = "Saat overstimulated, anak biasanya",
+        title = "Saat overstimulated, anak biasanya...",
         type = QuestionType.Checkbox,
         options = listOf(
             "Menangis",
