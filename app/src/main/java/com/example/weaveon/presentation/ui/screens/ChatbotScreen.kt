@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
 import com.example.weaveon.domain.model.ChatMessage
+import com.example.weaveon.presentation.ui.components.BottomBar
 import com.example.weaveon.presentation.ui.components.ChatBubble
 import com.example.weaveon.presentation.ui.components.TopBar
 import com.example.weaveon.presentation.ui.theme.NeutralBlack
@@ -76,7 +77,10 @@ fun ChatbotScreen(
 
     Scaffold(
         topBar = {
-            TopBar("Aibu", {}, painterResource(id = R.drawable.koala_say_hi))
+            TopBar(
+                title = "Aibu",
+                onBackClick = {},
+                painterResource(id = R.drawable.koala_say_hi))
         },
         containerColor = Color(0xFFE9F3F2)
     ) { innerPadding ->

@@ -35,6 +35,7 @@ import com.example.weaveon.R
 import com.example.weaveon.domain.model.QuestionType
 import com.example.weaveon.domain.model.formQuestions
 import com.example.weaveon.presentation.ui.components.ActionButton
+import com.example.weaveon.presentation.ui.components.BottomBar
 import com.example.weaveon.presentation.ui.components.CheckboxGroup
 import com.example.weaveon.presentation.ui.components.DropdownField
 import com.example.weaveon.presentation.ui.components.InputFormField
@@ -70,7 +71,7 @@ fun FormAnakScreen(
                 title = "Kidscover",
                 onBackClick = onBackClick
             )
-        }
+        },
     ) { paddingValues ->
         Box(
             modifier = Modifier
