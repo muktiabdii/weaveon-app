@@ -1,5 +1,6 @@
 package com.example.weaveon.presentation.ui.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,11 +37,18 @@ import com.example.weaveon.presentation.ui.theme.Primary07
 import com.example.weaveon.presentation.ui.theme.Primary09
 import com.example.weaveon.presentation.ui.theme.Secondary07
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ChatBubble(
     message: ChatMessage
 ) {
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+
     val outgoingGradient = Brush.linearGradient(
         colors = listOf(Color(0xFFFEFFD5), Color(0xFFFFD9CC)),
         start = Offset(-50f, -50f),
@@ -99,7 +107,7 @@ fun ChatBubble(
                     if (message.isOutgoing) {
                         Row(
                             modifier = Modifier
-                                .clickable { /* Handle edit click */ }
+                                .clickable {  }
                                 .padding(horizontal = 4.dp, vertical = 2.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -123,7 +131,10 @@ fun ChatBubble(
 
                     Row(
                         modifier = Modifier
-                            .clickable { /* Handle copy click */ }
+                            .clickable {
+                                clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(message.content))
+                                Toast.makeText(context, "Teks sudah disalin ke clipboard!", Toast.LENGTH_SHORT).show()
+                            }
                             .padding(horizontal = 4.dp, vertical = 2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
