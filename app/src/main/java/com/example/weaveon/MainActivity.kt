@@ -14,10 +14,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.weaveon.presentation.ui.components.BottomBar
-import com.example.weaveon.presentation.ui.components.BottomBarItem
 import com.example.weaveon.presentation.ui.screens.*
 import com.example.weaveon.presentation.ui.theme.WeaveOnTheme
 import com.example.weaveon.data.repoimpl.*
+import com.example.weaveon.domain.model.BottomBarItem
 import com.example.weaveon.domain.usecase.*
 import com.example.weaveon.presentation.viewmodel.*
 
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeaveOnTheme {
 
-                // Inisiasi repo, usecase, dan viewmodel (sama seperti kode kamu)
+                // Inisiasi repo, usecase, dan viewmodel
                 val userRepo = UserRepoImpl()
                 val userUseCase = UserUseCase(userRepo)
                 val userViewModel : UserViewModel = viewModel(factory = UserViewModel.Factory(userUseCase))
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = "chatbot-landing",
+                        startDestination = "login",
                         modifier = Modifier.padding(innerPadding)
                     ) {
 
@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             LoginScreen(
                                 userViewModel = userViewModel,
                                 onForgotPasswordClick = { navController.navigate("forgot-password") },
-                                onLoginClick = { navController.navigate("chatbot") },
+                                onLoginClick = { navController.navigate("home") },
                                 onRegisterClick = { navController.navigate("register") },
                                 onGoogleLoginClick = { /* Handle Google login */ },
                                 onFacebookLoginClick = { /* Handle Facebook login */ },

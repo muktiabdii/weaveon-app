@@ -23,18 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
-import com.example.weaveon.presentation.ui.theme.Secondary09
-
-sealed class BottomBarItem(
-    val title: String,
-    val iconRes: Int,
-    val selectedColor: Color = Secondary09,
-    val unselectedColor: Color = Color(0xFFFEFEFE)
-) {
-    data object Home : BottomBarItem("Home", R.drawable.ic_home)
-    data object Aibu : BottomBarItem("Aibu", R.drawable.ic_chatbot)
-    data object Profile : BottomBarItem("Profile", R.drawable.ic_user)
-}
+import com.example.weaveon.domain.model.BottomBarItem
 
 @Composable
 fun BottomBar(
