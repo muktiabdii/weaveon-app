@@ -96,6 +96,19 @@ class KidscoverViewModel(private val kidscoverUseCase: KidscoverUseCase) : ViewM
         }
     }
 
+    fun hasChildData(onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            kidscoverUseCase.hasChildData { success, errorMsg ->
+                if (errorMsg != null) {
+                    _error.value = errorMsg
+                } else {
+                    _error.value = null
+                }
+                onResult(success)
+            }
+        }
+    }
+
 
     // Factory untuk ViewModel
     class Factory(private val kidscoverUseCase: KidscoverUseCase) : androidx.lifecycle.ViewModelProvider.Factory {

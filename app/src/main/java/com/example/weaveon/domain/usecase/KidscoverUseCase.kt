@@ -13,4 +13,8 @@ class KidscoverUseCase(private val kidscoverRepository: KidscoverRepository) {
     ) {
         kidscoverRepository.saveChildData(childName, age, gender, answers, onResult)
     }
+
+    suspend fun hasChildData(onResult: (Boolean, String?) -> Unit) {
+        kidscoverRepository.hasChildData(onResult)
+    }
 }

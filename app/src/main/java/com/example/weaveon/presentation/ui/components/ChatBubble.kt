@@ -35,6 +35,7 @@ import com.example.weaveon.presentation.ui.theme.NeutralWhite
 import com.example.weaveon.presentation.ui.theme.Primary07
 import com.example.weaveon.presentation.ui.theme.Primary09
 import com.example.weaveon.presentation.ui.theme.Secondary07
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun ChatBubble(
@@ -57,10 +58,17 @@ fun ChatBubble(
         Column(
             modifier = Modifier
                 .wrapContentSize()
-                .shadow(6.dp, RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp, bottomStart = 14.dp))
+                .shadow(6.dp, shape =
+                if (message.isOutgoing) RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp, bottomStart = 14.dp)
+                else RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp, bottomEnd = 14.dp)
+                )
                 .background(
-                    brush = if (message.isOutgoing) outgoingGradient else Brush.linearGradient(listOf(incomingColor, incomingColor)),
-                    shape = RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp, bottomStart = 14.dp)
+                    brush =
+                    if (message.isOutgoing) outgoingGradient
+                    else Brush.linearGradient(listOf(incomingColor, incomingColor)),
+                    shape =
+                    if (message.isOutgoing) RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp, bottomStart = 14.dp)
+                    else RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp, bottomEnd = 14.dp)
                 )
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .widthIn(max = 240.dp),
@@ -75,11 +83,10 @@ fun ChatBubble(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text(
-                    text = message.content,
+                MarkdownText(
+                    markdown = message.content,
                     color = Primary09,
                     fontSize = 14.sp,
-                    lineHeight = 20.sp,
                     modifier = Modifier.wrapContentWidth()
                 )
 

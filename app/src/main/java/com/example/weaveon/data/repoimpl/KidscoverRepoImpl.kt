@@ -50,4 +50,27 @@ class KidscoverRepoImpl : KidscoverRepository {
     private fun sanitizeKey(key: String): String {
         return key.replace("[.]".toRegex(), "")
     }
+
+    override suspend fun hasChildData(onResult: (Boolean, String?) -> Unit) {
+        try {
+            val userId = auth.currentUser?.uid
+            if (userId == null) {
+                onResult(false, "User not authenticated")
+                return
+            }
+
+            val snapshot = db.getReference("users")
+                .child(userId)
+                .child("children")
+                .get()
+                .await()
+
+            // Cek apakah ada data children (snapshot.exists() dan snapshot memiliki anak)
+            val hasChildren = snapshot.exists() && snapshot.childrenCount > 0
+
+            onResult(hasChildren, null)
+        } catch (e: Exception) {
+            onResult(false, e.message)
+        }
+    }
 }

@@ -6,5 +6,8 @@ interface KidscoverRepository {
         age: String,
         gender: String,
         answers: Map<Int, List<String>>,
-        onResult: (Boolean, String?) -> Unit)
+        onResult: (Boolean, String?) -> Unit
+    )
+
+    suspend fun hasChildData(onResult: (Boolean, String?) -> Unit)
 }

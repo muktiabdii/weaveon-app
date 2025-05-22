@@ -31,7 +31,7 @@ class ChatbotRepoImpl(private val context: Context) : ChatbotRepository {
         val personalizationText = buildPersonalizationText(childData, matchedCategoryIds)
 
         // Instruksi agar Gemini santai & empatik
-        val toneInstruction = "Tanggapi dengan santai dan penuh empati."
+        val toneInstruction = "Balas dengan nada santai dan empatik.\n"
 
         // Gabungkan semua ke prompt final
         val finalPrompt = buildString {
@@ -45,8 +45,6 @@ class ChatbotRepoImpl(private val context: Context) : ChatbotRepository {
         val request = GeminiRequest(
             contents = listOf(Content(parts = listOf(Part(text = finalPrompt))))
         )
-
-        Log.d("ChatbotRepoImpl", "Final prompt: $finalPrompt")
 
         return try {
             val response = GeminiService.service.sendPrompt(apiKey, request)
@@ -102,9 +100,6 @@ class ChatbotRepoImpl(private val context: Context) : ChatbotRepository {
         }
     }
 
-    /**
-     * Mapping dari questionId (angka dalam String) ke categoryId (nama kategori string)
-     */
     private fun questionIdToQuestionName(questionId: String): String? {
         // Cari FormCategory yang mengandung questionId ini dalam string yang dipisah "_"
         val formCategory = FormCategories.list.find {
@@ -121,38 +116,28 @@ class ChatbotRepoImpl(private val context: Context) : ChatbotRepository {
     private fun buildPersonalizationText(child: ChildData?, categoryIds: List<String>): String? {
         if (child == null || categoryIds.isEmpty()) return null
 
-        Log.d("ChatbotRepoImpl", "categoryIds received for personalization: $categoryIds")
-        Log.d("ChatbotRepoImpl", "child.personalization_data keys: ${child.personalization_data.keys}")
-
         val builder = StringBuilder()
-        builder.appendLine("Data anak: Nama: ${child.name}, usia: ${child.age}, jenis kelamin: ${child.gender}.")
+        builder.appendLine("Data anak:\nNama: ${child.name}, usia: ${child.age}, jenis kelamin: ${child.gender}.\n")
         builder.appendLine("Personalisasi anak:")
 
         val processedCategoryIds = mutableSetOf<String>()
 
         for (categoryId in categoryIds) {
-            Log.d("ChatbotRepoImpl", "Processing categoryId: $categoryId")
-
             val splitIds = categoryId.split("_")
-            Log.d("ChatbotRepoImpl", "Split categoryIds: $splitIds")
 
             for (singleId in splitIds) {
                 if (processedCategoryIds.contains(singleId)) {
-                    Log.d("ChatbotRepoImpl", "Skipping duplicate singleId: $singleId")
                     continue
                 }
                 processedCategoryIds.add(singleId)
 
                 val questionName = questionIdToQuestionName(singleId)
-                Log.d("ChatbotRepoImpl", "Mapping singleId $singleId to questionName: $questionName")
-
                 val answers = child.personalization_data[singleId]
-                Log.d("ChatbotRepoImpl", "Answers for $singleId: $answers")
 
                 if (!answers.isNullOrEmpty()) {
                     builder.appendLine("${questionName ?: singleId}: ${answers.joinToString(", ")}")
                 } else {
-                    Log.d("ChatbotRepoImpl", "No answers found for $singleId")
+                    builder.appendLine("${questionName ?: singleId}: Tidak diketahui")
                 }
             }
         }

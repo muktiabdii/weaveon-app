@@ -129,6 +129,7 @@ class MainActivity : ComponentActivity() {
 
                         composable("chatbot-landing") {
                             LandingPageChatbot(
+                                kidscoverViewModel = kidscoverViewModel,
                                 onAccessKidscover = { navController.navigate("kidscover-form") },
                                 onSkipKidscover = { navController.navigate("chatbot") }
                             )

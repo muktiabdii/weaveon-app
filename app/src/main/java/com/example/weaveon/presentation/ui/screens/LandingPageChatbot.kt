@@ -38,9 +38,11 @@ import com.example.weaveon.presentation.ui.components.WarningDialog
 import com.example.weaveon.presentation.ui.theme.NeutralWhite
 import com.example.weaveon.presentation.ui.theme.Secondary05
 import com.example.weaveon.presentation.ui.theme.Secondary09
+import com.example.weaveon.presentation.viewmodel.KidscoverViewModel
 
 @Composable
 fun LandingPageChatbot(
+    kidscoverViewModel: KidscoverViewModel,
     onAccessKidscover: () -> Unit = {},
     onSkipKidscover: () -> Unit = {}
 ) {
@@ -113,7 +115,15 @@ fun LandingPageChatbot(
                 )
                 // Chat Button
                 Button(
-                    onClick = { showDialog.value = true }, // Show dialog when button is clicked
+                    onClick = {
+                        kidscoverViewModel.hasChildData { hasData ->
+                            if (hasData) {
+                                onSkipKidscover()
+                            } else {
+                                showDialog.value = true
+                            }
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Secondary05
                     ),
@@ -137,7 +147,7 @@ fun LandingPageChatbot(
                     message = "Silahkan akses fitur Kidscover untuk mengisi data personalisasi anak",
                     primaryButtonText = "Akses",
                     secondaryButtonText = "Lewati",
-                    imageRes = R.drawable.ic_brain_3d, // Make sure you have this image in drawable
+                    imageRes = R.drawable.ic_brain_3d,
                     onPrimaryButtonClick = {
                         showDialog.value = false
                         onAccessKidscover()
@@ -153,10 +163,4 @@ fun LandingPageChatbot(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun KoalaAppScreenPreview() {
-    LandingPageChatbot()
 }
