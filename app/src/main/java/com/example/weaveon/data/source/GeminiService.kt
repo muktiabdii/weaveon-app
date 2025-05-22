@@ -26,9 +26,4 @@ object GeminiService {
         .build()
 
     val service: Service = retrofit.create(Service::class.java)
-
-    // Opsional: helper function supaya lebih ringkas
-    suspend fun sendPrompt(url: String, request: GeminiRequest): GeminiResponse {
-        return service.sendPrompt(url, request)
-    }
 }
