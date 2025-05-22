@@ -1,7 +1,7 @@
 package com.example.weaveon.presentation.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,17 +12,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
-import com.example.weaveon.domain.model.ChatMessage
-import com.example.weaveon.presentation.ui.components.BottomBar
 import com.example.weaveon.presentation.ui.components.ChatBubble
 import com.example.weaveon.presentation.ui.components.TopBar
 import com.example.weaveon.presentation.ui.theme.NeutralBlack
@@ -38,42 +34,26 @@ fun ChatbotScreen(
     chatbotViewModel: ChatbotViewModel,
     onBackClick: () -> Unit = {}
 ) {
-    val reply by chatbotViewModel.reply.collectAsState()
+    val chatHistory by chatbotViewModel.chatHistory.collectAsState()
     val isLoading by chatbotViewModel.isLoading.collectAsState()
     val error by chatbotViewModel.error.collectAsState()
-    val messages = remember { mutableStateListOf<ChatMessage>() }
+
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     var newMessage by remember { mutableStateOf("") }
 
-    // Handle response and loading
-    LaunchedEffect(isLoading, reply, error) {
-        if (isLoading) {
-            messages.add(ChatMessage(content = "Loading...", isOutgoing = false, isLoading = true))
+    // Scroll to bottom setiap chatHistory berubah
+    LaunchedEffect(chatHistory.size) {
+        if (chatHistory.isNotEmpty()) {
             coroutineScope.launch {
-                listState.animateScrollToItem(messages.size - 1)
-            }
-        } else {
-            if (messages.isNotEmpty() && messages.last().isLoading) {
-                messages.removeAt(messages.size - 1)
-            }
-
-            val replyValue = reply
-            if (replyValue != null) {
-                messages.add(ChatMessage(content = replyValue, isOutgoing = false))
-                coroutineScope.launch {
-                    listState.animateScrollToItem(messages.size - 1)
-                }
-            }
-
-            if (error != null) {
-                messages.add(ChatMessage(content = "Error: $error", isOutgoing = false))
-                coroutineScope.launch {
-                    listState.animateScrollToItem(messages.size - 1)
-                }
+                listState.animateScrollToItem(chatHistory.size - 1)
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        chatbotViewModel.loadSavedChats()
     }
 
     Scaffold(
@@ -81,7 +61,8 @@ fun ChatbotScreen(
             TopBar(
                 title = "Aibu",
                 onBackClick = { onBackClick() },
-                painterResource(id = R.drawable.koala_say_hi))
+                painterResource(id = R.drawable.koala_say_hi)
+            )
         },
         containerColor = Color(0xFFE9F3F2)
     ) { innerPadding ->
@@ -98,8 +79,7 @@ fun ChatbotScreen(
             )
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
                 // Chat Messages
                 LazyColumn(
@@ -111,12 +91,37 @@ fun ChatbotScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
-                    items(messages) { message ->
+                    items(chatHistory) { message ->
                         ChatBubble(message = message)
+                    }
+
+                    // Jika loading, tampilkan loading bubble di bawah chat
+                    if (isLoading) {
+                        item {
+                            ChatBubble(
+                                message = com.example.weaveon.domain.model.ChatMessageDomain(
+                                    content = "Loading...",
+                                    isOutgoing = false,
+                                    isLoading = true
+                                )
+                            )
+                        }
+                    }
+
+                    // Jika error, tampilkan pesan error di bawah chat
+                    if (error != null) {
+                        item {
+                            ChatBubble(
+                                message = com.example.weaveon.domain.model.ChatMessageDomain(
+                                    content = "Error: $error",
+                                    isOutgoing = false
+                                )
+                            )
+                        }
                     }
                 }
 
-                // Input Message (tetap di atas navbar)
+                // Input Message
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shadowElevation = 6.dp,
@@ -159,11 +164,8 @@ fun ChatbotScreen(
                         IconButton(
                             onClick = {
                                 if (newMessage.isNotEmpty()) {
-                                    messages.add(ChatMessage(content = newMessage, isOutgoing = true))
+                                    // Kirim pesan user ke ViewModel
                                     chatbotViewModel.sendPrompt(newMessage)
-                                    coroutineScope.launch {
-                                        listState.animateScrollToItem(messages.size - 1)
-                                    }
                                     newMessage = ""
                                 }
                             },

@@ -31,20 +31,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
-import com.example.weaveon.domain.model.ChatMessage
+import com.example.weaveon.domain.model.ChatMessageDomain
 import com.example.weaveon.presentation.ui.theme.NeutralWhite
 import com.example.weaveon.presentation.ui.theme.Primary07
 import com.example.weaveon.presentation.ui.theme.Primary09
 import com.example.weaveon.presentation.ui.theme.Secondary07
 import dev.jeziellago.compose.markdowntext.MarkdownText
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ChatBubble(
-    message: ChatMessage
+    message: ChatMessageDomain
 ) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
