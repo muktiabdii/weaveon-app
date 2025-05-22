@@ -88,7 +88,10 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("chatbot") {
-                            ChatbotScreen(chatbotViewModel = chatbotViewModel)
+                            ChatbotScreen(
+                                chatbotViewModel = chatbotViewModel,
+                                onBackClick = { navController.popBackStack() }
+                            )
                         }
 
                         composable("profile") {

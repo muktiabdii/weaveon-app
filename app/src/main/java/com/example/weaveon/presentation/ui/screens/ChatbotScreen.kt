@@ -35,7 +35,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatbotScreen(
-    chatbotViewModel: ChatbotViewModel
+    chatbotViewModel: ChatbotViewModel,
+    onBackClick: () -> Unit = {}
 ) {
     val reply by chatbotViewModel.reply.collectAsState()
     val isLoading by chatbotViewModel.isLoading.collectAsState()
@@ -79,7 +80,7 @@ fun ChatbotScreen(
         topBar = {
             TopBar(
                 title = "Aibu",
-                onBackClick = {},
+                onBackClick = { onBackClick() },
                 painterResource(id = R.drawable.koala_say_hi))
         },
         containerColor = Color(0xFFE9F3F2)
