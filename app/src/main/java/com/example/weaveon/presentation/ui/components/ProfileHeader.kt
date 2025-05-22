@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weaveon.R
+import com.example.weaveon.presentation.ui.theme.NeutralBlack
 
 @Composable
 fun ProfileHeader(
@@ -76,13 +77,15 @@ fun ProfileHeader(
             Text(
                 text = username,
                 fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                fontSize = 15.sp
+                fontSize = 15.sp,
+                color = NeutralBlack
             )
 
             Text(
                 text = email,
                 fontSize = 13.sp,
                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                color = NeutralBlack
             )
         }
     }
