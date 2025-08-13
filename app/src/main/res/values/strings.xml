@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WeaveOn</string>
+    <string name="default_web_client_id">423598728511-lum0f45j625dhc311jt6lj6r2eq7oog2.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">4000777870137138</string>
+    <string name="facebook_client_token">4000777870137138|TW1pLzRJzuvqAxv7qAVYmH76swk</string>
+    <string name="gemini_api_key">AIzaSyDuwkigPQkMNtz5q_vhqzTMBvxB9GkkYhg</string>
 </resources>
