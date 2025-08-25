@@ -22,9 +22,17 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
     private val _loginState = MutableStateFlow<State>(State.Idle)
     val loginState: StateFlow<State> = _loginState
 
+    // register state
+    private val _registerState = MutableStateFlow<State>(State.Idle)
+    val registerState: StateFlow<State> = _registerState
+
     // reset state
     fun resetLoginState() {
         _loginState.value = State.Idle
+    }
+
+    fun resetRegisterState() {
+        _registerState.value = State.Idle
     }
 
     // function login
@@ -36,6 +44,21 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
             _loginState.value = State.Loading
             authUseCase.login(email, password) { success, message ->
                 _loginState.value = if (success) State.Success else State.Error(message ?: "Login gagal")
+            }
+        }
+    }
+
+    // function register
+    fun register(
+        name: String,
+        email: String,
+        password: String,
+        passwordConfirmation: String
+    ) {
+        viewModelScope.launch {
+            _registerState.value = State.Loading
+            authUseCase.register(name, email, password, passwordConfirmation) { success, message ->
+                _registerState.value = if (success) State.Success else State.Error(message ?: "Register gagal")
             }
         }
     }

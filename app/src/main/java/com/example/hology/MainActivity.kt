@@ -15,6 +15,7 @@ import com.example.hology.data.repository.AuthRepositoryImpl
 import com.example.hology.domain.usecase.AuthUseCase
 import com.example.hology.ui.auth.AuthViewModel
 import com.example.hology.ui.auth.LoginScreen
+import com.example.hology.ui.auth.RegisterScreen
 import com.example.hology.ui.theme.HologyTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,6 +37,10 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("login") {
                             LoginScreen(viewModel = authViewModel, navController = navController)
+                        }
+
+                        composable("register") {
+                            RegisterScreen(viewModel = authViewModel, navController = navController)
                         }
                     }
                 }

@@ -29,6 +29,50 @@ class AuthRepositoryImpl: AuthRepository {
             }
     }
 
+    // function register
+    override fun register(
+        name: String,
+        email: String,
+        password: String,
+        passwordConfirmation: String,
+        onResult: (Boolean, String?) -> Unit
+    ) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    user?.let {
+                        val userId = it.uid
+                        val userRef = database.child("users").child(userId)
+
+                        // menyimpan data pengguna ke database
+                        val userData = hashMapOf(
+                            "userId" to userId,
+                            "name" to name,
+                            "email" to email
+                        )
+                        userRef.setValue(userData)
+                            .addOnSuccessListener {
+                                onResult(true, null)
+                            }
+                            .addOnFailureListener { exception ->
+
+                                // jika gagal, hapus akun pengguna
+                                user.delete().addOnCompleteListener {
+                                    onResult(false, exception.message)
+                                }
+                            }
+                    }
+                }
+
+                // jika registrasi gagal, kirim pesan error
+                else {
+                    val errorMessage = getLocalizedErrorMessage(task.exception?.message)
+                    onResult(false, errorMessage)
+                }
+            }
+    }
+
     // function untuk mendapatkan pesan error yang sesuai
     private fun getLocalizedErrorMessage(errorMessage: String?): String {
         return when {
