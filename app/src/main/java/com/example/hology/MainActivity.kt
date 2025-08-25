@@ -14,8 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hology.data.repository.AuthRepositoryImpl
 import com.example.hology.domain.usecase.AuthUseCase
 import com.example.hology.ui.auth.AuthViewModel
+import com.example.hology.ui.auth.ForgotPasswordScreen
 import com.example.hology.ui.auth.LoginScreen
 import com.example.hology.ui.auth.RegisterScreen
+import com.example.hology.ui.home.HomeScreen
 import com.example.hology.ui.theme.HologyTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,6 +43,14 @@ class MainActivity : ComponentActivity() {
 
                         composable("register") {
                             RegisterScreen(viewModel = authViewModel, navController = navController)
+                        }
+
+                        composable("forgot_password") {
+                            ForgotPasswordScreen(viewModel = authViewModel, navController = navController)
+                        }
+
+                        composable("home") {
+                            HomeScreen()
                         }
                     }
                 }
