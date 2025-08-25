@@ -24,6 +24,17 @@ class AuthUseCase(private val authRepository: AuthRepository) {
         authRepository.register(name.trim(), email.trim(), password.trim(), passwordConfirmation.trim(), onResult)
     }
 
+
+    // function forgot password
+    fun forgotPassword(email: String, onResult: (Boolean, String?) -> Unit) {
+        val validateForgotPassword = validateForgotPassword(email)
+        if (validateForgotPassword != null){
+            onResult(false, validateForgotPassword)
+            return
+        }
+        authRepository.forgotPassword(email.trim(), onResult)
+    }
+
     // function validasi login
     private fun validateLogin(email: String, password: String): String? {
         if (email.trim().isEmpty() || password.trim().isEmpty()) {
@@ -56,6 +67,17 @@ class AuthUseCase(private val authRepository: AuthRepository) {
 
         if (password != passwordConfirmation) {
             return "Konfirmasi password tidak sesuai"
+        }
+        return null
+    }
+
+    // function validasi forgot password
+    private fun validateForgotPassword(email: String): String? {
+        if (email.trim().isEmpty()) {
+            return "Email harus diisi"
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            return "Format email salah"
         }
         return null
     }

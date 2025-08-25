@@ -26,6 +26,10 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
     private val _registerState = MutableStateFlow<State>(State.Idle)
     val registerState: StateFlow<State> = _registerState
 
+    // forgot password state
+    private val _forgotPasswordState = MutableStateFlow<State>(State.Idle)
+    val forgotPasswordState: StateFlow<State> = _forgotPasswordState
+
     // reset state
     fun resetLoginState() {
         _loginState.value = State.Idle
@@ -33,6 +37,10 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
 
     fun resetRegisterState() {
         _registerState.value = State.Idle
+    }
+
+    fun resetForgotPasswordState() {
+        _forgotPasswordState.value = State.Idle
     }
 
     // function login
@@ -59,6 +67,18 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
             _registerState.value = State.Loading
             authUseCase.register(name, email, password, passwordConfirmation) { success, message ->
                 _registerState.value = if (success) State.Success else State.Error(message ?: "Register gagal")
+            }
+        }
+    }
+
+    // function forgot password
+    fun forgotPassword(
+        email: String
+    ) {
+        viewModelScope.launch {
+            _forgotPasswordState.value = State.Loading
+            authUseCase.forgotPassword(email) { success, message ->
+                _forgotPasswordState.value = if (success) State.Success else State.Error(message ?: "Forgot password gagal")
             }
         }
     }

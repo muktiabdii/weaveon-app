@@ -73,6 +73,24 @@ class AuthRepositoryImpl: AuthRepository {
             }
     }
 
+    // function forgot password
+    override fun forgotPassword(
+        email: String,
+        onResult: (Boolean, String?) -> Unit
+    ) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onResult(true, null)
+                }
+
+                else {
+                    val errorMessage = getLocalizedErrorMessage(task.exception?.message)
+                    onResult(false, errorMessage)
+                }
+            }
+    }
+
     // function untuk mendapatkan pesan error yang sesuai
     private fun getLocalizedErrorMessage(errorMessage: String?): String {
         return when {
