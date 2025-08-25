@@ -18,6 +18,7 @@ import com.example.hology.ui.auth.ForgotPasswordScreen
 import com.example.hology.ui.auth.LoginScreen
 import com.example.hology.ui.auth.RegisterScreen
 import com.example.hology.ui.home.HomeScreen
+import com.example.hology.ui.splash.SplashScreen
 import com.example.hology.ui.theme.HologyTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,8 +36,12 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerpadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "login"
+                        startDestination = "splash"
                     ) {
+                        composable("splash") {
+                            SplashScreen(navController = navController)
+                        }
+
                         composable("login") {
                             LoginScreen(viewModel = authViewModel, navController = navController)
                         }
