@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +33,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    viewModel: SplashViewModel
 ) {
     var startAnimation by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
@@ -44,11 +46,36 @@ fun SplashScreen(
         animationSpec = tween(1000)
     )
 
+    val isOnBoardingShown by viewModel.isOnBoardingShown().collectAsState(initial = false)
+    val userUid by viewModel.getUserUidFlow().collectAsState(initial = null)
+
     LaunchedEffect(Unit) {
         startAnimation = true
         delay(2000)
-        navController.navigate("onboarding") {
-            popUpTo("splash") { inclusive = true }
+
+        // kalau onboarding belum ditampilkan
+        if (!isOnBoardingShown) {
+            navController.navigate("onboarding") {
+                popUpTo("splash") { inclusive = true }
+            }
+        }
+
+        else {
+
+            // kalau sudah onboarding tapi belum login
+            if (userUid.isNullOrEmpty()) {
+                navController.navigate("login") {
+                    popUpTo("splash") { inclusive = true }
+                }
+            }
+
+            // kalau sudah onboarding dan sudah login
+            else {
+                viewModel.loadUser(userUid!!)
+                navController.navigate("home") {
+                    popUpTo("splash") { inclusive = true }
+                }
+            }
         }
     }
 

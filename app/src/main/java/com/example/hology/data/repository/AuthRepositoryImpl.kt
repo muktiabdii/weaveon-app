@@ -2,6 +2,7 @@ package com.example.hology.data.repository
 
 import com.example.hology.di.FirebaseProvider
 import com.example.hology.domain.repository.AuthRepository
+import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImpl: AuthRepository {
 
@@ -10,24 +11,21 @@ class AuthRepositoryImpl: AuthRepository {
     private val database = FirebaseProvider.database
 
     // function login
-    override fun login(
+    override suspend fun login(
         email: String,
-        password: String,
-        onResult: (Boolean, String?) -> Unit
-    ) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onResult(true, null)
-                }
+        password: String
+    ): String {
+        try {
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            val uid = result.user?.uid ?: throw Exception("UID tidak ditemukan")
+            return uid
+        }
 
-                // jika login gagal, kirim pesan error
-                else {
-                    val errorMessage = getLocalizedErrorMessage(task.exception?.message)
-                    onResult(false, errorMessage)
-                }
-            }
+        catch (e: Exception) {
+            throw Exception(getLocalizedErrorMessage(e.message))
+        }
     }
+
 
     // function register
     override fun register(
@@ -47,7 +45,7 @@ class AuthRepositoryImpl: AuthRepository {
 
                         // menyimpan data pengguna ke database
                         val userData = hashMapOf(
-                            "userId" to userId,
+                            "uid" to userId,
                             "name" to name,
                             "email" to email
                         )

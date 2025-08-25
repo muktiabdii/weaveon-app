@@ -38,12 +38,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.hology.ui.common.OnBoardingImage
 import com.example.hology.ui.common.OnBoardingText
+import com.example.hology.ui.splash.SplashViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    viewModel : SplashViewModel
 ) {
     val pagerState = rememberPagerState(pageCount = { 4 })
     val scope = rememberCoroutineScope()
@@ -63,6 +65,7 @@ fun OnBoardingScreen(
         ) {
             TextButton(
                 onClick = {
+                    viewModel.setOnBoardingShown()
                     navController.navigate("welcome") {
                         popUpTo("onboarding") { inclusive = true }
                     }
@@ -111,6 +114,7 @@ fun OnBoardingScreen(
         Button(
             onClick = {
                 if (pagerState.currentPage == 3) {
+                    viewModel.setOnBoardingShown()
                     navController.navigate("welcome") {
                         popUpTo("onboarding") { inclusive = true }
                     }

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.hology.domain.usecase.AuthUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import androidx.lifecycle.viewModelScope
+import com.example.hology.domain.usecase.UserUseCase
 import kotlinx.coroutines.launch
 
 // general state
@@ -17,7 +17,10 @@ sealed class State {
     data class Error(val message: String) : State()
 }
 
-class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
+class AuthViewModel(
+    private val authUseCase: AuthUseCase,
+    private val userUseCase: UserUseCase
+): ViewModel() {
     // login state
     private val _loginState = MutableStateFlow<State>(State.Idle)
     val loginState: StateFlow<State> = _loginState
@@ -44,15 +47,27 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
     }
 
     // function login
-    fun login(
-        email: String,
-        password: String
-    ) {
+    fun login(email: String, password: String) {
         viewModelScope.launch {
             _loginState.value = State.Loading
-            authUseCase.login(email, password) { success, message ->
-                _loginState.value = if (success) State.Success else State.Error(message ?: "Login gagal")
+            val result = authUseCase.login(email, password)
+            result.onSuccess { uid ->
+                if (uid.isNotEmpty()) {
+                    loadUser(uid)
+                }
+
+                _loginState.value = State.Success
+            }.onFailure { e ->
+                _loginState.value = State.Error(e.message ?: "Login gagal")
             }
+        }
+    }
+
+    // function load user
+    suspend fun loadUser(uid: String) {
+        val user = userUseCase.getUserFromRemote(uid)
+        if (user != null) {
+            userUseCase.saveUserToCache(user.uid, user.name, user.email)
         }
     }
 
@@ -83,11 +98,14 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
         }
     }
 
-    class Factory(private val authUseCase: AuthUseCase) : ViewModelProvider.Factory {
+    class Factory(
+        private val authUseCase: AuthUseCase,
+        private val userUseCase: UserUseCase
+    ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return AuthViewModel(authUseCase) as T
+                return AuthViewModel(authUseCase, userUseCase) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

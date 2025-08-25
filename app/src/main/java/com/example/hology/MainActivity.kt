@@ -11,8 +11,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hology.data.datastore.PreferencesManager
 import com.example.hology.data.repository.AuthRepositoryImpl
+import com.example.hology.data.repository.UserRepositoryImpl
 import com.example.hology.domain.usecase.AuthUseCase
+import com.example.hology.domain.usecase.OnBoardingUseCase
+import com.example.hology.domain.usecase.UserUseCase
 import com.example.hology.ui.auth.AuthViewModel
 import com.example.hology.ui.auth.ForgotPasswordScreen
 import com.example.hology.ui.auth.LoginScreen
@@ -21,6 +25,7 @@ import com.example.hology.ui.home.HomeScreen
 import com.example.hology.ui.onboarding.OnBoardingScreen
 import com.example.hology.ui.onboarding.WelcomeScreen
 import com.example.hology.ui.splash.SplashScreen
+import com.example.hology.ui.splash.SplashViewModel
 import com.example.hology.ui.theme.HologyTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,9 +36,16 @@ class MainActivity : ComponentActivity() {
             HologyTheme {
 
                 // insiate auth
+                val userRepo = UserRepositoryImpl(PreferencesManager(this))
+                val userUseCase = UserUseCase(userRepo)
+
+                val onBoardingUseCase = OnBoardingUseCase(PreferencesManager(this))
+                val splashViewModel: SplashViewModel = viewModel(factory = SplashViewModel.Factory(userUseCase, onBoardingUseCase))
+
                 val authRepo = AuthRepositoryImpl()
                 val authUseCase = AuthUseCase(authRepo)
-                val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(authUseCase))
+                val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(authUseCase, userUseCase))
+
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerpadding ->
                     NavHost(
@@ -41,11 +53,11 @@ class MainActivity : ComponentActivity() {
                         startDestination = "splash"
                     ) {
                         composable("splash") {
-                            SplashScreen(navController = navController)
+                            SplashScreen(navController = navController, viewModel = splashViewModel)
                         }
 
                         composable("onboarding") {
-                            OnBoardingScreen(navController = navController)
+                            OnBoardingScreen(navController = navController, viewModel = splashViewModel)
                         }
 
                         composable("welcome") {

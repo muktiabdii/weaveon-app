@@ -5,14 +5,22 @@ import com.example.hology.domain.repository.AuthRepository
 class AuthUseCase(private val authRepository: AuthRepository) {
 
     // function login
-    fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+    suspend fun login(email: String, password: String): Result<String> {
         val validateLogin = validateLogin(email, password)
-        if (validateLogin != null){
-            onResult(false, validateLogin)
-            return
+        if (validateLogin != null) {
+            return Result.failure(Exception(validateLogin))
         }
-        authRepository.login(email.trim(), password.trim(), onResult)
+
+        return try {
+            val uid = authRepository.login(email.trim(), password.trim())
+            Result.success(uid)
+        }
+
+        catch (e: Exception) {
+            Result.failure(e)
+        }
     }
+
 
     // function register
     fun register(name: String, email: String, password: String, passwordConfirmation: String, onResult: (Boolean, String?) -> Unit) {

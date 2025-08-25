@@ -65,4 +65,7 @@ dependencies {
     // firebase
     implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
     implementation("com.google.firebase:firebase-database-ktx:21.0.0")
+
+    // datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }

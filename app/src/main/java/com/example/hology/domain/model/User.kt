@@ -1,6 +1,7 @@
 package com.example.hology.domain.model
 
 data class User(
-    val name: String,
-    val email: String
+    val uid: String = "",
+    val name: String = "",
+    val email: String = ""
 )
