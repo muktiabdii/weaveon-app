@@ -63,7 +63,7 @@ fun OnBoardingScreen(
         ) {
             TextButton(
                 onClick = {
-                    navController.navigate("login") {
+                    navController.navigate("welcome") {
                         popUpTo("onboarding") { inclusive = true }
                     }
                 }
@@ -111,7 +111,7 @@ fun OnBoardingScreen(
         Button(
             onClick = {
                 if (pagerState.currentPage == 3) {
-                    navController.navigate("login") {
+                    navController.navigate("welcome") {
                         popUpTo("onboarding") { inclusive = true }
                     }
                 } else {

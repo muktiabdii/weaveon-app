@@ -19,6 +19,7 @@ import com.example.hology.ui.auth.LoginScreen
 import com.example.hology.ui.auth.RegisterScreen
 import com.example.hology.ui.home.HomeScreen
 import com.example.hology.ui.onboarding.OnBoardingScreen
+import com.example.hology.ui.onboarding.WelcomeScreen
 import com.example.hology.ui.splash.SplashScreen
 import com.example.hology.ui.theme.HologyTheme
 
@@ -45,6 +46,10 @@ class MainActivity : ComponentActivity() {
 
                         composable("onboarding") {
                             OnBoardingScreen(navController = navController)
+                        }
+
+                        composable("welcome") {
+                            WelcomeScreen(navController = navController)
                         }
 
                         composable("login") {
