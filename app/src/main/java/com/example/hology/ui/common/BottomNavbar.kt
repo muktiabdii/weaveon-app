@@ -52,6 +52,8 @@ fun BottomNavBar(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            // nav item
             NavItem(
                 icon = R.drawable.ic_home,
                 label = "home",

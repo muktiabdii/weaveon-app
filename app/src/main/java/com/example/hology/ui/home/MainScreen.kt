@@ -16,6 +16,7 @@ fun MainScreen() {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
 
+    // initiate BottomNavBar
     Scaffold(
         bottomBar = {
             if (currentRoute in listOf("home", "report", "profile")) {
