@@ -72,7 +72,7 @@ fun SplashScreen(
             // kalau sudah onboarding dan sudah login
             else {
                 viewModel.loadUser(userUid!!)
-                navController.navigate("home") {
+                navController.navigate("main") {
                     popUpTo("splash") { inclusive = true }
                 }
             }

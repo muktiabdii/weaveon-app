@@ -11,8 +11,8 @@ import androidx.navigation.NavController
 import com.example.hology.ui.common.BottomNavBar
 
 @Composable
-fun HomeScreen() {
+fun ReportScreen() {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Ini Home Screen")
+        Text(text = "Ini report Screen")
     }
 }

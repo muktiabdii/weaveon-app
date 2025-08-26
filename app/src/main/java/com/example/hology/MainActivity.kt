@@ -22,6 +22,9 @@ import com.example.hology.ui.auth.ForgotPasswordScreen
 import com.example.hology.ui.auth.LoginScreen
 import com.example.hology.ui.auth.RegisterScreen
 import com.example.hology.ui.home.HomeScreen
+import com.example.hology.ui.home.MainScreen
+import com.example.hology.ui.home.ProfileScreen
+import com.example.hology.ui.home.ReportScreen
 import com.example.hology.ui.onboarding.OnBoardingScreen
 import com.example.hology.ui.onboarding.WelcomeScreen
 import com.example.hology.ui.splash.SplashScreen
@@ -78,8 +81,8 @@ class MainActivity : ComponentActivity() {
                             ForgotPasswordScreen(viewModel = authViewModel, navController = navController)
                         }
 
-                        composable("home") {
-                            HomeScreen()
+                        composable("main") {
+                            MainScreen()
                         }
                     }
                 }
