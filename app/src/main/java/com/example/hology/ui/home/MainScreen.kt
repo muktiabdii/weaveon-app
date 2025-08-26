@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hology.ui.common.BottomNavBar
+import com.example.hology.ui.profile.ProfileScreen
 
 @Composable
 fun MainScreen() {
