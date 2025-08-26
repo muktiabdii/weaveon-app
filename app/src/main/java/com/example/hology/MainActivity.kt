@@ -35,13 +35,15 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             HologyTheme {
 
-                // insiate auth
+                // insiate user
                 val userRepo = UserRepositoryImpl(PreferencesManager(this))
                 val userUseCase = UserUseCase(userRepo)
 
+                // insiate on boarding
                 val onBoardingUseCase = OnBoardingUseCase(PreferencesManager(this))
                 val splashViewModel: SplashViewModel = viewModel(factory = SplashViewModel.Factory(userUseCase, onBoardingUseCase))
 
+                // insiate auth
                 val authRepo = AuthRepositoryImpl()
                 val authUseCase = AuthUseCase(authRepo)
                 val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(authUseCase, userUseCase))
