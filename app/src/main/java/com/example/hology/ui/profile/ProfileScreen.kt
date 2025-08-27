@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.hology.ui.common.ProfileHeader
 import com.example.hology.ui.common.SettingsCard
 import com.example.hology.ui.common.SettingsItem
@@ -31,7 +32,8 @@ import com.example.hology.R
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: UserViewModel,
-    navController: NavController
+    navController: NavController,
+    rootNavController: NavController
 ) {
 
     val scrollState = rememberScrollState()
@@ -78,7 +80,11 @@ fun ProfileScreen(
                     SettingsItem(
                         icon = painterResource(id = R.drawable.ic_lock_2),
                         title = "Ganti Kata Sandi",
-                        onClick = { navController.navigate("forgot_password") }
+                        onClick = {
+                            rootNavController.navigate("forgot-password") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
                     )
                 }
 
@@ -97,13 +103,23 @@ fun ProfileScreen(
                     SettingsItem(
                         icon = painterResource(id = R.drawable.ic_sign_out),
                         title = "Keluar",
-                        onClick = {  }
+                        onClick = {
+                            viewModel.logout()
+                            rootNavController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
                     )
                     Divider(modifier = Modifier.background(Primary04))
                     SettingsItem(
                         icon = painterResource(id = R.drawable.ic_trash),
                         title = "Hapus Akun",
-                        onClick = {  }
+                        onClick = {
+                            viewModel.deleteAccount()
+                            rootNavController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
                     )
                 }
 

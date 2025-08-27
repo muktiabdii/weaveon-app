@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -17,13 +18,14 @@ import com.example.hology.domain.usecase.AuthUseCase
 import com.example.hology.domain.usecase.UserUseCase
 import com.example.hology.ui.auth.AuthViewModel
 import com.example.hology.ui.auth.ForgotPasswordScreen
+import com.example.hology.ui.auth.LoginScreen
 import com.example.hology.ui.common.BottomNavBar
 import com.example.hology.ui.profile.EditProfileScreen
 import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
 
 @Composable
-fun MainScreen() {
+fun MainScreen(rootNavController: NavController) {
     val navController = rememberNavController()
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
@@ -34,11 +36,6 @@ fun MainScreen() {
     val userRepo = UserRepositoryImpl(PreferencesManager(context))
     val userUseCase = UserUseCase(userRepo)
     val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory(userUseCase))
-
-    // insiate auth
-    val authRepo = AuthRepositoryImpl()
-    val authUseCase = AuthUseCase(authRepo)
-    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(authUseCase, userUseCase))
 
     // initiate BottomNavBar
     Scaffold(
@@ -62,15 +59,11 @@ fun MainScreen() {
             }
 
             composable("profile") {
-                ProfileScreen(viewModel = userViewModel, navController = navController)
+                ProfileScreen(viewModel = userViewModel, navController = navController, rootNavController = rootNavController)
             }
 
             composable("edit_profile") {
                 EditProfileScreen(navController = navController, viewModel = userViewModel)
-            }
-
-            composable("forgot_password") {
-                ForgotPasswordScreen(viewModel = authViewModel, navController = navController)
             }
         }
     }

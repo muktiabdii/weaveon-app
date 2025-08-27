@@ -21,8 +21,18 @@ class UserUseCase(private val userRepository: UserRepository) {
         return userRepository.getUserUidFlow()
     }
 
+    // function logout
+    suspend fun logout() {
+        userRepository.logout()
+    }
+
     // function untuk edit profile
     suspend fun editProfile(uid: String, name: String, email: String): Boolean {
         return userRepository.editProfile(uid, name, email)
+    }
+
+    // function untuk hapus akun
+    suspend fun deleteAccount(uid: String) {
+        userRepository.deleteAccount(uid)
     }
 }

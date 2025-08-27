@@ -11,6 +11,7 @@ import kotlinx.coroutines.tasks.await
 class UserRepositoryImpl(private val preferencesManager: PreferencesManager) : UserRepository {
 
     private val database = FirebaseProvider.database
+    private val auth = FirebaseProvider.auth
 
     // function untuk mendapatkan user dari remote
     override suspend fun getUserFromRemote(uid: String): User? {
@@ -30,7 +31,7 @@ class UserRepositoryImpl(private val preferencesManager: PreferencesManager) : U
     }
 
     // function untuk menghapus user dari cache
-    override suspend fun clearUser() {
+    override suspend fun logout() {
         preferencesManager.clearUser()
         UserData.clear()
     }
@@ -55,6 +56,25 @@ class UserRepositoryImpl(private val preferencesManager: PreferencesManager) : U
             return true
         }
 
+        catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+
+    // function untuk hapus akun
+    override suspend fun deleteAccount(uid: String) {
+        try {
+            // hapus user dari firebase
+            auth.currentUser?.delete()?.await()
+            database.child("users").child(uid).removeValue().await()
+
+            // hapus user dari datastore
+            preferencesManager.clearUser()
+
+            // hapus user dari cache
+            UserData.clear()
+        }
         catch (e: Exception) {
             e.printStackTrace()
             throw e
