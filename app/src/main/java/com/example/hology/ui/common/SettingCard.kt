@@ -1,5 +1,6 @@
 package com.example.hology.ui.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,7 +58,8 @@ fun SettingsItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

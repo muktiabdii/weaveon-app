@@ -20,4 +20,9 @@ class UserUseCase(private val userRepository: UserRepository) {
     fun getUserUidFlow(): Flow<String?> {
         return userRepository.getUserUidFlow()
     }
+
+    // function untuk edit profile
+    suspend fun editProfile(uid: String, name: String, email: String): Boolean {
+        return userRepository.editProfile(uid, name, email)
+    }
 }

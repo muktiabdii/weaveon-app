@@ -8,4 +8,5 @@ interface UserRepository {
     suspend fun saveUserToCache(uid: String, name: String, email: String)
     fun getUserUidFlow(): Flow<String?>
     suspend fun clearUser()
+    suspend fun editProfile(uid: String, name: String, email: String): Boolean
 }

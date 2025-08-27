@@ -62,7 +62,7 @@ fun ProfileHeader(
                 modifier = Modifier
                     .size(100.dp)
                     .clip(CircleShape)
-                    .background(Color.Red),
+                    .background(NeutralBlack),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

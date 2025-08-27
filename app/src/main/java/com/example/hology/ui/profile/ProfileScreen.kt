@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -16,6 +18,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.hology.ui.common.ProfileHeader
 import com.example.hology.ui.common.SettingsCard
 import com.example.hology.ui.common.SettingsItem
@@ -25,9 +28,14 @@ import com.example.hology.ui.theme.Primary06
 import com.example.hology.R
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    viewModel: UserViewModel,
+    navController: NavController
+) {
 
     val scrollState = rememberScrollState()
+    val userState by viewModel.userState.collectAsState()
 
     Scaffold(
     ) { innerPadding ->
@@ -41,8 +49,8 @@ fun ProfileScreen() {
 
             // header
             ProfileHeader(
-                username = "Username",
-                email = "email@gmail.com"
+                username = userState.name,
+                email = userState.email
             )
             Column(
                 modifier = Modifier
@@ -64,13 +72,13 @@ fun ProfileScreen() {
                     SettingsItem(
                         icon = painterResource(id = R.drawable.ic_pencil),
                         title = "Edit Profil",
-                        onClick = {  }
+                        onClick = { navController.navigate("edit_profile") }
                     )
                     Divider(modifier = Modifier.background(Primary04))
                     SettingsItem(
                         icon = painterResource(id = R.drawable.ic_lock_2),
                         title = "Ganti Kata Sandi",
-                        onClick = {  }
+                        onClick = { navController.navigate("forgot_password") }
                     )
                 }
 

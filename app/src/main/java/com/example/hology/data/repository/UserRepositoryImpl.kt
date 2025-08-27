@@ -34,4 +34,30 @@ class UserRepositoryImpl(private val preferencesManager: PreferencesManager) : U
         preferencesManager.clearUser()
         UserData.clear()
     }
+
+    // function untuk edit profile
+    override suspend fun editProfile(uid: String, name: String, email: String): Boolean {
+        try {
+
+            // update ke firebase
+            val userUpdates = hashMapOf<String, Any>(
+                "uid" to uid,
+                "name" to name,
+                "email" to email
+            )
+            database.child("users").child(uid).updateChildren(userUpdates).await()
+
+            // update di datastore
+            preferencesManager.saveUser(uid, name, email)
+
+            // update di cache
+            UserData.set(uid, name, email)
+            return true
+        }
+
+        catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
 }
