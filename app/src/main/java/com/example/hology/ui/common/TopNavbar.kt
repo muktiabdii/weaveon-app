@@ -26,22 +26,16 @@ fun TopNavbar(
         shadowElevation = 4.dp,
         color = Color(0xFFFEFEFE)
     ) {
-        TopAppBar(
+        CenterAlignedTopAppBar(
             title = {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = title,
-                        fontSize = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                        color = Secondary09,
-                        textAlign = TextAlign.Center
-                    )
-                }
+                Text(
+                    text = title,
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                    color = Secondary09,
+                    textAlign = TextAlign.Center
+                )
             },
-            modifier = Modifier.fillMaxWidth(),
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
@@ -52,7 +46,7 @@ fun TopNavbar(
                     )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color.Transparent
             )
         )

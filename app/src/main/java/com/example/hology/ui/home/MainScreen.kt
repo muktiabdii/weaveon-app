@@ -20,6 +20,9 @@ import com.example.hology.ui.auth.AuthViewModel
 import com.example.hology.ui.auth.ForgotPasswordScreen
 import com.example.hology.ui.auth.LoginScreen
 import com.example.hology.ui.common.BottomNavBar
+import com.example.hology.ui.exercise.ExerciseActivityScreen
+import com.example.hology.ui.exercise.ExerciseDetailScreen
+import com.example.hology.ui.exercise.ExerciseScreen
 import com.example.hology.ui.profile.EditProfileScreen
 import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
@@ -51,7 +54,7 @@ fun MainScreen(rootNavController: NavController) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home") {
-                HomeScreen()
+                HomeScreen(navController = navController)
             }
 
             composable("report") {
@@ -64,6 +67,25 @@ fun MainScreen(rootNavController: NavController) {
 
             composable("edit_profile") {
                 EditProfileScreen(navController = navController, viewModel = userViewModel)
+            }
+
+            composable("exercise") {
+                ExerciseScreen(navController = navController)
+            }
+
+            composable("exercise") {
+                ExerciseScreen(navController = navController)
+            }
+
+            composable("exercise_detail/{exerciseId}") { backStackEntry ->
+                val exerciseId = backStackEntry.arguments?.getString("exerciseId") ?: ""
+                ExerciseDetailScreen(navController, exerciseId)
+            }
+
+            composable("exercise_activity/{exerciseId}/{activityId}") { backStackEntry ->
+                val exerciseId = backStackEntry.arguments?.getString("exerciseId") ?: ""
+                val activityId = backStackEntry.arguments?.getString("activityId") ?: ""
+                ExerciseActivityScreen(navController, exerciseId, activityId)
             }
         }
     }

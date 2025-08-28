@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.hology.R
+import com.example.hology.cache.exerciseList
 import com.example.hology.ui.common.ActionButton
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralWhite
@@ -34,13 +35,41 @@ import com.example.hology.ui.theme.Secondary08
 import com.example.hology.ui.theme.Secondary09
 
 @Composable
-fun ActivityDetail(
-    navController: NavController
+fun ExerciseActivityScreen(
+    navController: NavController,
+    exerciseId: String,
+    activityId: String
 ) {
 
     val scrollState = rememberScrollState()
     var showUploadDialog by remember { mutableStateOf(false) }
     var selectedFeedback by remember { mutableStateOf<String?>(null) }
+
+    val activity = exerciseList.find { it.id == exerciseId }?.activities?.find { it.id == activityId }
+
+    val key = "${exerciseId}_${activity?.id}"
+    val exerciseImage = mapOf(
+        "1_C1" to R.drawable.foto_exercise,
+        "1_C2" to R.drawable.foto_exercise_2,
+        "1_C3" to R.drawable.foto_exercise_3,
+        "2_C1" to R.drawable.foto_exercise,
+        "2_C2" to R.drawable.foto_exercise_2,
+        "2_C3" to R.drawable.foto_exercise_3,
+        "3_C1" to R.drawable.foto_exercise,
+        "3_C2" to R.drawable.foto_exercise_2,
+        "3_C3" to R.drawable.foto_exercise_3,
+        "4_C1" to R.drawable.foto_exercise,
+        "4_C2" to R.drawable.foto_exercise_2,
+        "4_C3" to R.drawable.foto_exercise_3,
+        "5_C1" to R.drawable.foto_exercise,
+        "5_C2" to R.drawable.foto_exercise_2,
+        "5_C3" to R.drawable.foto_exercise_3,
+        "6_C1" to R.drawable.foto_exercise,
+        "6_C2" to R.drawable.foto_exercise_2,
+        "6_C3" to R.drawable.foto_exercise_3,
+    )
+
+    val imageResource = exerciseImage[key] ?: R.drawable.foto_exercise
 
     Scaffold(
         topBar = {
@@ -59,7 +88,7 @@ fun ActivityDetail(
 
             // header
             Image(
-                painter = painterResource(id = R.drawable.header_activity_detail),
+                painter = painterResource(id = imageResource),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -79,7 +108,7 @@ fun ActivityDetail(
                 shape = RoundedCornerShape(50.dp),
             ) {
                 Text(
-                    text = "Permainan Meniru Suara Hewan",
+                    text = activity?.title ?: "",
                     modifier = Modifier
                         .padding(horizontal = 40.dp, vertical = 8.dp),
                     color = Primary00,
@@ -154,7 +183,7 @@ fun ActivityDetail(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "Ayo ajak anak bermain dengan mainan hewan seperti boneka atau mobil binatang! Tiru bersama suara hewan-hewan tersebut dan ajak anak menirukannya sambil menyebutkan nama hewan dan menunjuk bonekanya.",
+                                text = activity?.description ?: "",
                                 fontSize = 14.sp,
                                 color = Secondary09,
                                 lineHeight = 20.sp,
@@ -190,7 +219,7 @@ fun ActivityDetail(
 
                             // goal description
                             Text(
-                                text = "Kegiatan ini bisa mendorong anak mengekspresikan suara dan mengurangi kontak dua arah",
+                                text = activity?.goal ?: "",
                                 fontSize = 13.sp,
                                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
                                 color = NeutralWhite,
@@ -232,7 +261,7 @@ fun ActivityDetail(
                             )
 
                             Text(
-                                text = "Mulai dari hewan favorit anak, beri pujian saat anak bisa hasil dan buat suara atau menempelkan kartu hewan setelah menutukannya.",
+                                text = activity?.tips ?: "",
                                 fontSize = 13.sp,
                                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
                                 color = Secondary09,

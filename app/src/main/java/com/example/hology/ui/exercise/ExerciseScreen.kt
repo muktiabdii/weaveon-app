@@ -61,7 +61,7 @@ fun ExerciseScreen(
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                        verticalArrangement = Arrangement.spacedBy(11.dp)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.lego_3d),
@@ -76,7 +76,7 @@ fun ExerciseScreen(
                                 color = Secondary09,
                                 fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                                 textAlign = TextAlign.Center,
-                                fontSize = 14.sp,
+                                fontSize = 16.sp,
                                 lineHeight = 20.sp
                             ),
                             modifier = Modifier.padding(horizontal = 16.dp)
@@ -89,7 +89,7 @@ fun ExerciseScreen(
                                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
                                 fontSize = 12.sp,
                                 textAlign = TextAlign.Center,
-                                lineHeight = 18.sp
+                                lineHeight = 14.sp
                             ),
                             modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
                         )
@@ -111,13 +111,17 @@ fun ExerciseScreen(
                             ExerciseCard(
                                 title = "Komunikasi",
                                 modifier = Modifier.weight(1f),
-                                onItemClick = {  }
+                                onItemClick = {
+                                    navController.navigate("exercise_detail/1")
+                                }
                             )
 
                             ExerciseCard(
                                 title = "Interaksi Sosial",
                                 modifier = Modifier.weight(1f),
-                                onItemClick = {  }
+                                onItemClick = {
+                                    navController.navigate("exercise_detail/2")
+                                }
                             )
                         }
 
@@ -129,13 +133,17 @@ fun ExerciseScreen(
                             ExerciseCard(
                                 title = "Perilaku Berulang",
                                 modifier = Modifier.weight(1f),
-                                onItemClick = {  }
+                                onItemClick = {
+                                    navController.navigate("exercise_detail/3")
+                                }
                             )
 
                             ExerciseCard(
                                 title = "Kognitif",
                                 modifier = Modifier.weight(1f),
-                                onItemClick = {  }
+                                onItemClick = {
+                                    navController.navigate("exercise_detail/4")
+                                }
                             )
                         }
 
@@ -147,13 +155,17 @@ fun ExerciseScreen(
                             ExerciseCard(
                                 title = "Sensorik",
                                 modifier = Modifier.weight(1f),
-                                onItemClick = {  }
+                                onItemClick = {
+                                    navController.navigate("exercise_detail/5")
+                                }
                             )
 
                             ExerciseCard(
                                 title = "Regulasi Emosi",
                                 modifier = Modifier.weight(1f),
-                                onItemClick = {  }
+                                onItemClick = {
+                                    navController.navigate("exercise_detail/6")
+                                }
                             )
                         }
 

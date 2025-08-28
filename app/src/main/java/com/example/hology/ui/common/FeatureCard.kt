@@ -2,6 +2,7 @@ package com.example.hology.ui.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,11 +37,13 @@ fun FeatureCard(
     title: String,
     description: String,
     icon: Int,
+    onClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
             .width(150.dp)
             .wrapContentHeight()
+            .clickable(onClick = onClick)
     ) {
 
         // gambar

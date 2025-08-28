@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import com.example.hology.R
 import com.example.hology.domain.model.ExerciseItem
 import com.example.hology.ui.common.ExerciseCarousel
@@ -36,7 +37,9 @@ import com.example.hology.ui.theme.Secondary07
 import com.example.hology.ui.theme.Secondary09
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavController
+) {
     val scrollState = rememberScrollState()
 
     val exerciseItems = listOf(
@@ -205,6 +208,9 @@ fun HomeScreen() {
                         title = "Wevy",
                         description = "Ungkap potensi anak lewat rekaman aktivitas",
                         icon = R.drawable.wevy_home,
+                        onClick = {
+                            navController.navigate("wevy")
+                        }
                     )
 
                     Spacer(modifier = Modifier.width(4.dp))
@@ -214,6 +220,9 @@ fun HomeScreen() {
                         title = "Exercise",
                         description = "Kumpulan permainan untuk belajar sambil bermain",
                         icon = R.drawable.brain_3d_2,
+                        onClick = {
+                            navController.navigate("exercise")
+                        }
                     )
                 }
 
