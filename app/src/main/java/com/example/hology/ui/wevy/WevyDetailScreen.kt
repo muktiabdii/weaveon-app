@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -36,17 +37,6 @@ fun WevyDetailScreen(
 ) {
 
     val wevy = wevyList.find { it.id == wevyId }
-
-    val wevyImage = mapOf(
-        "Logika & Pola" to R.drawable.foto_exercise,
-        "Seni & Visual" to R.drawable.foto_exercise_2,
-        "Verbal" to R.drawable.foto_exercise_3,
-        "Sosial & Imajinasi" to R.drawable.foto_exercise_4,
-        "Musik & Auditori" to R.drawable.foto_exercise_5,
-        "Motorik & Gerak" to R.drawable.foto_exercise
-    )
-
-    val imageResource = wevyImage[wevy?.title] ?: R.drawable.foto_exercise
 
     Scaffold(
         topBar = {
@@ -79,12 +69,13 @@ fun WevyDetailScreen(
 
                     // header
                     Image(
-                        painter = painterResource(id = imageResource),
+                        painter = painterResource(id = wevy?.image ?: R.drawable.foto_logika_pola),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(220.dp),
-                        contentScale = ContentScale.Crop
+                            .height(220.dp)
+                            .clip(RoundedCornerShape(bottomStart = 100.dp, bottomEnd = 100.dp)),
+                        contentScale = ContentScale.Crop,
                     )
 
                     Box(
@@ -165,7 +156,7 @@ fun WevyDetailScreen(
                                 number = activity.id,
                                 title = activity.title,
                                 description = activity.description,
-                                onItemClick = { navController.navigate("wevy_activity") }
+                                onItemClick = { navController.navigate("wevy_activity/$wevyId/${activity.id}") }
                             )
                         }
                     }

@@ -12,6 +12,7 @@ data class WevyActivity(
 data class Wevy(
     val id: String,
     val title: String,
+    val image: Int,
     val description: String,
     val activities: List<WevyActivity>
 )

@@ -2,11 +2,13 @@ package com.example.hology.cache
 
 import com.example.hology.domain.model.Wevy
 import com.example.hology.domain.model.WevyActivity
+import com.example.hology.R
 
 val wevyList = listOf(
     Wevy(
         id = "1",
         title = "Logika & Pola",
+        image = R.drawable.foto_logika_pola,
         description = "Latihan komunikasi membantu anak belajar mengekspresikan diri, memahami ucapan, dan merespons orang lain.",
         activities = listOf(
             WevyActivity(
@@ -58,6 +60,7 @@ val wevyList = listOf(
     Wevy(
         id = "2",
         title = "Seni & Visual",
+        image = R.drawable.foto_seni_visual,
         description = "Aktivitas seni dan visual membantu anak mengekspresikan diri, mengenali warna, bentuk, dan melatih kemampuan motorik halusnya.",
         activities = listOf(
             WevyActivity(
@@ -110,6 +113,7 @@ val wevyList = listOf(
     Wevy(
         id = "3",
         title = "Verbal",
+        image = R.drawable.foto_verbal,
         description = "Aktivitas verbal akan mengajak si kecil untuk bercerita, memperkaya kosakata, dan mengungkapkan ide dengan lebih percaya diri. membantu anak mengekspresikan diri, mengenali warna, bentuk, dan melatih kemampuan motorik halusnya.",
         activities = listOf(
             WevyActivity(
@@ -162,6 +166,7 @@ val wevyList = listOf(
     Wevy(
         id = "4",
         title = "Sosial & Imajinasi",
+        image = R.drawable.foto_social_imajinasi,
         description = "Bermain bersama teman itu seru! Di sini, si kecil akan belajar berinteraksi, memahami perasaan orang lain, dan menggunakan imajinasinya untuk bermain peran.",
         activities = listOf(
             WevyActivity(
@@ -214,6 +219,7 @@ val wevyList = listOf(
     Wevy(
         id = "5",
         title = "Musik & Auditori",
+        image = R.drawable.foto_musik_auditori,
         description = "Dunia ini penuh dengan suara! Mari kita ajak si kecil untuk mendengarkan dengan saksama, mengenali berbagai bunyi, dan menciptakan irama yang menyenangkan.",
         activities = listOf(
             WevyActivity(
@@ -266,6 +272,7 @@ val wevyList = listOf(
     Wevy(
         id = "6",
         title = "Motorik & Gerak",
+        image = R.drawable.foto_motorik_gerak,
         description = "Ayo bergerak! Aktivitas di sini akan membantu si kecil melatih otot-otot kecil di tangannya (motorik halus) dan juga otot-otot besar di tubuhnya (motorik kasar) agar tumbuh kuat dan terampil.",
         activities = listOf(
             WevyActivity(

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hology.R
+import com.example.hology.cache.wevyList
 import com.example.hology.ui.common.ActionButton
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralBlack
@@ -38,8 +39,13 @@ import com.example.hology.ui.theme.Secondary10
 
 @Composable
 fun WevyActivityScreen(
-    navController: NavController
+    navController: NavController,
+    wevyId: String,
+    activityId: String
 ) {
+
+    val activity = wevyList.find { it.id == wevyId }?.activities?.find { it.id == activityId }
+
     Scaffold(
         topBar = {
             TopNavbar(
@@ -75,7 +81,7 @@ fun WevyActivityScreen(
                 )
 
                 Text(
-                    text = "Meronce Manik-Manik",
+                    text = activity?.title ?: "",
                     fontSize = 20.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                     color = Color.White,
@@ -93,7 +99,7 @@ fun WevyActivityScreen(
             ) {
                 // Description Text
                 Text(
-                    text = "Lihat manik-manik warna-warni ini! Ayo kita buat gelang atau kalung yang cantik untuk dipakai.",
+                    text = activity?.description ?: "",
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_regular)),
                     color = Color.Black,
@@ -144,7 +150,7 @@ fun WevyActivityScreen(
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Text(
-                        text = "Kegiatan ini melatih motorik halus, koordinasi mata dan tangan, serta melatih kesabaran dan fokus.",
+                        text = activity?.goal ?: "",
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = NeutralWhite,
@@ -181,22 +187,12 @@ fun WevyActivityScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Step Items
-                val steps = listOf(
-                    "Siapkan manik-manik dengan lubang besar dan tali yang ujungnya kaku (misal: tali sepatu).",
-                    "Contohkan cara memasukkan tali ke dalam lubang manik-manik.",
-                    "Rekam di tempat terang dan tenang untuk mengamati ketrampilan si anak.",
-                    "Rekam selama 5-10 menit.",
-                    "Biarkan anak mencoba meronce manik-maniknya sendiri.",
-                    "Bantu jika anak kesulitan, dan puji setiap manik yang berhasil dimasukkan."
-                )
-
-                steps.forEachIndexed { index, step ->
+                activity?.steps?.forEachIndexed { index, step ->
                     StepItem(
                         number = index + 1,
                         text = step
                     )
-                    if (index < steps.size - 1) {
+                    if (index < activity.steps.size - 1) {
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
@@ -232,7 +228,7 @@ fun WevyActivityScreen(
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
                     Text(
-                        text = "Gunakan nampan agar manik-manik tidak mudah berantakan dan menggelinding jauh.",
+                        text = activity?.tips ?: "",
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_regular)),
                         color = Secondary09,
