@@ -26,6 +26,8 @@ import com.example.hology.ui.exercise.ExerciseScreen
 import com.example.hology.ui.profile.EditProfileScreen
 import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
+import com.example.hology.ui.wevy.WevyActivityScreen
+import com.example.hology.ui.wevy.WevyDetailScreen
 import com.example.hology.ui.wevy.WevyScreen
 
 @Composable
@@ -91,6 +93,15 @@ fun MainScreen(rootNavController: NavController) {
 
             composable("wevy") {
                 WevyScreen(navController = navController)
+            }
+
+            composable ("wevy_detail/{wevyId}") { backStackEntry ->
+                val wevyId = backStackEntry.arguments?.getString("wevyId") ?: ""
+                WevyDetailScreen(navController, wevyId)
+            }
+
+            composable("wevy_activity") {
+                WevyActivityScreen(navController = navController)
             }
         }
     }

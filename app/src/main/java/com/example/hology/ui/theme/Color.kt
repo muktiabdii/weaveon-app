@@ -36,6 +36,7 @@ val Secondary06 = Color(0xFFC9613B)
 val Secondary07 = Color(0xFFA74B2A)
 val Secondary08 = Color(0xFF85371B)
 val Secondary09 = Color(0xFF632610)
+val Secondary10 = Color(0xFF343523)
 
 val Green = Color(0xFF48BE43)
 val Red = Color(0xFFFF0000)

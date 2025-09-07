@@ -1,4 +1,4 @@
-package com.example.hology.ui.exercise
+package com.example.hology.ui.wevy
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,6 +9,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hology.R
 import com.example.hology.cache.exerciseList
+import com.example.hology.cache.wevyList
 import com.example.hology.ui.common.TicketCard
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralWhite
@@ -27,28 +30,28 @@ import com.example.hology.ui.theme.Primary08
 import com.example.hology.ui.theme.Secondary09
 
 @Composable
-fun ExerciseDetailScreen(
+fun WevyDetailScreen(
     navController: NavController,
-    exerciseId: String
+    wevyId: String
 ) {
 
-    val exercise = exerciseList.find { it.id == exerciseId }
+    val wevy = wevyList.find { it.id == wevyId }
 
-    val exerciseImage = mapOf(
-        "Komunikasi" to R.drawable.foto_exercise,
-        "Interaksi Sosial" to R.drawable.foto_exercise_2,
-        "Perilaku Berulang" to R.drawable.foto_exercise_3,
-        "Sensorik & Motorik" to R.drawable.foto_exercise_4,
-        "Kognitif" to R.drawable.foto_exercise_5,
-        "Regulasi Emosi" to R.drawable.foto_exercise
+    val wevyImage = mapOf(
+        "Logika & Pola" to R.drawable.foto_exercise,
+        "Seni & Visual" to R.drawable.foto_exercise_2,
+        "Verbal" to R.drawable.foto_exercise_3,
+        "Sosial & Imajinasi" to R.drawable.foto_exercise_4,
+        "Musik & Auditori" to R.drawable.foto_exercise_5,
+        "Motorik & Gerak" to R.drawable.foto_exercise
     )
 
-    val imageResource = exerciseImage[exercise?.title] ?: R.drawable.foto_exercise
+    val imageResource = wevyImage[wevy?.title] ?: R.drawable.foto_exercise
 
     Scaffold(
         topBar = {
             TopNavbar(
-                title = "Exercise",
+                title = "Wevy",
                 navController = navController
             )
         }
@@ -92,11 +95,19 @@ fun ExerciseDetailScreen(
                     ) {
                         Box(
                             modifier = Modifier
-                                .background(Secondary09, RoundedCornerShape(20.dp))
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            Color(0xFFFFA686),
+                                            Color(0xFFC5C784)
+                                        )
+                                    ),
+                                    RoundedCornerShape(20.dp)
+                                )
                                 .padding(horizontal = 24.dp, vertical = 8.dp)
                         ) {
                             Text(
-                                text = exercise?.title ?: "",
+                                text = wevy?.title ?: "",
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     color = Primary00,
                                     fontFamily = FontFamily(Font(R.font.poppins_semibold)),
@@ -117,7 +128,7 @@ fun ExerciseDetailScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = exercise?.description ?: "",
+                            text = wevy?.description ?: "",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Secondary09,
                                 fontFamily = FontFamily(Font(R.font.poppins_semibold)),
@@ -142,21 +153,19 @@ fun ExerciseDetailScreen(
 
                 item {
 
-                    // exercise cards
+                    // wevy cards
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        exercise?.activities?.forEach { activity ->
+                        wevy?.activities?.forEach { activity ->
                             TicketCard(
                                 number = activity.id,
                                 title = activity.title,
                                 description = activity.description,
-                                onItemClick = {
-                                    navController.navigate("exercise_activity/$exerciseId/${activity.id}")
-                                }
+                                onItemClick = { navController.navigate("wevy_activity") }
                             )
                         }
                     }

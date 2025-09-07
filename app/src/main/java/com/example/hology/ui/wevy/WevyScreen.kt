@@ -108,12 +108,47 @@ fun WevyScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
-                        WevyCard(text = "Logika & Pola")
-                        WevyCard(text = "Seni & Visual")
-                        WevyCard(text = "Verbal")
-                        WevyCard(text = "Sosial & Imajinasi")
-                        WevyCard(text = "Musik & Auditori")
-                        WevyCard(text = "Motorik & Gerak")
+                        WevyCard(
+                            text = "Logika & Pola",
+                            onClick = {
+                                navController.navigate("wevy_detail/1")
+                            }
+                        )
+
+                        WevyCard(
+                            text = "Seni & Visual",
+                            onClick = {
+                                navController.navigate("wevy_detail/2")
+                            }
+                        )
+
+                        WevyCard(
+                            text = "Verbal",
+                            onClick = {
+                                navController.navigate("wevy_detail/3")
+                            }
+                        )
+
+                        WevyCard(
+                            text = "Sosial & Imajinasi",
+                            onClick = {
+                                navController.navigate("wevy_detail/4")
+                            }
+                        )
+
+                        WevyCard(
+                            text = "Musik & Auditori",
+                            onClick = {
+                                navController.navigate("wevy_detail/5")
+                            }
+                        )
+
+                        WevyCard(
+                            text = "Motorik & Gerak",
+                            onClick = {
+                                navController.navigate("wevy_detail/6")
+                            }
+                        )
                     }
                 }
             }

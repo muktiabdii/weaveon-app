@@ -26,7 +26,7 @@ import com.example.hology.ui.theme.Secondary08
 import com.example.hology.ui.theme.Secondary09
 
 @Composable
-fun ExerciseTicketCard(
+fun TicketCard(
     number: String,
     title: String,
     description: String,

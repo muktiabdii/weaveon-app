@@ -31,6 +31,7 @@ import com.example.hology.ui.common.ActionButton
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.theme.Primary00
+import com.example.hology.ui.theme.Secondary05
 import com.example.hology.ui.theme.Secondary08
 import com.example.hology.ui.theme.Secondary09
 
@@ -320,13 +321,25 @@ fun ExerciseActivityScreen(
 
 
                     // upload Button
-                    ActionButton(
-                        text = "Unggah Dokumentasi",
-                        onClick = {  },
-                        modifier = Modifier.padding(bottom = 30.dp, start = 16.dp, end = 16.dp),
-                        enabled = true,
-                        isLoading = false
-                    )
+                    Button(
+                        onClick = { /* Handle button click */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Secondary05,
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(24.dp)
+                    ) {
+                        Text(
+                            text = "Unggah Dokumentasi",
+                            fontSize = 15.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium))
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }
