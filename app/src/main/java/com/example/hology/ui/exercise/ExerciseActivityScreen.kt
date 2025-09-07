@@ -48,30 +48,6 @@ fun ExerciseActivityScreen(
 
     val activity = exerciseList.find { it.id == exerciseId }?.activities?.find { it.id == activityId }
 
-    val key = "${exerciseId}_${activity?.id}"
-    val exerciseImage = mapOf(
-        "1_C1" to R.drawable.foto_exercise,
-        "1_C2" to R.drawable.foto_exercise_2,
-        "1_C3" to R.drawable.foto_exercise_3,
-        "2_C1" to R.drawable.foto_exercise,
-        "2_C2" to R.drawable.foto_exercise_2,
-        "2_C3" to R.drawable.foto_exercise_3,
-        "3_C1" to R.drawable.foto_exercise,
-        "3_C2" to R.drawable.foto_exercise_2,
-        "3_C3" to R.drawable.foto_exercise_3,
-        "4_C1" to R.drawable.foto_exercise,
-        "4_C2" to R.drawable.foto_exercise_2,
-        "4_C3" to R.drawable.foto_exercise_3,
-        "5_C1" to R.drawable.foto_exercise,
-        "5_C2" to R.drawable.foto_exercise_2,
-        "5_C3" to R.drawable.foto_exercise_3,
-        "6_C1" to R.drawable.foto_exercise,
-        "6_C2" to R.drawable.foto_exercise_2,
-        "6_C3" to R.drawable.foto_exercise_3,
-    )
-
-    val imageResource = exerciseImage[key] ?: R.drawable.foto_exercise
-
     Scaffold(
         topBar = {
             TopNavbar(
@@ -89,7 +65,7 @@ fun ExerciseActivityScreen(
 
             // header
             Image(
-                painter = painterResource(id = imageResource),
+                painter = painterResource(id = activity?.image ?: R.drawable.foto_kata_penting_lebihtolong),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -133,7 +109,6 @@ fun ExerciseActivityScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 6.dp, start = 30.dp, end = 30.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Box(
@@ -144,7 +119,7 @@ fun ExerciseActivityScreen(
                         Image(
                             painter = painterResource(id = R.drawable.bg_koala),
                             contentDescription = null,
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.FillBounds,
                             modifier = Modifier.fillMaxSize()
                         )
                         Column(
@@ -193,7 +168,7 @@ fun ExerciseActivityScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(27.dp))
 
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -229,6 +204,8 @@ fun ExerciseActivityScreen(
                             )
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(14.dp))
 
                     // tips card
                     Card(
@@ -272,6 +249,8 @@ fun ExerciseActivityScreen(
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(39.dp))
+
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -300,6 +279,8 @@ fun ExerciseActivityScreen(
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(14.dp))
+
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -319,6 +300,7 @@ fun ExerciseActivityScreen(
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(39.dp))
 
                     // upload Button
                     Button(

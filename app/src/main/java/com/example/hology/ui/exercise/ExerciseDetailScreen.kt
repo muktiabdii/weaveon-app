@@ -34,17 +34,6 @@ fun ExerciseDetailScreen(
 
     val exercise = exerciseList.find { it.id == exerciseId }
 
-    val exerciseImage = mapOf(
-        "Komunikasi" to R.drawable.foto_exercise,
-        "Interaksi Sosial" to R.drawable.foto_exercise_2,
-        "Perilaku Berulang" to R.drawable.foto_exercise_3,
-        "Sensorik & Motorik" to R.drawable.foto_exercise_4,
-        "Kognitif" to R.drawable.foto_exercise_5,
-        "Regulasi Emosi" to R.drawable.foto_exercise
-    )
-
-    val imageResource = exerciseImage[exercise?.title] ?: R.drawable.foto_exercise
-
     Scaffold(
         topBar = {
             TopNavbar(
@@ -76,7 +65,7 @@ fun ExerciseDetailScreen(
 
                     // header
                     Image(
-                        painter = painterResource(id = imageResource),
+                        painter = painterResource(id = exercise?.image ?: R.drawable.foto_regulasi_emosi),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()

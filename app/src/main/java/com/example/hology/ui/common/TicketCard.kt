@@ -49,7 +49,7 @@ fun TicketCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -65,7 +65,7 @@ fun TicketCard(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Secondary09,
-                        fontSize = 27.sp
+                        fontSize = 27.sp,
                     ),
                     modifier = Modifier.align(Alignment.Center)
                 )

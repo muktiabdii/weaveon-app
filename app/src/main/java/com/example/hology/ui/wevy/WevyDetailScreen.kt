@@ -73,9 +73,8 @@ fun WevyDetailScreen(
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(220.dp)
-                            .clip(RoundedCornerShape(bottomStart = 100.dp, bottomEnd = 100.dp)),
-                        contentScale = ContentScale.Crop,
+                            .height(220.dp),
+                        contentScale = ContentScale.FillBounds,
                     )
 
                     Box(
