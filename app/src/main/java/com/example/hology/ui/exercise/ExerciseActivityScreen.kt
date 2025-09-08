@@ -1,5 +1,8 @@
 package com.example.hology.ui.exercise
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +33,7 @@ import com.example.hology.R
 import com.example.hology.cache.exerciseList
 import com.example.hology.ui.common.ActionButton
 import com.example.hology.ui.common.TopNavbar
+import com.example.hology.ui.common.UploadDialog
 import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.theme.Primary00
 import com.example.hology.ui.theme.Secondary05
@@ -39,14 +44,46 @@ import com.example.hology.ui.theme.Secondary09
 fun ExerciseActivityScreen(
     navController: NavController,
     exerciseId: String,
-    activityId: String
+    activityId: String,
+    viewModel: ExerciseViewModel
 ) {
 
     val scrollState = rememberScrollState()
     var showUploadDialog by remember { mutableStateOf(false) }
     var selectedFeedback by remember { mutableStateOf<String?>(null) }
 
+    val uploadedImageUrl by viewModel.imageUrl.collectAsState()
+    val isLoading by viewModel.loading.collectAsState()
+
     val activity = exerciseList.find { it.id == exerciseId }?.activities?.find { it.id == activityId }
+
+    // image picker launcher
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            // langsung upload setelah pilih gambar
+            viewModel.uploadImage(it)
+        }
+    }
+
+    if (showUploadDialog) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(3f),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            UploadDialog(
+                onDismiss = { showUploadDialog = false },
+                onUploadClick = { launcher.launch("image/*") },
+                onFeedbackSelected = { feedback -> selectedFeedback = feedback },
+                selectedFeedback = selectedFeedback,
+                uploadedImageUrl = uploadedImageUrl,
+                isLoading = isLoading
+            )
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -304,7 +341,7 @@ fun ExerciseActivityScreen(
 
                     // upload Button
                     Button(
-                        onClick = { /* Handle button click */ },
+                        onClick = { showUploadDialog = true },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(44.dp),

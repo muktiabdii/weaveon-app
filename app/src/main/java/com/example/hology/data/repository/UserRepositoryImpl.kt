@@ -2,7 +2,7 @@ package com.example.hology.data.repository
 
 import com.example.hology.cache.UserData
 import com.example.hology.data.datastore.PreferencesManager
-import com.example.hology.di.FirebaseProvider
+import com.example.hology.data.remote.firebase.FirebaseProvider
 import com.example.hology.domain.model.User
 import com.example.hology.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow

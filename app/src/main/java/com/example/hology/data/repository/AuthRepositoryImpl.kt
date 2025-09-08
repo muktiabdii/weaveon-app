@@ -1,6 +1,6 @@
 package com.example.hology.data.repository
 
-import com.example.hology.di.FirebaseProvider
+import com.example.hology.data.remote.firebase.FirebaseProvider
 import com.example.hology.domain.repository.AuthRepository
 import kotlinx.coroutines.tasks.await
 
