@@ -6,6 +6,7 @@ import com.example.hology.data.datastore.ExercisePreferencesManager
 import com.example.hology.data.remote.api.CloudinaryConfig
 import com.example.hology.data.remote.firebase.FirebaseProvider
 import com.example.hology.domain.model.CloudinaryResponse
+import com.example.hology.domain.model.ExerciseHistoryItem
 import com.example.hology.domain.model.ExerciseProgress
 import com.example.hology.domain.repository.ExerciseRepository
 import kotlinx.coroutines.flow.Flow
@@ -72,5 +73,41 @@ class ExerciseRepositoryImpl(
     // function get exercise done
     override fun getExerciseProgress(exerciseId: String): Flow<ExerciseProgress> {
         return preferences.getExerciseProgress(exerciseId)
+    }
+
+    // function get exercise history
+    override suspend fun getExerciseHistory(userId: String): Result<List<ExerciseHistoryItem>> {
+        return try {
+            val snapshot = database.child("users")
+                .child(userId)
+                .child("exercises")
+                .get()
+                .await()
+
+            val history = mutableListOf<ExerciseHistoryItem>()
+
+            for (exerciseSnapshot in snapshot.children) {
+                val exerciseId = exerciseSnapshot.key ?: continue
+                val activitiesSnapshot = exerciseSnapshot.child("activities")
+                for (activitySnapshot in activitiesSnapshot.children) {
+                    val activityId = activitySnapshot.key ?: continue
+                    val imageUrl = activitySnapshot.child("imageUrl").getValue(String::class.java) ?: ""
+                    val timestamp = activitySnapshot.child("timestamp").getValue(Long::class.java) ?: 0L
+
+                    history.add(
+                        ExerciseHistoryItem(
+                            exerciseId = exerciseId,
+                            activityId = activityId,
+                            imageUrl = imageUrl,
+                            timestamp = timestamp
+                        )
+                    )
+                }
+            }
+
+            Result.success(history)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

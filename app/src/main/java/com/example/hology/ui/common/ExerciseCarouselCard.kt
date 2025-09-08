@@ -15,12 +15,13 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.hology.R
-import com.example.hology.domain.model.ExerciseItem
+import com.example.hology.domain.model.ExerciseHistoryUi
 import com.example.hology.ui.theme.Secondary09
 
 @Composable
-fun ExerciseCarouselCard(exerciseItem: ExerciseItem, isActive: Boolean) {
+fun ExerciseCarouselCard(exerciseItem: ExerciseHistoryUi, isActive: Boolean) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,13 +35,10 @@ fun ExerciseCarouselCard(exerciseItem: ExerciseItem, isActive: Boolean) {
         ) {
 
             // image
-            Image(
-                painter = painterResource(id = exerciseItem.imageResId),
-                contentDescription = "Children playing",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFFFBFA9))
-                    .offset(y = (-5).dp),
+            AsyncImage(
+                model = exerciseItem.imageUrl,
+                contentDescription = "Exercise Image",
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
 
@@ -66,7 +64,7 @@ fun ExerciseCarouselCard(exerciseItem: ExerciseItem, isActive: Boolean) {
 
                         // title
                         Text(
-                            text = exerciseItem.title,
+                            text = exerciseItem.activityTitle,
                             fontSize = 13.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                             lineHeight = 16.sp,

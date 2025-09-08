@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.hology.R
-import com.example.hology.domain.model.ExerciseItem
+import com.example.hology.domain.model.ExerciseHistoryUi
 import com.example.hology.ui.theme.Primary09
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ExerciseCarousel(exerciseItems: List<ExerciseItem>) {
+fun ExerciseCarousel(exerciseItems: List<ExerciseHistoryUi>) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {

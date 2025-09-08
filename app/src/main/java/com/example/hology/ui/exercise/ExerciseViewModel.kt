@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hology.domain.model.CloudinaryResponse
+import com.example.hology.domain.model.Exercise
+import com.example.hology.domain.model.ExerciseHistoryUi
 import com.example.hology.domain.model.ExerciseProgress
 import com.example.hology.domain.usecase.ExerciseUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +36,10 @@ class ExerciseViewModel(private val exerciseUseCase: ExerciseUseCase) : ViewMode
 
     private val _exerciseProgress = MutableStateFlow<ExerciseProgress?>(null)
     val exerciseProgress: StateFlow<ExerciseProgress?> = _exerciseProgress.asStateFlow()
+
+    private val _history = MutableStateFlow<List<ExerciseHistoryUi>>(emptyList())
+    val history: StateFlow<List<ExerciseHistoryUi>> = _history
+
 
     // function upload image ke Cloudinary
     fun uploadImage(uri: Uri) {
@@ -72,6 +78,7 @@ class ExerciseViewModel(private val exerciseUseCase: ExerciseUseCase) : ViewMode
         }
     }
 
+    // function load exercise progress
     fun loadExerciseProgress(exerciseId: String) {
         viewModelScope.launch {
             exerciseUseCase.getExerciseProgress(exerciseId).collect { progress ->
@@ -79,6 +86,38 @@ class ExerciseViewModel(private val exerciseUseCase: ExerciseUseCase) : ViewMode
                 Log.d("ExerciseViewModel", "Exercise progress loaded: $progress")
             }
         }
+    }
+
+    // function load exercise history
+    fun loadExerciseHistory(userId: String, exerciseList: List<Exercise>) {
+        viewModelScope.launch {
+            val result = exerciseUseCase.getExerciseHistory(userId)
+            result.onSuccess { items ->
+                val mapped = items.map { item ->
+                    val exerciseTitle = exerciseList.find { it.id == item.exerciseId }?.title ?: item.exerciseId
+                    val activityTitle = exerciseList
+                        .find { it.id == item.exerciseId }
+                        ?.activities?.find { it.id == item.activityId }
+                        ?.title ?: item.activityId
+
+                    ExerciseHistoryUi(
+                        exerciseTitle = exerciseTitle,
+                        activityTitle = activityTitle,
+                        imageUrl = item.imageUrl,
+                        date = formatDate(item.timestamp)
+                    )
+                }
+                _history.value = mapped
+            }.onFailure {
+                Log.e("ExerciseViewModel", "Error loading exercise history", it)
+            }
+        }
+    }
+
+    // function date format
+    private fun formatDate(timestamp: Long): String {
+        val sdf = java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale("id", "ID"))
+        return sdf.format(java.util.Date(timestamp))
     }
 
     class Factory(private val exerciseUseCase: ExerciseUseCase) : ViewModelProvider.Factory {

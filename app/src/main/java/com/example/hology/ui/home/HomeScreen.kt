@@ -12,6 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,9 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.hology.R
-import com.example.hology.domain.model.ExerciseItem
+import com.example.hology.cache.UserData
+import com.example.hology.cache.exerciseList
 import com.example.hology.ui.common.ExerciseCarousel
 import com.example.hology.ui.common.FeatureCard
+import com.example.hology.ui.exercise.ExerciseViewModel
 import com.example.hology.ui.theme.NeutralBlack
 import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.theme.Primary09
@@ -38,42 +43,17 @@ import com.example.hology.ui.theme.Secondary09
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: ExerciseViewModel
 ) {
     val scrollState = rememberScrollState()
+    val history by viewModel.history.collectAsState()
+    val user = UserData
+    val exerciseList = exerciseList
 
-    val exerciseItems = listOf(
-        ExerciseItem(
-            id = 1,
-            title = "Permainan meniru suara hewan",
-            date = "13 Mei 2025",
-            imageResId = R.drawable.foto_exercise
-        ),
-        ExerciseItem(
-            id = 2,
-            title = "Bermain puzzle alfabet",
-            date = "10 Mei 2025",
-            imageResId = R.drawable.foto_exercise_2
-        ),
-        ExerciseItem(
-            id = 3,
-            title = "Bercerita dengan boneka",
-            date = "7 Mei 2025",
-            imageResId = R.drawable.foto_exercise_3
-        ),
-        ExerciseItem(
-            id = 4,
-            title = "Menggambar warna-warni",
-            date = "5 Mei 2025",
-            imageResId = R.drawable.foto_exercise_4
-        ),
-        ExerciseItem(
-            id = 5,
-            title = "Mengenal anggota tubuh",
-            date = "2 Mei 2025",
-            imageResId = R.drawable.foto_exercise_5
-        )
-    )
+    LaunchedEffect(Unit) {
+        viewModel.loadExerciseHistory(user.uid, exerciseList)
+    }
 
     Scaffold(
         containerColor = NeutralWhite
@@ -229,7 +209,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(35.dp))
 
                 // exercise carousel
-                ExerciseCarousel(exerciseItems = exerciseItems)
+                ExerciseCarousel(exerciseItems = history)
 
                 Spacer(modifier = Modifier.height(35.dp))
             }
