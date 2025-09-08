@@ -59,7 +59,7 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
 
     when (loginState) {
-        is State.Success -> {
+        is AuthState.Success -> {
             LaunchedEffect(Unit) {
                 navController.navigate("main") {
                     popUpTo("login") { inclusive = true }
@@ -69,8 +69,8 @@ fun LoginScreen(
             }
         }
 
-        is State.Error -> {
-            val message = (loginState as State.Error).message
+        is AuthState.Error -> {
+            val message = (loginState as AuthState.Error).message
             LaunchedEffect(message) {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 viewModel.resetLoginState()
@@ -217,7 +217,7 @@ fun LoginScreen(
                     ActionButton(
                         text = "Masuk",
                         onClick = { viewModel.login(email, password) },
-                        isLoading = loginState is State.Loading
+                        isLoading = loginState is AuthState.Loading
                     )
 
                     Spacer(modifier = modifier.height(12.dp))

@@ -11,18 +11,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.hology.data.datastore.PreferencesManager
-import com.example.hology.data.remote.api.CloudinaryConfig
+import com.example.hology.data.datastore.ExercisePreferencesManager
+import com.example.hology.data.datastore.UserPreferencesManager
 import com.example.hology.data.remote.api.CloudinaryService
-import com.example.hology.data.repository.AuthRepositoryImpl
 import com.example.hology.data.repository.ExerciseRepositoryImpl
 import com.example.hology.data.repository.UserRepositoryImpl
-import com.example.hology.domain.usecase.AuthUseCase
 import com.example.hology.domain.usecase.ExerciseUseCase
 import com.example.hology.domain.usecase.UserUseCase
-import com.example.hology.ui.auth.AuthViewModel
-import com.example.hology.ui.auth.ForgotPasswordScreen
-import com.example.hology.ui.auth.LoginScreen
 import com.example.hology.ui.common.BottomNavBar
 import com.example.hology.ui.exercise.ExerciseActivityScreen
 import com.example.hology.ui.exercise.ExerciseDetailScreen
@@ -44,13 +39,27 @@ fun MainScreen(rootNavController: NavController) {
     val context = LocalContext.current
 
     // initiate user
-    val userRepo = UserRepositoryImpl(PreferencesManager(context))
-    val userUseCase = UserUseCase(userRepo)
-    val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory(userUseCase))
+    val userRepo = UserRepositoryImpl(
+        preferencesManager = UserPreferencesManager(context)
+    )
+    val userUseCase = UserUseCase(
+        userRepository = userRepo
+    )
+    val userViewModel: UserViewModel = viewModel(
+        factory = UserViewModel.Factory(userUseCase)
+    )
 
-    val exerciseRepo = ExerciseRepositoryImpl(CloudinaryService.instance, context)
-    val exerciseUseCase = ExerciseUseCase(exerciseRepo)
-    val exerciseViewModel: ExerciseViewModel = viewModel(factory = ExerciseViewModel.Factory(exerciseUseCase))
+    val exerciseRepo = ExerciseRepositoryImpl(
+        service = CloudinaryService.instance,
+        context = context,
+        preferences = ExercisePreferencesManager(context)
+    )
+    val exerciseUseCase = ExerciseUseCase(
+        repository = exerciseRepo
+    )
+    val exerciseViewModel: ExerciseViewModel = viewModel(
+        factory = ExerciseViewModel.Factory(exerciseUseCase)
+    )
 
     // initiate BottomNavBar
     Scaffold(
@@ -91,7 +100,7 @@ fun MainScreen(rootNavController: NavController) {
 
             composable("exercise_detail/{exerciseId}") { backStackEntry ->
                 val exerciseId = backStackEntry.arguments?.getString("exerciseId") ?: ""
-                ExerciseDetailScreen(navController, exerciseId)
+                ExerciseDetailScreen(navController, exerciseId, exerciseViewModel)
             }
 
             composable("exercise_activity/{exerciseId}/{activityId}") { backStackEntry ->

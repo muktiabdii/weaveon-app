@@ -1,14 +1,14 @@
 package com.example.hology.data.repository
 
 import com.example.hology.cache.UserData
-import com.example.hology.data.datastore.PreferencesManager
+import com.example.hology.data.datastore.UserPreferencesManager
 import com.example.hology.data.remote.firebase.FirebaseProvider
 import com.example.hology.domain.model.User
 import com.example.hology.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
-class UserRepositoryImpl(private val preferencesManager: PreferencesManager) : UserRepository {
+class UserRepositoryImpl(private val preferencesManager: UserPreferencesManager) : UserRepository {
 
     private val database = FirebaseProvider.database
     private val auth = FirebaseProvider.auth

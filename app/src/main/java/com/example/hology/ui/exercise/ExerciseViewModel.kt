@@ -1,30 +1,83 @@
 package com.example.hology.ui.exercise
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hology.domain.model.CloudinaryResponse
+import com.example.hology.domain.model.ExerciseProgress
 import com.example.hology.domain.usecase.ExerciseUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ExerciseViewModel(private val cloudinaryUseCase: ExerciseUseCase) : ViewModel() {
+// general state
+sealed class ExerciseState {
+    object Idle : ExerciseState()
+    object Loading : ExerciseState()
+    object Success : ExerciseState()
+    data class Error(val message: String) : ExerciseState()
+}
+
+class ExerciseViewModel(private val exerciseUseCase: ExerciseUseCase) : ViewModel() {
 
     private val _imageUrl = MutableStateFlow<String?>(null)
     val imageUrl = _imageUrl.asStateFlow()
 
-    private val _loading = MutableStateFlow(false)
-    val loading = _loading.asStateFlow()
+    private val _uploadState = MutableStateFlow<ExerciseState>(ExerciseState.Idle)
+    val uploadState = _uploadState.asStateFlow()
 
-    // function upload image
+    private val _saveState = MutableStateFlow<ExerciseState>(ExerciseState.Idle)
+    val saveState = _saveState.asStateFlow()
+
+    private val _exerciseProgress = MutableStateFlow<ExerciseProgress?>(null)
+    val exerciseProgress: StateFlow<ExerciseProgress?> = _exerciseProgress.asStateFlow()
+
+    // function upload image ke Cloudinary
     fun uploadImage(uri: Uri) {
         viewModelScope.launch {
-            _loading.value = true
-            val result: CloudinaryResponse? = cloudinaryUseCase(uri)
-            _imageUrl.value = result?.secureUrl
-            _loading.value = false
+            _uploadState.value = ExerciseState.Loading
+            try {
+                val result: CloudinaryResponse? = exerciseUseCase.invoke(uri)
+                _imageUrl.value = result?.secureUrl
+                if (result?.secureUrl != null) {
+                    _uploadState.value = ExerciseState.Success
+                } else {
+                    _uploadState.value = ExerciseState.Error("Upload gagal, URL kosong")
+                }
+            } catch (e: Exception) {
+                _uploadState.value = ExerciseState.Error(e.message ?: "Terjadi kesalahan")
+            }
+        }
+    }
+
+    // function simpan URL gambar ke DB
+    fun saveImageUrl(userId: String, exerciseId: String, activityId: String) {
+        viewModelScope.launch {
+            _saveState.value = ExerciseState.Loading
+            try {
+                val url = _imageUrl.value ?: throw Exception("Image URL kosong")
+                val result = exerciseUseCase.saveImageUrl(userId, exerciseId, activityId, url)
+                if (result.isSuccess) {
+                    _saveState.value = ExerciseState.Success
+                } else {
+                    _saveState.value =
+                        ExerciseState.Error(result.exceptionOrNull()?.message ?: "Gagal menyimpan")
+                }
+            } catch (e: Exception) {
+                _saveState.value = ExerciseState.Error(e.message ?: "Terjadi kesalahan")
+            }
+        }
+    }
+
+    fun loadExerciseProgress(exerciseId: String) {
+        viewModelScope.launch {
+            exerciseUseCase.getExerciseProgress(exerciseId).collect { progress ->
+                _exerciseProgress.value = progress
+                Log.d("ExerciseViewModel", "Exercise progress loaded: $progress")
+            }
         }
     }
 

@@ -30,6 +30,7 @@ fun TicketCard(
     number: String,
     title: String,
     description: String,
+    isDone: Boolean = false,
     onItemClick: () -> Unit = {}
 ) {
     Box(
@@ -37,7 +38,6 @@ fun TicketCard(
             .fillMaxWidth()
             .clickable { onItemClick() }
     ) {
-
         // ticket background
         Image(
             painter = painterResource(id = R.drawable.exercise_ticket),
@@ -53,22 +53,27 @@ fun TicketCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // number circle
+            // number circle / done icon
             Box(
-                modifier = Modifier
-                    .size(40.dp),
+                modifier = Modifier.size(40.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = number,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                        color = Secondary09,
-                        fontSize = 27.sp,
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                if (isDone) {
+                    Image(
+                        painter = painterResource(id = R.drawable.exercise_done),
+                        contentDescription = "Done",
+                        modifier = Modifier.size(40.dp)
+                    )
+                } else {
+                    Text(
+                        text = number,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                            color = Secondary09,
+                            fontSize = 27.sp,
+                        )
+                    )
+                }
             }
 
             // description
@@ -85,8 +90,7 @@ fun TicketCard(
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Secondary09,
                         fontSize = 14.sp
-                    ),
-                    modifier = Modifier.align(Alignment.Start)
+                    )
                 )
 
                 Text(
@@ -98,8 +102,7 @@ fun TicketCard(
                         lineHeight = 16.sp
                     ),
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.align(Alignment.Start)
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

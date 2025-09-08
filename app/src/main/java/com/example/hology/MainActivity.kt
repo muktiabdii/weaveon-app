@@ -7,11 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.hology.data.datastore.PreferencesManager
+import com.example.hology.data.datastore.UserPreferencesManager
 import com.example.hology.data.repository.AuthRepositoryImpl
 import com.example.hology.data.repository.UserRepositoryImpl
 import com.example.hology.domain.usecase.AuthUseCase
@@ -36,11 +35,11 @@ class MainActivity : ComponentActivity() {
             HologyTheme {
 
                 // insiate user
-                val userRepo = UserRepositoryImpl(PreferencesManager(this))
+                val userRepo = UserRepositoryImpl(UserPreferencesManager(this))
                 val userUseCase = UserUseCase(userRepo)
 
                 // insiate on boarding
-                val onBoardingUseCase = OnBoardingUseCase(PreferencesManager(this))
+                val onBoardingUseCase = OnBoardingUseCase(UserPreferencesManager(this))
                 val splashViewModel: SplashViewModel = viewModel(factory = SplashViewModel.Factory(userUseCase, onBoardingUseCase))
 
                 // insiate auth

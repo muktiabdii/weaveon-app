@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import com.example.hology.R
+import com.example.hology.ui.theme.Secondary01
+import com.example.hology.ui.theme.Secondary03
 import com.example.hology.ui.theme.Secondary05
 import com.example.hology.ui.theme.Secondary09
 
@@ -37,7 +39,9 @@ fun UploadDialog(
     onFeedbackSelected: (String) -> Unit,
     selectedFeedback: String? = null,
     uploadedImageUrl: String? = null,
-    isLoading: Boolean = false
+    isUploading: Boolean = false,
+    isSaving: Boolean = false,
+    onSaveClick: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -77,7 +81,16 @@ fun UploadDialog(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Upload Section
-                if (uploadedImageUrl != null) {
+                if (isUploading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Secondary09)
+                    }
+                } else if (uploadedImageUrl != null) {
                     AsyncImage(
                         model = uploadedImageUrl,
                         contentDescription = "Uploaded Image",
@@ -92,38 +105,27 @@ fun UploadDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(120.dp)
-                            .clickable { if (!isLoading) onUploadClick() }, // disable click saat loading
+                            .clickable { onUploadClick() },
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3EF)),
                         border = BorderStroke(1.dp, Secondary09)
                     ) {
-                        Box(
+                        Column(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
-                            if (isLoading) {
-                                CircularProgressIndicator()
-                            } else {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.ic_upload),
-                                        contentDescription = "Upload",
-                                        modifier = Modifier.size(30.dp)
-                                    )
-
-                                    Spacer(modifier = Modifier.height(8.dp))
-
-                                    Text(
-                                        text = "Klik di sini untuk unggah foto",
-                                        fontSize = 10.sp,
-                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                        color = Color.Black
-                                    )
-                                }
-                            }
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_upload),
+                                contentDescription = "Upload",
+                                modifier = Modifier.size(30.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Klik di sini untuk unggah foto",
+                                fontSize = 10.sp,
+                                color = Color.Black
+                            )
                         }
                     }
                 }
@@ -173,22 +175,32 @@ fun UploadDialog(
 
                 // Submit Button
                 Button(
-                    onClick = {  },
+                    onClick = { onSaveClick() },
+                    enabled = !isSaving && uploadedImageUrl != null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Secondary05,
-                        contentColor = Color.White
+                        contentColor = Color.White,
+                        disabledContainerColor = Secondary01,
+                        disabledContentColor = Secondary03
                     ),
                     shape = RoundedCornerShape(24.dp)
                 ) {
-                    Text(
-                        text = "Kirim Dokumentasi",
-                        fontSize = 13.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_medium))
-                    )
+                    if (isSaving) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Menyimpan...")
+                    } else {
+                        Text("Kirim Dokumentasi")
+                    }
                 }
+
             }
         }
     }

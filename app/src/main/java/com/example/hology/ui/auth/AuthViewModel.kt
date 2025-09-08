@@ -10,11 +10,11 @@ import com.example.hology.domain.usecase.UserUseCase
 import kotlinx.coroutines.launch
 
 // general state
-sealed class State {
-    object Idle : State()
-    object Loading : State()
-    object Success : State()
-    data class Error(val message: String) : State()
+sealed class AuthState {
+    object Idle : AuthState()
+    object Loading : AuthState()
+    object Success : AuthState()
+    data class Error(val message: String) : AuthState()
 }
 
 class AuthViewModel(
@@ -22,43 +22,43 @@ class AuthViewModel(
     private val userUseCase: UserUseCase
 ): ViewModel() {
     // login state
-    private val _loginState = MutableStateFlow<State>(State.Idle)
-    val loginState: StateFlow<State> = _loginState
+    private val _loginState = MutableStateFlow<AuthState>(AuthState.Idle)
+    val loginState: StateFlow<AuthState> = _loginState
 
     // register state
-    private val _registerState = MutableStateFlow<State>(State.Idle)
-    val registerState: StateFlow<State> = _registerState
+    private val _registerState = MutableStateFlow<AuthState>(AuthState.Idle)
+    val registerState: StateFlow<AuthState> = _registerState
 
     // forgot password state
-    private val _forgotPasswordState = MutableStateFlow<State>(State.Idle)
-    val forgotPasswordState: StateFlow<State> = _forgotPasswordState
+    private val _forgotPasswordState = MutableStateFlow<AuthState>(AuthState.Idle)
+    val forgotPasswordState: StateFlow<AuthState> = _forgotPasswordState
 
     // reset state
     fun resetLoginState() {
-        _loginState.value = State.Idle
+        _loginState.value = AuthState.Idle
     }
 
     fun resetRegisterState() {
-        _registerState.value = State.Idle
+        _registerState.value = AuthState.Idle
     }
 
     fun resetForgotPasswordState() {
-        _forgotPasswordState.value = State.Idle
+        _forgotPasswordState.value = AuthState.Idle
     }
 
     // function login
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            _loginState.value = State.Loading
+            _loginState.value = AuthState.Loading
             val result = authUseCase.login(email, password)
             result.onSuccess { uid ->
                 if (uid.isNotEmpty()) {
                     loadUser(uid)
                 }
 
-                _loginState.value = State.Success
+                _loginState.value = AuthState.Success
             }.onFailure { e ->
-                _loginState.value = State.Error(e.message ?: "Login gagal")
+                _loginState.value = AuthState.Error(e.message ?: "Login gagal")
             }
         }
     }
@@ -79,9 +79,9 @@ class AuthViewModel(
         passwordConfirmation: String
     ) {
         viewModelScope.launch {
-            _registerState.value = State.Loading
+            _registerState.value = AuthState.Loading
             authUseCase.register(name, email, password, passwordConfirmation) { success, message ->
-                _registerState.value = if (success) State.Success else State.Error(message ?: "Register gagal")
+                _registerState.value = if (success) AuthState.Success else AuthState.Error(message ?: "Register gagal")
             }
         }
     }
@@ -91,9 +91,9 @@ class AuthViewModel(
         email: String
     ) {
         viewModelScope.launch {
-            _forgotPasswordState.value = State.Loading
+            _forgotPasswordState.value = AuthState.Loading
             authUseCase.forgotPassword(email) { success, message ->
-                _forgotPasswordState.value = if (success) State.Success else State.Error(message ?: "Forgot password gagal")
+                _forgotPasswordState.value = if (success) AuthState.Success else AuthState.Error(message ?: "Forgot password gagal")
             }
         }
     }

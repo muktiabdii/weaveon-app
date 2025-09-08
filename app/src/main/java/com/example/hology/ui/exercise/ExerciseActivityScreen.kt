@@ -1,8 +1,10 @@
 package com.example.hology.ui.exercise
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -30,12 +34,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.hology.R
+import com.example.hology.cache.UserData
 import com.example.hology.cache.exerciseList
 import com.example.hology.ui.common.ActionButton
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.common.UploadDialog
 import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.theme.Primary00
+import com.example.hology.ui.theme.Primary01
+import com.example.hology.ui.theme.Secondary01
+import com.example.hology.ui.theme.Secondary03
 import com.example.hology.ui.theme.Secondary05
 import com.example.hology.ui.theme.Secondary08
 import com.example.hology.ui.theme.Secondary09
@@ -48,14 +56,20 @@ fun ExerciseActivityScreen(
     viewModel: ExerciseViewModel
 ) {
 
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
     var showUploadDialog by remember { mutableStateOf(false) }
     var selectedFeedback by remember { mutableStateOf<String?>(null) }
 
     val uploadedImageUrl by viewModel.imageUrl.collectAsState()
-    val isLoading by viewModel.loading.collectAsState()
+    val uploadState by viewModel.uploadState.collectAsState()
+    val saveState by viewModel.saveState.collectAsState()
 
+    val user = UserData
+    val exercise = exerciseList.find { it.id == exerciseId }
     val activity = exerciseList.find { it.id == exerciseId }?.activities?.find { it.id == activityId }
+    val progress = viewModel.exerciseProgress.collectAsState().value
+    val isDone = progress?.activities?.get(activityId) ?: false
 
     // image picker launcher
     val launcher = rememberLauncherForActivityResult(
@@ -80,9 +94,30 @@ fun ExerciseActivityScreen(
                 onFeedbackSelected = { feedback -> selectedFeedback = feedback },
                 selectedFeedback = selectedFeedback,
                 uploadedImageUrl = uploadedImageUrl,
-                isLoading = isLoading
+                isUploading = uploadState is ExerciseState.Loading,
+                isSaving = saveState is ExerciseState.Loading,
+                onSaveClick = {
+                    viewModel.saveImageUrl(
+                        userId = user.uid,
+                        exerciseId = exercise?.id ?: "",
+                        activityId = activity?.id ?: ""
+                    )
+                }
             )
         }
+    }
+
+    when (saveState) {
+        is ExerciseState.Success -> {
+            LaunchedEffect(Unit) { showUploadDialog = false }
+        }
+        is ExerciseState.Error -> {
+            val errorMessage = (saveState as ExerciseState.Error).message
+            LaunchedEffect(errorMessage) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+        else -> Unit
     }
 
     Scaffold(
@@ -341,13 +376,16 @@ fun ExerciseActivityScreen(
 
                     // upload Button
                     Button(
+                        enabled = !isDone,
                         onClick = { showUploadDialog = true },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(44.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Secondary05,
-                            contentColor = Color.White
+                            contentColor = Color.White,
+                            disabledContainerColor = Secondary01,
+                            disabledContentColor = Secondary03
                         ),
                         shape = RoundedCornerShape(24.dp)
                     ) {
@@ -356,6 +394,29 @@ fun ExerciseActivityScreen(
                             fontSize = 15.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_medium))
                         )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    if (isDone) {
+                        Button(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = NeutralWhite,
+                                contentColor = Secondary08
+                            ),
+                            shape = RoundedCornerShape(24.dp),
+                            border = BorderStroke(1.dp, Secondary08)
+                        ) {
+                            Text(
+                                text = "Kembali",
+                                fontSize = 15.sp,
+                                fontFamily = FontFamily(Font(R.font.poppins_medium))
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))

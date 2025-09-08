@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -57,7 +56,7 @@ fun ForgotPasswordScreen(
     var dialogButtonText by remember { mutableStateOf("") }
 
     when (forgotPasswordState) {
-        is State.Success -> {
+        is AuthState.Success -> {
             isSuccess = true
             showDialog = true
             dialogTitle = "Berhasil mengirim link reset kata sandi ke email!"
@@ -65,7 +64,7 @@ fun ForgotPasswordScreen(
             dialogButtonText = "Masuk"
         }
 
-        is State.Error -> {
+        is AuthState.Error -> {
             isSuccess = false
             showDialog = true
             dialogTitle = "Gagal mengirim link reset kata sandi ke email!"
@@ -212,7 +211,7 @@ fun ForgotPasswordScreen(
             ActionButton(
                 text = "Kirim",
                 onClick = { viewModel.forgotPassword(email) },
-                isLoading = forgotPasswordState is State.Loading
+                isLoading = forgotPasswordState is AuthState.Loading
             )
 
             Spacer(modifier = Modifier.weight(1f))

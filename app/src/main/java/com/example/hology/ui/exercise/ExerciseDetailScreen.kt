@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,10 +31,16 @@ import com.example.hology.ui.theme.Secondary09
 @Composable
 fun ExerciseDetailScreen(
     navController: NavController,
-    exerciseId: String
+    exerciseId: String,
+    viewModel: ExerciseViewModel
 ) {
 
     val exercise = exerciseList.find { it.id == exerciseId }
+    val progress = viewModel.exerciseProgress.collectAsState().value
+
+    LaunchedEffect(exerciseId) {
+        viewModel.loadExerciseProgress(exerciseId)
+    }
 
     Scaffold(
         topBar = {
@@ -139,10 +147,12 @@ fun ExerciseDetailScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         exercise?.activities?.forEach { activity ->
+                            val isDone = progress?.activities?.get(activity.id) ?: false
                             TicketCard(
                                 number = activity.id,
                                 title = activity.title,
                                 description = activity.description,
+                                isDone = isDone,
                                 onItemClick = {
                                     navController.navigate("exercise_activity/$exerciseId/${activity.id}")
                                 }

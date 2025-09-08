@@ -62,7 +62,7 @@ fun RegisterScreen(
     var passwordConfirmation by remember { mutableStateOf("") }
 
     when (registerState) {
-        is State.Success -> {
+        is AuthState.Success -> {
             LaunchedEffect(Unit) {
                 navController.navigate("login") {
                     popUpTo("register") { inclusive = true }
@@ -72,8 +72,8 @@ fun RegisterScreen(
             }
         }
 
-        is State.Error -> {
-            val message = (registerState as State.Error).message
+        is AuthState.Error -> {
+            val message = (registerState as AuthState.Error).message
             LaunchedEffect(message) {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 viewModel.resetRegisterState()
@@ -275,7 +275,7 @@ fun RegisterScreen(
             ActionButton(
                 text = "Daftar",
                 onClick = { viewModel.register(name, email, password, passwordConfirmation) },
-                isLoading = registerState is State.Loading
+                isLoading = registerState is AuthState.Loading
             )
 
             Spacer(modifier = modifier.height(12.dp))
