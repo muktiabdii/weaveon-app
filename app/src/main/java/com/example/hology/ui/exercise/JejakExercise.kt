@@ -107,8 +107,18 @@ fun JejakExerciseScreen(
 
                 // exercise cards
                 items(history) { exerciseItem ->
-                    ExerciseCarouselCard(exerciseItem = exerciseItem, isActive = true)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp)
+                    ) {
+                        ExerciseCarouselCard(
+                            exerciseItem = exerciseItem,
+                            isActive = true
+                        )
+                    }
                 }
+
             }
         }
     }
