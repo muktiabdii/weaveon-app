@@ -23,6 +23,7 @@ import com.example.hology.ui.exercise.ExerciseActivityScreen
 import com.example.hology.ui.exercise.ExerciseDetailScreen
 import com.example.hology.ui.exercise.ExerciseScreen
 import com.example.hology.ui.exercise.ExerciseViewModel
+import com.example.hology.ui.exercise.JejakExerciseScreen
 import com.example.hology.ui.profile.EditProfileScreen
 import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
@@ -107,6 +108,10 @@ fun MainScreen(rootNavController: NavController) {
                 val exerciseId = backStackEntry.arguments?.getString("exerciseId") ?: ""
                 val activityId = backStackEntry.arguments?.getString("activityId") ?: ""
                 ExerciseActivityScreen(navController, exerciseId, activityId, exerciseViewModel)
+            }
+
+            composable("jejak-exercise") {
+                JejakExerciseScreen(navController = navController, viewModel = exerciseViewModel)
             }
 
             composable("wevy") {

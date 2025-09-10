@@ -86,6 +86,12 @@ fun ProfileScreen(
                             }
                         }
                     )
+                    Divider(modifier = Modifier.background(Primary04))
+                    SettingsItem(
+                        icon = painterResource(id = R.drawable.ic_archive),
+                        title = "Jejak Exercise",
+                        onClick = { navController.navigate("jejak-exercise") }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
