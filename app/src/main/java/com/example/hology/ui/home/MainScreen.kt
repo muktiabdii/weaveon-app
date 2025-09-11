@@ -32,6 +32,7 @@ import com.example.hology.ui.profile.UserViewModel
 import com.example.hology.ui.wevy.WevyActivityScreen
 import com.example.hology.ui.wevy.WevyDetailScreen
 import com.example.hology.ui.wevy.WevyRecordScreen
+import com.example.hology.ui.wevy.WevyResultScreen
 import com.example.hology.ui.wevy.WevyScreen
 import com.example.hology.ui.wevy.WevyViewModel
 
@@ -66,9 +67,8 @@ fun MainScreen(rootNavController: NavController) {
         factory = ExerciseViewModel.Factory(exerciseUseCase)
     )
 
-    val wevyRepo = WevyRepositoryImpl(
-        context = context
-    )
+    val wevyRepo = WevyRepositoryImpl()
+
     val wevyUseCase = WevyUseCase(
         repository = wevyRepo
     )
@@ -143,8 +143,14 @@ fun MainScreen(rootNavController: NavController) {
                 WevyActivityScreen(navController, wevyId, activityId)
             }
 
-            composable("wevy_record") {
-                WevyRecordScreen(viewModel = wevyViewModel, navController = navController)
+            composable("wevy_record/{wevyId}/{activityId}") {
+                val wevyId = it.arguments?.getString("wevyId") ?: ""
+                val activityId = it.arguments?.getString("activityId") ?: ""
+                WevyRecordScreen(viewModel = wevyViewModel, navController = navController, wevyId, activityId)
+            }
+
+            composable("wevy_result") {
+                WevyResultScreen(navController = navController)
             }
         }
     }

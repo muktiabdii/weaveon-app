@@ -31,6 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.hology.R
+import com.example.hology.cache.UserData
 import com.example.hology.ui.common.ActionResultDialog
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralWhite
@@ -41,11 +42,14 @@ import kotlinx.coroutines.delay
 @Composable
 fun WevyRecordScreen(
     viewModel: WevyViewModel,
-    navController: NavController
+    navController: NavController,
+    wevyId: String,
+    activityId: String
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState()
+    val user = UserData
 
     var cameraManager by remember { mutableStateOf<WevyCameraManager?>(null) }
     var isRecording by remember { mutableStateOf(false) }
@@ -53,8 +57,6 @@ fun WevyRecordScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     val previewView = remember { PreviewView(context) }
-
-    var lensFacing by remember { mutableStateOf(CameraSelector.LENS_FACING_FRONT) }
 
     // timer recording
     LaunchedEffect(isRecording) {
@@ -82,7 +84,7 @@ fun WevyRecordScreen(
                 lifecycleOwner = lifecycleOwner,
                 previewView = previewView,
                 onVideoSaved = { file ->
-                    viewModel.uploadVideo(file)
+                    viewModel.uploadVideo(file, user.uid, wevyId, activityId)
                     showDialog = true
                 },
                 onError = { e -> e.printStackTrace() }

@@ -8,4 +8,8 @@ class WevyUseCase(private val repository: WevyRepository) {
     suspend fun detectEmotion(file: MultipartBody.Part): EmotionDetectionResponse? {
         return repository.detectEmotion(file)
     }
+
+    suspend fun saveEmotion(userId: String, wevyId: String, activityId: String, result: EmotionDetectionResponse): Result<Unit> {
+        return repository.saveEmotion(userId, wevyId, activityId, result)
+    }
 }

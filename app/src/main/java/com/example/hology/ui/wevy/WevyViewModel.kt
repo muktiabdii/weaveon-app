@@ -27,7 +27,7 @@ class WevyViewModel(private val useCase: WevyUseCase) : ViewModel() {
     private val _state = MutableStateFlow<WevyState>(WevyState.Idle)
     val state: StateFlow<WevyState> = _state
 
-    fun uploadVideo(file: File) {
+    fun uploadVideo(file: File, userId: String, wevyId: String, activityId: String) {
         viewModelScope.launch {
             _state.value = WevyState.Loading
             try {
@@ -37,6 +37,7 @@ class WevyViewModel(private val useCase: WevyUseCase) : ViewModel() {
                 val result = useCase.detectEmotion(body)
                 if (result != null) {
                     _state.value = WevyState.Success(result)
+                    saveEmotion(userId, wevyId, activityId, result)
                 } else {
                     _state.value = WevyState.Error("Gagal memproses video")
                 }
@@ -44,6 +45,12 @@ class WevyViewModel(private val useCase: WevyUseCase) : ViewModel() {
                 Log.e("Wevy", "Upload failed: ${e.message}", e)
                 _state.value = WevyState.Error(e.message ?: "Unknown error")
             }
+        }
+    }
+
+    fun saveEmotion(userId: String, wevyId: String, activityId: String, result: EmotionDetectionResponse) {
+        viewModelScope.launch {
+            useCase.saveEmotion(userId, wevyId, activityId, result)
         }
     }
 
