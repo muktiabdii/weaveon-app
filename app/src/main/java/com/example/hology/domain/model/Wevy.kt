@@ -1,5 +1,7 @@
 package com.example.hology.domain.model
 
+import androidx.compose.ui.graphics.Color
+
 data class WevyActivity(
     val id: String,
     val title: String,
@@ -16,3 +18,12 @@ data class Wevy(
     val description: String,
     val activities: List<WevyActivity>
 )
+
+data class WevyResult(
+    val label: String,
+    val color: Color,
+    val activeIcon: Int,
+    val inactiveIcon: Int,
+    val description: String
+)
+

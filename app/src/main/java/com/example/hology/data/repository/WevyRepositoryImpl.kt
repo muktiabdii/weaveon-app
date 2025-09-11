@@ -12,6 +12,7 @@ class WevyRepositoryImpl() : WevyRepository {
 
     private val database = FirebaseProvider.database
 
+    // function to detect emotion
     override suspend fun detectEmotion(
         file: MultipartBody.Part
     ): EmotionDetectionResponse? {
@@ -27,6 +28,7 @@ class WevyRepositoryImpl() : WevyRepository {
         }
     }
 
+    // function to save emotion
     override suspend fun saveEmotion(
         userId: String,
         wevyId: String,
@@ -55,4 +57,40 @@ class WevyRepositoryImpl() : WevyRepository {
         }
     }
 
+    // function to get emotion
+    override suspend fun getEmotion(
+        userId: String,
+        wevyId: String,
+        activityId: String
+    ): EmotionDetectionResponse? {
+        return try {
+            val snapshot = database.child("users")
+                .child(userId)
+                .child("wevy")
+                .child(wevyId)
+                .child("activities")
+                .child(activityId)
+                .get()
+                .await()
+            if (snapshot.exists()) {
+                val label = snapshot.child("label").getValue(String::class.java)
+                val timestamp = snapshot.child("timestamp").getValue(Long::class.java)
+
+                if (label != null && timestamp != null) {
+                    EmotionDetectionResponse(
+                        score = 0.0,
+                        label = label,
+                        distribution = emptyMap()
+                    )
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("Wevy", "Gagal mengambil hasil emosi: ${e.message}", e)
+            null
+        }
+    }
 }

@@ -34,9 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hology.R
+import com.example.hology.cache.UserData
+import com.example.hology.cache.wevyResultList
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralBlack
 import com.example.hology.ui.theme.NeutralWhite
+import com.example.hology.ui.theme.Primary03
 
 data class MoodOption(
     val color: Color,
@@ -45,30 +48,18 @@ data class MoodOption(
 
 @Composable
 fun WevyResultScreen(
-    navController: NavController
+    navController: NavController,
+    wevyId: String,
+    activityId: String,
+    viewModel: WevyViewModel
 ) {
-    var selectedMood by remember { mutableIntStateOf(0) }
 
-    val moodOptions = listOf(
-        MoodOption(Color(0xFF33A136), "Sangat Senang"),
-        MoodOption(Color(0xFF77BF3A), "Cukup Senang"),
-        MoodOption(Color(0xFFFCB506), "Kurang Senang"),
-        MoodOption(Color(0xFFF67812), "Sangat Tidak Senang")
-    )
+    val state by viewModel.state.collectAsState()
+    val user = UserData
 
-    val activeDrawables = listOf(
-        R.drawable.ic_very_happy,
-        R.drawable.ic_happy,
-        R.drawable.ic_unhappy,
-        R.drawable.ic_very_unhappy
-    )
-
-    val inactiveDrawables = listOf(
-        R.drawable.ic_very_happy_gray,
-        R.drawable.ic_happy_gray,
-        R.drawable.ic_unhappy_gray,
-        R.drawable.ic_very_unhappy_grey
-    )
+    LaunchedEffect(Unit) {
+        viewModel.getEmotion(user.uid, wevyId, activityId)
+    }
 
     Scaffold(
         topBar = {
@@ -77,16 +68,13 @@ fun WevyResultScreen(
                 navController = navController
             )
         },
-    ) {
-        innerPadding ->
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(color = NeutralWhite)
         ) {
-
-            // background
             Image(
                 painter = painterResource(id = R.drawable.bg_5),
                 contentDescription = null,
@@ -94,102 +82,100 @@ fun WevyResultScreen(
                 contentScale = ContentScale.Crop
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
+            when (state) {
+                is WevyState.Loading -> {
+                    CircularProgressIndicator(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 47.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        moodOptions.forEachIndexed { index, mood ->
-                            MoodButton(
-                                mood = mood,
-                                isSelected = selectedMood == index,
-                                onClick = { selectedMood = index },
-                                activeDrawableRes = activeDrawables[index],
-                                inactiveDrawableRes = inactiveDrawables[index]
-                            )
-                            if (index != moodOptions.lastIndex) {
-                                Spacer(modifier = Modifier.width(16.dp))
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Text(
-                        text = moodOptions[selectedMood].label,
-                        color = moodOptions[selectedMood].color,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_semibold))
+                            .size(size = 150.dp)
+                            .padding(bottom = 25.dp)
+                            .align(Alignment.Center),
+                        color = Primary03,
+                        strokeWidth = 10.dp
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                is WevyState.Success -> {
+                    val emotion = (state as WevyState.Success).data
+                    val activeLabel = emotion.label.lowercase()
+                    val matched = wevyResultList.find { it.label.lowercase() == activeLabel }
 
-                // Activity Description Card
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Transparent
-                    ),
-                    border = BorderStroke(1.dp, NeutralBlack)
-                ) {
                     Column(
-                        modifier = Modifier.padding(14.dp)
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp)
                     ) {
+                        // Tampilkan semua emot
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 47.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            wevyResultList.forEach { item ->
+                                val isActive = item.label.lowercase() == activeLabel
+                                Image(
+                                    painter = painterResource(
+                                        id = if (isActive) item.activeIcon else item.inactiveIcon
+                                    ),
+                                    contentDescription = item.label,
+                                    modifier = Modifier.size(60.dp)
+                                )
+
+                                if (item != wevyResultList.last()) {
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
                         Text(
-                            text = "Pada aktivitas Susun Balok, anak menunjukkan antusiasme yang cukup tinggi. Berdasarkan hasil analisis, anak terlihat fokus dan tertarik selama proses menyusun balok. Respon emosional yang positif mulai terlihat sejak menit-menit awal hingga pertengahan aktivitas. Namun, terdapat sedikit penurunan minat di bagian tengah yang kemungkinan disebabkan oleh tantangan atau tingkat kesulitan yang mulai meningkat.",
-                            color = NeutralBlack,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                            lineHeight = 20.sp
+                            text = matched?.label ?: "",
+                            color = matched?.color ?: Color.Black,
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
                         )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        // Card activity description
+                        if (matched != null) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                                border = BorderStroke(1.dp, NeutralBlack)
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(14.dp)
+                                ) {
+                                    Text(
+                                        text = matched.description,
+                                        color = NeutralBlack,
+                                        fontSize = 15.sp,
+                                        fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                        lineHeight = 20.sp
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+
+                is WevyState.Error -> {
+                    Text(
+                        text = (state as WevyState.Error).message,
+                        color = Color.Red,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                else -> {}
             }
         }
-    }
-}
-
-@Composable
-fun MoodButton(
-    mood: MoodOption,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    activeDrawableRes: Int,
-    inactiveDrawableRes: Int
-) {
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.1f else 1f,
-        animationSpec = tween(200)
-    )
-
-    Box(
-        modifier = Modifier
-            .size(64.dp)
-            .scale(scale)
-            .clip(CircleShape)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = if (isSelected) activeDrawableRes else inactiveDrawableRes),
-            contentDescription = mood.label,
-            modifier = Modifier.size(64.dp)
-        )
     }
 }

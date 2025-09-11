@@ -27,6 +27,7 @@ class WevyViewModel(private val useCase: WevyUseCase) : ViewModel() {
     private val _state = MutableStateFlow<WevyState>(WevyState.Idle)
     val state: StateFlow<WevyState> = _state
 
+    // function to detect emotion
     fun uploadVideo(file: File, userId: String, wevyId: String, activityId: String) {
         viewModelScope.launch {
             _state.value = WevyState.Loading
@@ -48,9 +49,28 @@ class WevyViewModel(private val useCase: WevyUseCase) : ViewModel() {
         }
     }
 
+    // function to save emotion
     fun saveEmotion(userId: String, wevyId: String, activityId: String, result: EmotionDetectionResponse) {
         viewModelScope.launch {
             useCase.saveEmotion(userId, wevyId, activityId, result)
+        }
+    }
+
+    // function to get emotion
+    fun getEmotion(userId: String, wevyId: String, activityId: String) {
+        viewModelScope.launch {
+            _state.value = WevyState.Loading
+            try {
+                val result = useCase.getEmotion(userId, wevyId, activityId)
+                if (result != null) {
+                    _state.value = WevyState.Success(result)
+                } else {
+                    _state.value = WevyState.Error("Data emotion tidak ditemukan")
+                }
+            } catch (e: Exception) {
+                Log.e("Wevy", "Get emotion failed: ${e.message}", e)
+                _state.value = WevyState.Error(e.message ?: "Unknown error")
+            }
         }
     }
 

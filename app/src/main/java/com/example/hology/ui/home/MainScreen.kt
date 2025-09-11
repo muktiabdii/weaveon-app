@@ -149,8 +149,10 @@ fun MainScreen(rootNavController: NavController) {
                 WevyRecordScreen(viewModel = wevyViewModel, navController = navController, wevyId, activityId)
             }
 
-            composable("wevy_result") {
-                WevyResultScreen(navController = navController)
+            composable("wevy_result/{wevyId}/{activityId}") {
+                val wevyId = it.arguments?.getString("wevyId") ?: ""
+                val activityId = it.arguments?.getString("activityId") ?: ""
+                WevyResultScreen(navController = navController, wevyId, activityId, wevyViewModel)
             }
         }
     }
