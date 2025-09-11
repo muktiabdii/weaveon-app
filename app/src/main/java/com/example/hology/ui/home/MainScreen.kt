@@ -16,8 +16,10 @@ import com.example.hology.data.datastore.UserPreferencesManager
 import com.example.hology.data.remote.api.CloudinaryService
 import com.example.hology.data.repository.ExerciseRepositoryImpl
 import com.example.hology.data.repository.UserRepositoryImpl
+import com.example.hology.data.repository.WevyRepositoryImpl
 import com.example.hology.domain.usecase.ExerciseUseCase
 import com.example.hology.domain.usecase.UserUseCase
+import com.example.hology.domain.usecase.WevyUseCase
 import com.example.hology.ui.common.BottomNavBar
 import com.example.hology.ui.exercise.ExerciseActivityScreen
 import com.example.hology.ui.exercise.ExerciseDetailScreen
@@ -29,7 +31,9 @@ import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
 import com.example.hology.ui.wevy.WevyActivityScreen
 import com.example.hology.ui.wevy.WevyDetailScreen
+import com.example.hology.ui.wevy.WevyRecordScreen
 import com.example.hology.ui.wevy.WevyScreen
+import com.example.hology.ui.wevy.WevyViewModel
 
 @Composable
 fun MainScreen(rootNavController: NavController) {
@@ -60,6 +64,16 @@ fun MainScreen(rootNavController: NavController) {
     )
     val exerciseViewModel: ExerciseViewModel = viewModel(
         factory = ExerciseViewModel.Factory(exerciseUseCase)
+    )
+
+    val wevyRepo = WevyRepositoryImpl(
+        context = context
+    )
+    val wevyUseCase = WevyUseCase(
+        repository = wevyRepo
+    )
+    val wevyViewModel: WevyViewModel = viewModel(
+        factory = WevyViewModel.Factory(wevyUseCase)
     )
 
     // initiate BottomNavBar
@@ -127,6 +141,10 @@ fun MainScreen(rootNavController: NavController) {
                 val wevyId = it.arguments?.getString("wevyId") ?: ""
                 val activityId = it.arguments?.getString("activityId") ?: ""
                 WevyActivityScreen(navController, wevyId, activityId)
+            }
+
+            composable("wevy_record") {
+                WevyRecordScreen(viewModel = wevyViewModel, navController = navController)
             }
         }
     }

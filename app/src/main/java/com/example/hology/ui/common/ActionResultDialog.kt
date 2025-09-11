@@ -1,17 +1,9 @@
 package com.example.hology.ui.common
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,22 +18,26 @@ import androidx.compose.ui.unit.sp
 import com.example.hology.R
 import com.example.hology.ui.theme.Green
 import com.example.hology.ui.theme.NeutralBlack
+import com.example.hology.ui.theme.Primary03
+import com.example.hology.ui.theme.Primary04
 import com.example.hology.ui.theme.Red
+import com.example.hology.ui.theme.Secondary00
+import com.example.hology.ui.theme.Secondary02
 import com.example.hology.ui.theme.Secondary08
 
 @Composable
 fun ActionResultDialog(
     isSuccess: Boolean,
+    isLoading: Boolean = false,
     title: String,
     message: String,
     buttonText: String,
     onDismissRequest: () -> Unit,
     onButtonClick: () -> Unit
 ) {
-
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        confirmButton = {  },
+        confirmButton = { },
         containerColor = Color(0xFFEAF9F9),
         shape = RoundedCornerShape(16.dp),
         text = {
@@ -51,49 +47,72 @@ fun ActionResultDialog(
                     .padding(top = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val iconRes = if (isSuccess) R.drawable.ic_success_3d else R.drawable.ic_failure_3d
-                Image(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
-                    modifier = Modifier
-                        .size(150.dp)
-                        .padding(bottom = 25.dp)
-                )
+                if (isLoading) {
 
-                Text(
-                    text = title,
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                        color = if (isSuccess) NeutralBlack else Red,
-                        lineHeight = 28.sp
+                    // loading
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(size = 150.dp)
+                            .padding(bottom = 25.dp),
+                        color = Primary03,
+                        strokeWidth = 10.dp
                     )
-                )
+                } else {
 
-                Spacer(modifier = Modifier.height(15.dp))
+                    // icon success / failure
+                    val iconRes = if (isSuccess) R.drawable.ic_success_3d else R.drawable.ic_failure_3d
+                    Image(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
+                        modifier = Modifier
+                            .size(size = 150.dp)
+                            .padding(bottom = 55.dp)
+                    )
+                }
 
-                Text(
-                    text = message,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                        color = Secondary08
-                    ),
-                    textAlign = TextAlign.Center
-                )
+                // title & message
+                if (!isLoading) {
+                    Text(
+                        text = title,
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                            color = if (isSuccess) NeutralBlack else Red,
+                            lineHeight = 28.sp
+                        )
+                    )
 
-                Spacer(modifier = Modifier.height(25.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
 
+                    Text(
+                        text = message,
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                            color = Secondary08
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(25.dp))
+                } else {
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+
+                // button
                 Button(
                     onClick = onButtonClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(43.dp),
                     shape = RoundedCornerShape(30.dp),
+                    enabled = !isLoading,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (isSuccess) Green else Color.Red,
-                        contentColor = Color.White
+                        contentColor = Color.White,
+                        disabledContainerColor = Secondary00,
+                        disabledContentColor = Secondary02
                     )
                 ) {
                     Text(

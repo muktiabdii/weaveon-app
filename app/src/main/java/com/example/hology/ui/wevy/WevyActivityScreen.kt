@@ -242,7 +242,7 @@ fun WevyActivityScreen(
 
                 // button
                 Button(
-                    onClick = { /* Handle button click */ },
+                    onClick = { navController.navigate("wevy_record") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp),
