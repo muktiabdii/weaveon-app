@@ -1,14 +1,18 @@
 package com.example.hology.data.repository
 
+import android.content.Context
 import android.util.Log
+import com.example.hology.data.datastore.WevyPreferencesManager
 import com.example.hology.data.model.EmotionDetectionResponse
 import com.example.hology.data.remote.api.ApiEmotionDetectionService
 import com.example.hology.data.remote.firebase.FirebaseProvider
+import com.example.hology.domain.model.WevyProgress
 import com.example.hology.domain.repository.WevyRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import okhttp3.MultipartBody
 
-class WevyRepositoryImpl() : WevyRepository {
+class WevyRepositoryImpl(private val preferences: WevyPreferencesManager) : WevyRepository {
 
     private val database = FirebaseProvider.database
 
@@ -50,11 +54,18 @@ class WevyRepositoryImpl() : WevyRepository {
                 .updateChildren(data)
                 .await()
 
+            preferences.setWevyDone(wevyId, activityId, true)
+
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e("Wevy", "Gagal simpan hasil emosi: ${e.message}", e)
             Result.failure(e)
         }
+    }
+
+    // function to get wevy done
+    override fun getWevyProgress(wevyId: String): Flow<WevyProgress> {
+        return preferences.getWevyProgress(wevyId)
     }
 
     // function to get emotion

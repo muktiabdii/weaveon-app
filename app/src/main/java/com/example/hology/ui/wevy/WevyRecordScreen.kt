@@ -261,7 +261,7 @@ fun WevyRecordScreen(
                                 showDialog = false
                                 recordingTime = 0
                                 navController.navigate("wevy_result/${wevyId}/${activityId}") {
-                                    popUpTo("wevy_detail") { inclusive = true }
+                                    popUpTo("wevy_detail/${wevyId}") { inclusive = true }
                                 }
                             },
                             isLoading = false

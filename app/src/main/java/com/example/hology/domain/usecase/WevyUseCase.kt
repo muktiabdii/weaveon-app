@@ -1,7 +1,9 @@
 package com.example.hology.domain.usecase
 
 import com.example.hology.data.model.EmotionDetectionResponse
+import com.example.hology.domain.model.WevyProgress
 import com.example.hology.domain.repository.WevyRepository
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
 class WevyUseCase(private val repository: WevyRepository) {
@@ -14,6 +16,11 @@ class WevyUseCase(private val repository: WevyRepository) {
     // function to save emotion
     suspend fun saveEmotion(userId: String, wevyId: String, activityId: String, result: EmotionDetectionResponse): Result<Unit> {
         return repository.saveEmotion(userId, wevyId, activityId, result)
+    }
+
+    // function to get wevy done
+    fun getWevyProgress(wevyId: String): Flow<WevyProgress> {
+        return repository.getWevyProgress(wevyId)
     }
 
     // function to get emotion

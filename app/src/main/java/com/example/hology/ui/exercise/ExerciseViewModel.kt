@@ -83,7 +83,6 @@ class ExerciseViewModel(private val exerciseUseCase: ExerciseUseCase) : ViewMode
         viewModelScope.launch {
             exerciseUseCase.getExerciseProgress(exerciseId).collect { progress ->
                 _exerciseProgress.value = progress
-                Log.d("ExerciseViewModel", "Exercise progress loaded: $progress")
             }
         }
     }

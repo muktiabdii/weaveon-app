@@ -7,6 +7,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +29,7 @@ import androidx.navigation.NavController
 import com.example.hology.R
 import com.example.hology.cache.exerciseList
 import com.example.hology.cache.wevyList
+import com.example.hology.ui.common.ActionResultDialog
 import com.example.hology.ui.common.TicketCard
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralWhite
@@ -33,10 +40,31 @@ import com.example.hology.ui.theme.Secondary09
 @Composable
 fun WevyDetailScreen(
     navController: NavController,
-    wevyId: String
+    wevyId: String,
+    viewModel: WevyViewModel
 ) {
 
     val wevy = wevyList.find { it.id == wevyId }
+    val progress = viewModel.wevyProgress.collectAsState().value
+    var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(wevyId) {
+        viewModel.loadWevyProgress(wevyId)
+    }
+
+    if (showDialog) {
+        ActionResultDialog(
+            isSuccess = true,
+            title = "Aktivitas telah dilakukan!",
+            message = "Lihat riwayat aktivitas pada laman report",
+            buttonText = "Lihat Riwayat",
+            onDismissRequest = { showDialog = false },
+            onButtonClick = {
+                showDialog = false
+            },
+            iconRes = R.drawable.done_3d
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -151,11 +179,19 @@ fun WevyDetailScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         wevy?.activities?.forEach { activity ->
+                            val isDone = progress?.activities?.get(activity.id) ?: false
+                            
                             TicketCard(
                                 number = activity.id,
                                 title = activity.title,
                                 description = activity.description,
-                                onItemClick = { navController.navigate("wevy_activity/$wevyId/${activity.id}") }
+                                onItemClick = {
+                                    if (isDone) {
+                                        showDialog = true
+                                    } else {
+                                        navController.navigate("wevy_record/${wevy.id}/${activity.id}")
+                                    }
+                                }
                             )
                         }
                     }

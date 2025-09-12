@@ -33,7 +33,8 @@ fun ActionResultDialog(
     message: String,
     buttonText: String,
     onDismissRequest: () -> Unit,
-    onButtonClick: () -> Unit
+    onButtonClick: () -> Unit,
+    iconRes: Int? = null
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -59,10 +60,15 @@ fun ActionResultDialog(
                     )
                 } else {
 
-                    // icon success / failure
-                    val iconRes = if (isSuccess) R.drawable.ic_success_3d else R.drawable.ic_failure_3d
+                    // icon
+                    val finalIconRes = iconRes ?: if (isSuccess) {
+                        R.drawable.ic_success_3d
+                    } else {
+                        R.drawable.ic_failure_3d
+                    }
+
                     Image(
-                        painter = painterResource(id = iconRes),
+                        painter = painterResource(id = finalIconRes),
                         contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
                         modifier = Modifier
                             .size(size = 150.dp)

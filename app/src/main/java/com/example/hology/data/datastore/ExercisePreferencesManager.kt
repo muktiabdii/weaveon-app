@@ -17,7 +17,7 @@ class ExercisePreferencesManager(private val context: Context) {
     private fun doneKey(exerciseId: String, activityId: String) =
         booleanPreferencesKey("exercise_${exerciseId}_activity_${activityId}_done")
 
-    // ✅ simpan status done
+    // simpan status done
     suspend fun setExerciseDone(exerciseId: String, activityId: String, done: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[doneKey(exerciseId, activityId)] = done
@@ -30,7 +30,6 @@ class ExercisePreferencesManager(private val context: Context) {
             val activities = prefs.asMap()
                 .filterKeys { it.name.startsWith("exercise_${exerciseId}_activity_") }
                 .mapKeys { entry ->
-                    // dari key "exercise_x_activity_y_done" ambil bagian activityId saja
                     entry.key.name
                         .removePrefix("exercise_${exerciseId}_activity_")
                         .removeSuffix("_done")

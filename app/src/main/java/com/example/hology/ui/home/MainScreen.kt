@@ -13,6 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hology.data.datastore.ExercisePreferencesManager
 import com.example.hology.data.datastore.UserPreferencesManager
+import com.example.hology.data.datastore.WevyPreferencesManager
 import com.example.hology.data.remote.api.CloudinaryService
 import com.example.hology.data.repository.ExerciseRepositoryImpl
 import com.example.hology.data.repository.UserRepositoryImpl
@@ -67,7 +68,9 @@ fun MainScreen(rootNavController: NavController) {
         factory = ExerciseViewModel.Factory(exerciseUseCase)
     )
 
-    val wevyRepo = WevyRepositoryImpl()
+    val wevyRepo = WevyRepositoryImpl(
+        preferences = WevyPreferencesManager(context),
+    )
 
     val wevyUseCase = WevyUseCase(
         repository = wevyRepo
@@ -134,7 +137,7 @@ fun MainScreen(rootNavController: NavController) {
 
             composable ("wevy_detail/{wevyId}") { backStackEntry ->
                 val wevyId = backStackEntry.arguments?.getString("wevyId") ?: ""
-                WevyDetailScreen(navController, wevyId)
+                WevyDetailScreen(navController, wevyId, wevyViewModel)
             }
 
             composable("wevy_activity/{wevyId}/{activityId}") {

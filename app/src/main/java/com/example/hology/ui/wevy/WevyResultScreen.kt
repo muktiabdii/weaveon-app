@@ -41,11 +41,6 @@ import com.example.hology.ui.theme.NeutralBlack
 import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.theme.Primary03
 
-data class MoodOption(
-    val color: Color,
-    val label: String
-)
-
 @Composable
 fun WevyResultScreen(
     navController: NavController,

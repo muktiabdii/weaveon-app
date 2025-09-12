@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.hology.data.model.EmotionDetectionResponse
+import com.example.hology.domain.model.WevyProgress
 import com.example.hology.domain.usecase.WevyUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,9 @@ class WevyViewModel(private val useCase: WevyUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow<WevyState>(WevyState.Idle)
     val state: StateFlow<WevyState> = _state
+
+    private val _wevyProgress = MutableStateFlow<WevyProgress?>(null)
+    val wevyProgress: StateFlow<WevyProgress?> = _wevyProgress
 
     // function to detect emotion
     fun uploadVideo(file: File, userId: String, wevyId: String, activityId: String) {
@@ -53,6 +57,15 @@ class WevyViewModel(private val useCase: WevyUseCase) : ViewModel() {
     fun saveEmotion(userId: String, wevyId: String, activityId: String, result: EmotionDetectionResponse) {
         viewModelScope.launch {
             useCase.saveEmotion(userId, wevyId, activityId, result)
+        }
+    }
+
+    // function load wevy progress
+    fun loadWevyProgress(wevyId: String) {
+        viewModelScope.launch {
+            useCase.getWevyProgress(wevyId).collect { progress ->
+                _wevyProgress.value = progress
+            }
         }
     }
 
