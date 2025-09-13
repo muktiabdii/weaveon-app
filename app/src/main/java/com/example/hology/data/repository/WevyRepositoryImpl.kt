@@ -108,6 +108,7 @@ class WevyRepositoryImpl(private val preferences: WevyPreferencesManager) : Wevy
         }
     }
 
+    // function to get category chart data
     override suspend fun getCategoryChartData(userId: String): List<ChartData> {
         return try {
             val snapshot = database.child("users")
@@ -126,14 +127,14 @@ class WevyRepositoryImpl(private val preferences: WevyPreferencesManager) : Wevy
 
                 val scores = mutableListOf<Int>()
 
-                // loop aktivitas yang ada aja
+                // loop all of activities
                 for (activitySnapshot in activitiesSnapshot.children) {
                     val label = activitySnapshot.child("label").getValue(String::class.java)
                     val score = emotionScore[label?.lowercase()] ?: continue
                     scores.add(score)
                 }
 
-                // kalau ada data, baru hitung rata-rata
+                // calculate average
                 if (scores.isNotEmpty()) {
                     val avg = scores.average().toFloat()
                     val categoryTitle = wevyList.find { it.id == wevyId }?.title ?: "Kategori $wevyId"

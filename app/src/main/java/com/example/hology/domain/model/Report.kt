@@ -5,6 +5,12 @@ data class Conclusion(
     val description: String
 )
 
+data class ReportTextState(
+    val conclusion: String = "",
+    val categoryDescription: String = "",
+    val categoryId: String = ""
+)
+
 data class ChartData(
     val label: String,
     val value: Float

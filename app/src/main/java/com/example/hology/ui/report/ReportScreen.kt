@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hology.R
 import com.example.hology.cache.UserData
+import com.example.hology.cache.reportCategoryList
+import com.example.hology.cache.wevyList
 import com.example.hology.ui.common.BarChart
 import com.example.hology.ui.common.RecommendedActivityCard
 import com.example.hology.ui.common.TicketCard
@@ -146,6 +148,13 @@ fun ReportScreen(
             is ReportState.Success -> {
                 val chartData = (state as ReportState.Success).data
 
+                LaunchedEffect(chartData) {
+                    viewModel.generateReport(user.uid, reportCategoryList)
+                }
+
+                val reportText by viewModel.reportText.collectAsState()
+                val reportCategory = reportCategoryList.find { it.id == reportText.categoryId }
+
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -186,9 +195,9 @@ fun ReportScreen(
                                     modifier = Modifier.weight(1f)
                                 )
                                 TabButton(
-                                    text = "Recent",
-                                    isSelected = selectedTab == "Recent",
-                                    onClick = { selectedTab = "Recent" },
+                                    text = "Terkini",
+                                    isSelected = selectedTab == "Terkini",
+                                    onClick = { selectedTab = "Terkini" },
                                     modifier = Modifier.weight(1f)
                                 )
                             }
@@ -217,7 +226,7 @@ fun ReportScreen(
                                         .padding(top = 16.dp)
                                 ) {
 
-                                    // conclution description
+                                    // conclusion description
                                     Text(
                                         text = "Deskripsi",
                                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
@@ -238,9 +247,9 @@ fun ReportScreen(
                                                 .padding(14.dp)
                                         ) {
                                             Text(
-                                                text = "Pada aktivitas Maze Sederhana, anak menunjukkan antusiasme ...",
+                                                text = reportText.conclusion,
                                                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                                fontSize = 16.sp,
+                                                fontSize = 14.sp,
                                                 lineHeight = 20.sp,
                                                 color = NeutralBlack
                                             )
@@ -251,7 +260,7 @@ fun ReportScreen(
 
                                     // category description
                                     Text(
-                                        text = "Deskripsi",
+                                        text = "🎯 ${reportCategory?.title ?: ""}",
                                         fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                                         fontSize = 16.sp,
                                         color = Color(0xFF474828)
@@ -270,9 +279,9 @@ fun ReportScreen(
                                                 .padding(14.dp)
                                         ) {
                                             Text(
-                                                text = "Pada aktivitas Maze Sederhana, anak menunjukkan antusiasme ...",
+                                                text = reportText.categoryDescription,
                                                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                                fontSize = 16.sp,
+                                                fontSize = 14.sp,
                                                 lineHeight = 20.sp,
                                                 color = NeutralBlack
                                             )
@@ -296,18 +305,18 @@ fun ReportScreen(
                                         color = Color(0xFF474828)
                                     )
 
-                                    repeat(5) { index ->
+                                    reportCategory?.recommendedActivity?.forEach { recommendedActivity ->
                                         RecommendedActivityCard(
-                                            title = "Aktivitas ${index + 1}",
-                                            description = "Deskripsi aktivitas ${index + 1}",
-                                            imageRes = R.drawable.bg_5
+                                            title = recommendedActivity.title,
+                                            description = recommendedActivity.description,
+                                            imageRes = recommendedActivity.image
                                         )
                                     }
                                 }
                             }
                         }
 
-                        "Recent" -> {
+                        "Terkini" -> {
                             val groupedTickets = ticketItems.groupBy { it.category }
 
                             groupedTickets.forEach { (category, tickets) ->
@@ -334,7 +343,7 @@ fun ReportScreen(
                                     )
                                 }
 
-                                item { Spacer(modifier = Modifier.height(24.dp)) }
+                                item { Spacer(modifier = Modifier.height(40.dp)) }
                             }
                         }
                     }

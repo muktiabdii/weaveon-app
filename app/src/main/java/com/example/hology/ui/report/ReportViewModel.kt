@@ -3,9 +3,11 @@ package com.example.hology.ui.report
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.hology.cache.conclusionList
+import com.example.hology.domain.model.Category
 import com.example.hology.domain.model.ChartData
+import com.example.hology.domain.model.ReportTextState
 import com.example.hology.domain.usecase.WevyUseCase
-import com.example.hology.ui.wevy.WevyViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,6 +27,10 @@ class ReportViewModel(private val useCase: WevyUseCase) : ViewModel() {
     private val _chartData = MutableStateFlow<List<ChartData>>(emptyList())
     val chartData: StateFlow<List<ChartData>> = _chartData
 
+    private val _reportText = MutableStateFlow(ReportTextState())
+    val reportText: StateFlow<ReportTextState> = _reportText
+
+    // function to get category chart data
     fun getCategoryChartData(userId: String) {
         viewModelScope.launch {
             _state.value = ReportState.Loading
@@ -34,6 +40,28 @@ class ReportViewModel(private val useCase: WevyUseCase) : ViewModel() {
                 _state.value = ReportState.Success(result)
             } catch (e: Exception) {
                 _state.value = ReportState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    // function to get conclusion
+    fun generateReport(
+        userId: String,
+        allCategories: List<Category>,
+    ) {
+        viewModelScope.launch {
+            try {
+                val (conclusion, categoryId, categoryDesc) = useCase.generateReport(userId, allCategories)
+                _reportText.value = ReportTextState(
+                    conclusion = conclusion,
+                    categoryDescription = categoryDesc,
+                    categoryId = categoryId
+                )
+            } catch (e: Exception) {
+                _reportText.value = ReportTextState(
+                    conclusion = "Gagal memuat kesimpulan: ${e.message}",
+                    categoryDescription = ""
+                )
             }
         }
     }
