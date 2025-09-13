@@ -31,10 +31,11 @@ fun TicketCard(
     title: String,
     description: String,
     isDone: Boolean = false,
-    onItemClick: () -> Unit = {}
+    onItemClick: () -> Unit = {},
+    modifier: Modifier = Modifier // kasih default biar nggak error kalau lupa isi
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable { onItemClick() }
     ) {

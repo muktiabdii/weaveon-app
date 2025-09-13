@@ -48,7 +48,7 @@ fun BarChart(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(horizontal = 20.dp)
             .height(450.dp),
         colors = CardDefaults.cardColors(
             containerColor = NeutralWhite

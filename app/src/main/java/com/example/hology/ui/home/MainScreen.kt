@@ -30,6 +30,7 @@ import com.example.hology.ui.exercise.JejakExerciseScreen
 import com.example.hology.ui.profile.EditProfileScreen
 import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
+import com.example.hology.ui.report.ReportScreen
 import com.example.hology.ui.wevy.WevyActivityScreen
 import com.example.hology.ui.wevy.WevyDetailScreen
 import com.example.hology.ui.wevy.WevyRecordScreen
