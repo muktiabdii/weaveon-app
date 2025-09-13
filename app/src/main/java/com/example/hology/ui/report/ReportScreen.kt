@@ -13,14 +13,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,14 +40,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hology.R
-import com.example.hology.domain.model.ChartData
+import com.example.hology.cache.UserData
 import com.example.hology.ui.common.BarChart
 import com.example.hology.ui.common.RecommendedActivityCard
 import com.example.hology.ui.common.TicketCard
 import com.example.hology.ui.theme.NeutralBlack
 import com.example.hology.ui.theme.NeutralWhite
+import com.example.hology.ui.theme.Primary03
 import com.example.hology.ui.theme.Secondary03
 import com.example.hology.ui.theme.Secondary09
+import com.example.hology.ui.wevy.WevyState
 
 data class TicketItem(
     val number: String,
@@ -54,19 +60,18 @@ data class TicketItem(
 )
 
 @Composable
-fun ReportScreen() {
-    var selectedTab by remember { mutableStateOf("Grafik") }
+fun ReportScreen(
+    viewModel: ReportViewModel
+) {
 
-    val chartData = remember {
-        listOf(
-            ChartData("Logika & Pola", 25f),
-            ChartData("Seni & Visual", 50f),
-            ChartData("Verbal", 50f),
-            ChartData("Sosial & Imajinasi", 25f),
-            ChartData("Musik & Auditori", 85f),
-            ChartData("Logika & Pola", 75f)
-        )
+    val state by viewModel.state.collectAsState()
+    val user = UserData
+
+    LaunchedEffect(Unit) {
+        viewModel.getCategoryChartData(user.uid)
     }
+
+    var selectedTab by remember { mutableStateOf("Grafik") }
 
     val ticketItems = remember {
         listOf(
@@ -127,198 +132,223 @@ fun ReportScreen() {
             contentScale = ContentScale.Crop
         )
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            // header
-            item {
-                Text(
-                    text = "Report",
-                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                    fontSize = 24.sp,
-                    color = Secondary09,
+        when (state) {
+            is ReportState.Loading -> {
+                CircularProgressIndicator(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .padding(top = 47.dp, bottom = 16.dp),
-                    textAlign = TextAlign.Center
+                        .size(size = 150.dp)
+                        .padding(bottom = 25.dp)
+                        .align(Alignment.Center),
+                    color = Primary03,
+                    strokeWidth = 10.dp
                 )
             }
+            is ReportState.Success -> {
+                val chartData = (state as ReportState.Success).data
 
-            // tab section (toggle)
-            item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    colors = CardDefaults.cardColors(containerColor = NeutralWhite),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    shape = RoundedCornerShape(50.dp)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        TabButton(
-                            text = "Grafik",
-                            isSelected = selectedTab == "Grafik",
-                            onClick = { selectedTab = "Grafik" },
-                            modifier = Modifier.weight(1f)
-                        )
-                        TabButton(
-                            text = "Recent",
-                            isSelected = selectedTab == "Recent",
-                            onClick = { selectedTab = "Recent" },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
 
-                Spacer(modifier = Modifier.height(41.dp))
-            }
-
-            // content based on section
-            when (selectedTab) {
-                "Grafik" -> {
+                    // header
                     item {
-
-                        // chart
-                        BarChart(
-                            modifier = Modifier.fillMaxWidth(),
-                            data = chartData
-                        )
-                    }
-
-                    item {
-                        Column(
+                        Text(
+                            text = "Report",
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                            fontSize = 24.sp,
+                            color = Secondary09,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp)
-                                .padding(top = 16.dp)
-                        ) {
-
-                            // conclution description
-                            Text(
-                                text = "Deskripsi",
-                                fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                                fontSize = 16.sp,
-                                color = Color(0xFF474828)
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                                border = BorderStroke(1.dp, NeutralBlack)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(14.dp)
-                                ) {
-                                    Text(
-                                        text = "Pada aktivitas Maze Sederhana, anak menunjukkan antusiasme ...",
-                                        fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                        fontSize = 16.sp,
-                                        lineHeight = 20.sp,
-                                        color = NeutralBlack
-                                    )
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            // category description
-                            Text(
-                                text = "Deskripsi",
-                                fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                                fontSize = 16.sp,
-                                color = Color(0xFF474828)
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                                border = BorderStroke(1.dp, NeutralBlack)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(14.dp)
-                                ) {
-                                    Text(
-                                        text = "Pada aktivitas Maze Sederhana, anak menunjukkan antusiasme ...",
-                                        fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                        fontSize = 16.sp,
-                                        lineHeight = 20.sp,
-                                        color = NeutralBlack
-                                    )
-                                }
-                            }
-                        }
+                                .padding(horizontal = 24.dp)
+                                .padding(top = 47.dp, bottom = 16.dp),
+                            textAlign = TextAlign.Center
+                        )
                     }
 
+                    // tab section (toggle)
                     item {
-                        Column(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp)
-                                .padding(top = 38.dp, bottom = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                                .padding(horizontal = 20.dp),
+                            colors = CardDefaults.cardColors(containerColor = NeutralWhite),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                            shape = RoundedCornerShape(50.dp)
                         ) {
-                            Text(
-                                text = "Kegiatan yang Direkomendasikan",
-                                fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                                fontSize = 16.sp,
-                                color = Color(0xFF474828)
-                            )
-
-                            repeat(5) { index ->
-                                RecommendedActivityCard(
-                                    title = "Aktivitas ${index + 1}",
-                                    description = "Deskripsi aktivitas ${index + 1}",
-                                    imageRes = R.drawable.bg_5
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                TabButton(
+                                    text = "Grafik",
+                                    isSelected = selectedTab == "Grafik",
+                                    onClick = { selectedTab = "Grafik" },
+                                    modifier = Modifier.weight(1f)
+                                )
+                                TabButton(
+                                    text = "Recent",
+                                    isSelected = selectedTab == "Recent",
+                                    onClick = { selectedTab = "Recent" },
+                                    modifier = Modifier.weight(1f)
                                 )
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(41.dp))
                     }
-                }
 
-                "Recent" -> {
-                    val groupedTickets = ticketItems.groupBy { it.category }
+                    // content based on section
+                    when (selectedTab) {
+                        "Grafik" -> {
+                            item {
 
-                    groupedTickets.forEach { (category, tickets) ->
-                        item {
-                            Text(
-                                text = category,
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                    color = NeutralBlack,
-                                    fontSize = 16.sp
-                                ),
-                                modifier = Modifier.padding(horizontal = 20.dp)
-                            )
+                                // chart
+                                BarChart(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    data = chartData
+                                )
+                            }
+
+                            item {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp)
+                                        .padding(top = 16.dp)
+                                ) {
+
+                                    // conclution description
+                                    Text(
+                                        text = "Deskripsi",
+                                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                        fontSize = 16.sp,
+                                        color = Color(0xFF474828)
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                                        border = BorderStroke(1.dp, NeutralBlack)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(14.dp)
+                                        ) {
+                                            Text(
+                                                text = "Pada aktivitas Maze Sederhana, anak menunjukkan antusiasme ...",
+                                                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                                fontSize = 16.sp,
+                                                lineHeight = 20.sp,
+                                                color = NeutralBlack
+                                            )
+                                        }
+                                    }
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    // category description
+                                    Text(
+                                        text = "Deskripsi",
+                                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                        fontSize = 16.sp,
+                                        color = Color(0xFF474828)
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                                        border = BorderStroke(1.dp, NeutralBlack)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(14.dp)
+                                        ) {
+                                            Text(
+                                                text = "Pada aktivitas Maze Sederhana, anak menunjukkan antusiasme ...",
+                                                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                                fontSize = 16.sp,
+                                                lineHeight = 20.sp,
+                                                color = NeutralBlack
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            item {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp)
+                                        .padding(top = 38.dp, bottom = 8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Text(
+                                        text = "Kegiatan yang Direkomendasikan",
+                                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                        fontSize = 16.sp,
+                                        color = Color(0xFF474828)
+                                    )
+
+                                    repeat(5) { index ->
+                                        RecommendedActivityCard(
+                                            title = "Aktivitas ${index + 1}",
+                                            description = "Deskripsi aktivitas ${index + 1}",
+                                            imageRes = R.drawable.bg_5
+                                        )
+                                    }
+                                }
+                            }
                         }
 
-                        items(tickets) { ticket ->
-                            TicketCard(
-                                number = ticket.number,
-                                title = ticket.title,
-                                description = ticket.description,
-                                isDone = ticket.isDone,
-                                onItemClick = { /* handle */ },
-                                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
-                            )
-                        }
+                        "Recent" -> {
+                            val groupedTickets = ticketItems.groupBy { it.category }
 
-                        item { Spacer(modifier = Modifier.height(24.dp)) }
+                            groupedTickets.forEach { (category, tickets) ->
+                                item {
+                                    Text(
+                                        text = category,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                            color = NeutralBlack,
+                                            fontSize = 16.sp
+                                        ),
+                                        modifier = Modifier.padding(horizontal = 20.dp)
+                                    )
+                                }
+
+                                items(tickets) { ticket ->
+                                    TicketCard(
+                                        number = ticket.number,
+                                        title = ticket.title,
+                                        description = ticket.description,
+                                        isDone = ticket.isDone,
+                                        onItemClick = { /* handle */ },
+                                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+                                    )
+                                }
+
+                                item { Spacer(modifier = Modifier.height(24.dp)) }
+                            }
+                        }
                     }
                 }
             }
+            is ReportState.Error -> {
+                Text(
+                    text = (state as ReportState.Error).message,
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+
+            else -> {}
         }
     }
 }

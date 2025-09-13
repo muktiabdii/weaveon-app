@@ -2,10 +2,13 @@ package com.example.hology.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.example.hology.cache.reportCategoryList
+import com.example.hology.cache.wevyList
 import com.example.hology.data.datastore.WevyPreferencesManager
 import com.example.hology.data.model.EmotionDetectionResponse
 import com.example.hology.data.remote.api.ApiEmotionDetectionService
 import com.example.hology.data.remote.firebase.FirebaseProvider
+import com.example.hology.domain.model.ChartData
 import com.example.hology.domain.model.WevyProgress
 import com.example.hology.domain.repository.WevyRepository
 import kotlinx.coroutines.flow.Flow
@@ -104,4 +107,58 @@ class WevyRepositoryImpl(private val preferences: WevyPreferencesManager) : Wevy
             null
         }
     }
+
+    override suspend fun getCategoryChartData(userId: String): List<ChartData> {
+        return try {
+            val snapshot = database.child("users")
+                .child(userId)
+                .child("wevy")
+                .get()
+                .await()
+
+            if (!snapshot.exists()) return emptyList()
+
+            val chartDataList = mutableListOf<ChartData>()
+
+            for (wevySnapshot in snapshot.children) {
+                val wevyId = wevySnapshot.key ?: continue
+                val activitiesSnapshot = wevySnapshot.child("activities")
+
+                val scores = mutableListOf<Int>()
+
+                // loop aktivitas yang ada aja
+                for (activitySnapshot in activitiesSnapshot.children) {
+                    val label = activitySnapshot.child("label").getValue(String::class.java)
+                    val score = emotionScore[label?.lowercase()] ?: continue
+                    scores.add(score)
+                }
+
+                // kalau ada data, baru hitung rata-rata
+                if (scores.isNotEmpty()) {
+                    val avg = scores.average().toFloat()
+                    val categoryTitle = wevyList.find { it.id == wevyId }?.title ?: "Kategori $wevyId"
+
+                    chartDataList.add(
+                        ChartData(
+                            label = categoryTitle,
+                            value = avg
+                        )
+                    )
+                }
+            }
+
+            Log.d("Wevy", "Data chart: $chartDataList")
+            chartDataList
+        } catch (e: Exception) {
+            Log.e("Wevy", "Gagal ambil data chart: ${e.message}", e)
+            emptyList()
+        }
+    }
+
+    private val emotionScore = mapOf(
+        "sangat tidak senang" to 1,
+        "kurang senang" to 2,
+        "cukup senang" to 3,
+        "sangat senang" to 4
+    )
 }

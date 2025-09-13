@@ -31,6 +31,7 @@ import com.example.hology.ui.profile.EditProfileScreen
 import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
 import com.example.hology.ui.report.ReportScreen
+import com.example.hology.ui.report.ReportViewModel
 import com.example.hology.ui.wevy.WevyActivityScreen
 import com.example.hology.ui.wevy.WevyDetailScreen
 import com.example.hology.ui.wevy.WevyRecordScreen
@@ -57,6 +58,7 @@ fun MainScreen(rootNavController: NavController) {
         factory = UserViewModel.Factory(userUseCase)
     )
 
+    // initiate exercise
     val exerciseRepo = ExerciseRepositoryImpl(
         service = CloudinaryService.instance,
         context = context,
@@ -69,15 +71,20 @@ fun MainScreen(rootNavController: NavController) {
         factory = ExerciseViewModel.Factory(exerciseUseCase)
     )
 
+    // initiate wevy
     val wevyRepo = WevyRepositoryImpl(
         preferences = WevyPreferencesManager(context),
     )
-
     val wevyUseCase = WevyUseCase(
         repository = wevyRepo
     )
     val wevyViewModel: WevyViewModel = viewModel(
         factory = WevyViewModel.Factory(wevyUseCase)
+    )
+
+    // initiate report
+    val reportViewModel: ReportViewModel = viewModel(
+        factory = ReportViewModel.Factory(wevyUseCase)
     )
 
     // initiate BottomNavBar
@@ -98,7 +105,7 @@ fun MainScreen(rootNavController: NavController) {
             }
 
             composable("report") {
-                ReportScreen()
+                ReportScreen(viewModel = reportViewModel)
             }
 
             composable("profile") {

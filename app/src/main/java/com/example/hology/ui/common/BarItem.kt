@@ -17,26 +17,15 @@ fun BarItem(
     data: ChartData,
     modifier: Modifier = Modifier
 ) {
-    val level = when {
-        data.value <= 25f -> 1
-        data.value <= 50f -> 2
-        data.value <= 75f -> 3
-        else -> 4
-    }
+    val normalizedValue = data.value.coerceIn(1f, 4f)
 
-    val levelHeights = mapOf(
-        1 to 75.dp,
-        2 to 150.dp,
-        3 to 225.dp,
-        4 to 300.dp
-    )
-
-    val barHeight = levelHeights[level] ?: 0.dp
+    val maxHeight = 300.dp
+    val barHeight = (normalizedValue / 4f) * maxHeight.value
 
     Box(
         modifier = modifier
             .width(30.dp)
-            .height(barHeight)
+            .height(barHeight.dp)
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(

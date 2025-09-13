@@ -2,7 +2,6 @@ package com.example.hology.ui.common
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -25,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.res.painterResource
@@ -43,7 +39,7 @@ import com.example.hology.ui.theme.NeutralWhite
 @Composable
 fun BarChart(
     modifier: Modifier = Modifier,
-    data: List<ChartData> = defaultChartData()
+    data: List<ChartData>
 ) {
     Card(
         modifier = modifier
@@ -185,15 +181,4 @@ fun BarChart(
             }
         }
     }
-}
-
-private fun defaultChartData(): List<ChartData> {
-    return listOf(
-        ChartData("Logika & Pola", 25f),
-        ChartData("Seni & Visual", 50f),
-        ChartData("Verbal", 50f),
-        ChartData("Sosial & Imajinasi", 25f),
-        ChartData("Musik & Auditori", 85f),
-        ChartData("Logika & Pola", 75f)
-    )
 }
