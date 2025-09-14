@@ -192,7 +192,7 @@ fun WevyDetailScreen(
                                         selectedActivityId = activity.id
                                         showDialog = true
                                     } else {
-                                        navController.navigate("wevy_record/${wevy.id}/${activity.id}")
+                                        navController.navigate("wevy_activity/${wevy.id}/${activity.id}")
                                     }
                                 }
                             )

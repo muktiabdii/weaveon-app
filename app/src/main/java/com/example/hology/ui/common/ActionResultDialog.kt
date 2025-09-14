@@ -18,12 +18,16 @@ import androidx.compose.ui.unit.sp
 import com.example.hology.R
 import com.example.hology.ui.theme.Green
 import com.example.hology.ui.theme.NeutralBlack
+import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.theme.Primary03
 import com.example.hology.ui.theme.Primary04
 import com.example.hology.ui.theme.Red
 import com.example.hology.ui.theme.Secondary00
 import com.example.hology.ui.theme.Secondary02
+import com.example.hology.ui.theme.Secondary05
 import com.example.hology.ui.theme.Secondary08
+import com.example.hology.ui.theme.Secondary09
+import com.example.hology.ui.theme.Secondary10
 
 @Composable
 fun ActionResultDialog(
@@ -72,7 +76,7 @@ fun ActionResultDialog(
                         contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
                         modifier = Modifier
                             .size(size = 150.dp)
-                            .padding(bottom = 55.dp)
+                            .padding(bottom = 37.dp)
                     )
                 }
 
@@ -84,7 +88,7 @@ fun ActionResultDialog(
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                            color = if (isSuccess) NeutralBlack else Red,
+                            color = NeutralBlack,
                             lineHeight = 28.sp
                         )
                     )
@@ -96,7 +100,7 @@ fun ActionResultDialog(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                            color = Secondary08
+                            color = Secondary10
                         ),
                         textAlign = TextAlign.Center
                     )
@@ -115,7 +119,7 @@ fun ActionResultDialog(
                     shape = RoundedCornerShape(30.dp),
                     enabled = !isLoading,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSuccess) Green else Color.Red,
+                        containerColor = Secondary05,
                         contentColor = Color.White,
                         disabledContainerColor = Secondary00,
                         disabledContentColor = Secondary02

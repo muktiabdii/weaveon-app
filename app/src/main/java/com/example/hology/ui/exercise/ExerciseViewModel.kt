@@ -40,6 +40,11 @@ class ExerciseViewModel(private val exerciseUseCase: ExerciseUseCase) : ViewMode
     private val _history = MutableStateFlow<List<ExerciseHistoryUi>>(emptyList())
     val history: StateFlow<List<ExerciseHistoryUi>> = _history
 
+    // function to reset image state
+    fun resetImageState() {
+        _imageUrl.value = null
+        _uploadState.value = ExerciseState.Idle
+    }
 
     // function upload image ke Cloudinary
     fun uploadImage(uri: Uri) {

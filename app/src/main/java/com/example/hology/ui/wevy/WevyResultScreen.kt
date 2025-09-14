@@ -99,7 +99,7 @@ fun WevyResultScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
                                 .background(Secondary01),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {

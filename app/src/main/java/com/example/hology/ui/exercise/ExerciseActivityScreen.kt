@@ -109,7 +109,10 @@ fun ExerciseActivityScreen(
 
     when (saveState) {
         is ExerciseState.Success -> {
-            LaunchedEffect(Unit) { showUploadDialog = false }
+            LaunchedEffect(Unit) {
+                showUploadDialog = false
+                viewModel.resetImageState()
+            }
         }
         is ExerciseState.Error -> {
             val errorMessage = (saveState as ExerciseState.Error).message
