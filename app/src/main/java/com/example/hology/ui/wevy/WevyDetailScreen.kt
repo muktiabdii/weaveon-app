@@ -47,6 +47,7 @@ fun WevyDetailScreen(
     val wevy = wevyList.find { it.id == wevyId }
     val progress = viewModel.wevyProgress.collectAsState().value
     var showDialog by remember { mutableStateOf(false) }
+    var selectedActivityId by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(wevyId) {
         viewModel.loadWevyProgress(wevyId)
@@ -61,6 +62,7 @@ fun WevyDetailScreen(
             onDismissRequest = { showDialog = false },
             onButtonClick = {
                 showDialog = false
+                navController.navigate("wevy_result/$wevyId/$selectedActivityId")
             },
             iconRes = R.drawable.done_3d
         )
@@ -187,6 +189,7 @@ fun WevyDetailScreen(
                                 description = activity.description,
                                 onItemClick = {
                                     if (isDone) {
+                                        selectedActivityId = activity.id
                                         showDialog = true
                                     } else {
                                         navController.navigate("wevy_record/${wevy.id}/${activity.id}")

@@ -2,44 +2,38 @@
 
 package com.example.hology.ui.wevy
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hology.R
 import com.example.hology.cache.UserData
+import com.example.hology.cache.wevyList
 import com.example.hology.cache.wevyResultList
 import com.example.hology.ui.common.TopNavbar
 import com.example.hology.ui.theme.NeutralBlack
 import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.theme.Primary03
+import com.example.hology.ui.theme.Secondary01
+import com.example.hology.ui.theme.Secondary09
 
 @Composable
 fun WevyResultScreen(
@@ -48,8 +42,9 @@ fun WevyResultScreen(
     activityId: String,
     viewModel: WevyViewModel
 ) {
-
     val state by viewModel.state.collectAsState()
+    val wevy = wevyList.find { it.id == wevyId }
+    val activity = wevy?.activities?.find { it.id == activityId }
     val user = UserData
 
     LaunchedEffect(Unit) {
@@ -81,7 +76,7 @@ fun WevyResultScreen(
                 is WevyState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier
-                            .size(size = 150.dp)
+                            .size(150.dp)
                             .padding(bottom = 25.dp)
                             .align(Alignment.Center),
                         color = Primary03,
@@ -98,68 +93,134 @@ fun WevyResultScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
-                            .padding(16.dp)
                     ) {
-                        // Tampilkan semua emot
-                        Row(
+
+                        // header section
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 47.dp),
-                            horizontalArrangement = Arrangement.Center
+                                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                                .background(Secondary01),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            wevyResultList.forEach { item ->
-                                val isActive = item.label.lowercase() == activeLabel
-                                Image(
-                                    painter = painterResource(
-                                        id = if (isActive) item.activeIcon else item.inactiveIcon
-                                    ),
-                                    contentDescription = item.label,
-                                    modifier = Modifier.size(60.dp)
-                                )
 
-                                if (item != wevyResultList.last()) {
-                                    Spacer(modifier = Modifier.width(16.dp))
+                            // category tag
+                            Card(
+                                modifier = Modifier
+                                    .wrapContentSize()
+                                    .padding(top = 35.dp)
+                                    .clip(RoundedCornerShape(32.dp))
+                                    .background(
+                                        brush = Brush.horizontalGradient(
+                                            colors = listOf(
+                                                Color(0xFFFFA686),
+                                                Color(0xFFC5C784)
+                                            )
+                                        )
+                                    ),
+                                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_category),
+                                        contentDescription = "Category",
+                                        modifier = Modifier.size(20.dp)
+                                    )
+
+                                    Spacer(modifier = Modifier.width(6.dp))
+
+                                    Text(
+                                        text = wevy?.title ?: "",
+                                        color = NeutralBlack,
+                                        fontSize = 14.sp,
+                                        fontFamily = FontFamily(Font(R.font.poppins_medium))
+                                    )
                                 }
                             }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            // title
+                            Text(
+                                text = activity?.title ?: "",
+                                color = Secondary09,
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(bottom = 27.dp)
+                            )
                         }
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(40.dp))
 
-                        Text(
-                            text = matched?.label ?: "",
-                            color = matched?.color ?: Color.Black,
-                            fontSize = 16.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 16.dp),
+                        ) {
 
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        // Card activity description
-                        if (matched != null) {
-                            Card(
+                            // icons
+                            Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                                border = BorderStroke(1.dp, NeutralBlack)
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                Column(
-                                    modifier = Modifier.padding(14.dp)
-                                ) {
-                                    Text(
-                                        text = matched.description,
-                                        color = NeutralBlack,
-                                        fontSize = 15.sp,
-                                        fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                        lineHeight = 20.sp
+                                wevyResultList.forEach { item ->
+                                    val isActive = item.label.lowercase() == activeLabel
+                                    Image(
+                                        painter = painterResource(
+                                            id = if (isActive) item.activeIcon else item.inactiveIcon
+                                        ),
+                                        contentDescription = item.label,
+                                        modifier = Modifier.size(60.dp)
                                     )
+
+                                    if (item != wevyResultList.last()) {
+                                        Spacer(modifier = Modifier.width(16.dp))
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            Text(
+                                text = matched?.label ?: "",
+                                color = matched?.color ?: Color.Black,
+                                fontSize = 16.sp,
+                                fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Spacer(modifier = Modifier.height(32.dp))
+
+                            // card activity description
+                            if (matched != null) {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                                    border = BorderStroke(1.dp, NeutralBlack)
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(14.dp)
+                                    ) {
+                                        Text(
+                                            text = matched.description,
+                                            color = NeutralBlack,
+                                            fontSize = 15.sp,
+                                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                            lineHeight = 20.sp
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
 
                 is WevyState.Error -> {
                     Text(
