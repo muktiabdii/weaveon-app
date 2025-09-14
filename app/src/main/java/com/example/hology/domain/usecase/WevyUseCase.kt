@@ -5,6 +5,7 @@ import com.example.hology.data.model.EmotionDetectionResponse
 import com.example.hology.domain.model.Category
 import com.example.hology.domain.model.ChartData
 import com.example.hology.domain.model.Conclusion
+import com.example.hology.domain.model.WevyHistoryItem
 import com.example.hology.domain.model.WevyProgress
 import com.example.hology.domain.repository.WevyRepository
 import kotlinx.coroutines.flow.Flow
@@ -100,4 +101,8 @@ class WevyUseCase(private val repository: WevyRepository) {
         }
     }
 
+    // function to get wevy history
+    suspend fun getWevyHistory(userId: String): Result<List<WevyHistoryItem>> {
+        return repository.getWevyHistory(userId)
+    }
 }

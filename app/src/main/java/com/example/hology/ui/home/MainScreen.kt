@@ -105,7 +105,7 @@ fun MainScreen(rootNavController: NavController) {
             }
 
             composable("report") {
-                ReportScreen(viewModel = reportViewModel)
+                ReportScreen(navController = navController, viewModel = reportViewModel)
             }
 
             composable("profile") {

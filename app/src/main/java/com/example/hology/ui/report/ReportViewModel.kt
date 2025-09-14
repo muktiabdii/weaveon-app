@@ -3,29 +3,37 @@ package com.example.hology.ui.report
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.hology.cache.conclusionList
 import com.example.hology.domain.model.Category
 import com.example.hology.domain.model.ChartData
 import com.example.hology.domain.model.ReportTextState
+import com.example.hology.domain.model.WevyHistoryItem
 import com.example.hology.domain.usecase.WevyUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// general state
-sealed class ReportState{
-    object Idle : ReportState()
-    object Loading : ReportState()
-    data class Success(val data: List<ChartData>) : ReportState()
-    data class Error(val message: String) : ReportState()
+// graphic state
+sealed class GraphicState{
+    object Idle : GraphicState()
+    object Loading : GraphicState()
+    data class Success(val data: List<ChartData>) : GraphicState()
+    data class Error(val message: String) : GraphicState()
+}
+
+// history state
+sealed class HistoryState{
+    object Idle : HistoryState()
+    object Loading : HistoryState()
+    data class Success(val data: List<WevyHistoryItem>) : HistoryState()
+    data class Error(val message: String) : HistoryState()
 }
 
 class ReportViewModel(private val useCase: WevyUseCase) : ViewModel() {
-    private val _state = MutableStateFlow<ReportState>(ReportState.Idle)
-    val state: StateFlow<ReportState> = _state
+    private val _graphicState = MutableStateFlow<GraphicState>(GraphicState.Idle)
+    val graphicState: StateFlow<GraphicState> = _graphicState
 
-    private val _chartData = MutableStateFlow<List<ChartData>>(emptyList())
-    val chartData: StateFlow<List<ChartData>> = _chartData
+    private val _historyState = MutableStateFlow<HistoryState>(HistoryState.Idle)
+    val historyState: StateFlow<HistoryState> = _historyState
 
     private val _reportText = MutableStateFlow(ReportTextState())
     val reportText: StateFlow<ReportTextState> = _reportText
@@ -33,13 +41,12 @@ class ReportViewModel(private val useCase: WevyUseCase) : ViewModel() {
     // function to get category chart data
     fun getCategoryChartData(userId: String) {
         viewModelScope.launch {
-            _state.value = ReportState.Loading
+            _graphicState.value = GraphicState.Loading
             try {
                 val result = useCase.getCategoryChartData(userId)
-                _chartData.value = result
-                _state.value = ReportState.Success(result)
+                _graphicState.value = GraphicState.Success(result)
             } catch (e: Exception) {
-                _state.value = ReportState.Error(e.message ?: "Unknown error")
+                _graphicState.value = GraphicState.Error(e.message ?: "Unknown error")
             }
         }
     }
@@ -61,6 +68,23 @@ class ReportViewModel(private val useCase: WevyUseCase) : ViewModel() {
                     conclusion = "Gagal memuat kesimpulan: ${e.message}",
                     categoryId = ""
                 )
+            }
+        }
+    }
+
+    // function to get wevy history
+    fun getWevyHistory(userId: String) {
+        viewModelScope.launch {
+            _historyState.value = HistoryState.Loading
+            try {
+                val result = useCase.getWevyHistory(userId)
+                if (result.isSuccess) {
+                    _historyState.value = HistoryState.Success(result.getOrThrow())
+                } else {
+                    _historyState.value = HistoryState.Error(result.exceptionOrNull()?.message ?: "Unknown error")
+                }
+                } catch (e: Exception) {
+                _historyState.value = HistoryState.Error(e.message ?: "Unknown error")
             }
         }
     }

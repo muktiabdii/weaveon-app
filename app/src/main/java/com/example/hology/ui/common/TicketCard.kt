@@ -27,12 +27,12 @@ import com.example.hology.ui.theme.Secondary09
 
 @Composable
 fun TicketCard(
+    modifier: Modifier = Modifier,
     number: String,
     title: String,
     description: String,
     isDone: Boolean = false,
-    onItemClick: () -> Unit = {},
-    modifier: Modifier = Modifier // kasih default biar nggak error kalau lupa isi
+    onItemClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier

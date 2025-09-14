@@ -9,6 +9,7 @@ import com.example.hology.data.model.EmotionDetectionResponse
 import com.example.hology.data.remote.api.ApiEmotionDetectionService
 import com.example.hology.data.remote.firebase.FirebaseProvider
 import com.example.hology.domain.model.ChartData
+import com.example.hology.domain.model.WevyHistoryItem
 import com.example.hology.domain.model.WevyProgress
 import com.example.hology.domain.repository.WevyRepository
 import kotlinx.coroutines.flow.Flow
@@ -156,10 +157,40 @@ class WevyRepositoryImpl(private val preferences: WevyPreferencesManager) : Wevy
         }
     }
 
+    // mapping emotion score
     private val emotionScore = mapOf(
         "sangat tidak senang" to 1,
         "kurang senang" to 2,
         "cukup senang" to 3,
         "sangat senang" to 4
     )
+
+    // function to get wevy history
+    override suspend fun getWevyHistory(userId: String): Result<List<WevyHistoryItem>> {
+        return try {
+            val snapshot = database.child("users")
+                .child(userId)
+                .child("wevy")
+                .get()
+                .await()
+            if (!snapshot.exists()) return Result.failure(Exception("No data found"))
+            val history = mutableListOf<WevyHistoryItem>()
+            for (wevySnapshot in snapshot.children) {
+                val wevyId = wevySnapshot.key ?: continue
+                val activitiesSnapshot = wevySnapshot.child("activities")
+                for (activitySnapshot in activitiesSnapshot.children) {
+                    val activityId = activitySnapshot.key ?: continue
+                    history.add(
+                        WevyHistoryItem(
+                            wevyId = wevyId,
+                            activityId = activityId
+                        )
+                    )
+                }
+            }
+            Result.success(history)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
