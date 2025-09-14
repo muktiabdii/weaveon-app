@@ -279,7 +279,7 @@ fun ReportScreen(
                                                 .padding(14.dp)
                                         ) {
                                             Text(
-                                                text = reportText.categoryDescription,
+                                                text = reportCategory?.description?: "",
                                                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
                                                 fontSize = 14.sp,
                                                 lineHeight = 20.sp,

@@ -51,16 +51,15 @@ class ReportViewModel(private val useCase: WevyUseCase) : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                val (conclusion, categoryId, categoryDesc) = useCase.generateReport(userId, allCategories)
+                val (conclusion, categoryId) = useCase.generateReport(userId, allCategories)
                 _reportText.value = ReportTextState(
                     conclusion = conclusion,
-                    categoryDescription = categoryDesc,
                     categoryId = categoryId
                 )
             } catch (e: Exception) {
                 _reportText.value = ReportTextState(
                     conclusion = "Gagal memuat kesimpulan: ${e.message}",
-                    categoryDescription = ""
+                    categoryId = ""
                 )
             }
         }

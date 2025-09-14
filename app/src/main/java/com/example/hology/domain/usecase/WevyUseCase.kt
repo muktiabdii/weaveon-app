@@ -42,14 +42,14 @@ class WevyUseCase(private val repository: WevyRepository) {
     suspend fun generateReport(
         userId: String,
         allCategories: List<Category>,
-    ): Triple<String, String, String> {
+    ): Pair<String, String> {
 
         // get category chart data
         val chartData = repository.getCategoryChartData(userId)
         val conclusionTemplates = conclusionList
 
         if (chartData.isEmpty()) {
-            return Triple("Belum ada data aktivitas yang bisa dianalisis.", "", "")
+            return Pair("Belum ada data aktivitas yang bisa dianalisis.", "")
         }
 
         // sort category chart data by value
@@ -81,17 +81,12 @@ class WevyUseCase(private val repository: WevyRepository) {
             }
         }
 
-        // get category description
-        val categoryDesc = topCategories.firstOrNull()?.let { top ->
-            allCategories.find { it.title == top.label }?.description ?: ""
-        } ?: ""
-
         // get category id
         val categoryId = topCategories.firstOrNull()?.let { top ->
             allCategories.find { it.title == top.label }?.id ?: ""
         } ?: ""
 
-        return Triple(conclusion, categoryId, categoryDesc)
+        return Pair(conclusion, categoryId)
     }
 
     // helper function to convert float to expression

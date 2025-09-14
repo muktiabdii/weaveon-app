@@ -7,7 +7,6 @@ data class Conclusion(
 
 data class ReportTextState(
     val conclusion: String = "",
-    val categoryDescription: String = "",
     val categoryId: String = ""
 )
 
