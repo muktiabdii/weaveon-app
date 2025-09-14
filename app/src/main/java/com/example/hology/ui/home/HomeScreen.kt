@@ -209,7 +209,12 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(35.dp))
 
                 // exercise carousel
-                ExerciseCarousel(exerciseItems = history)
+                ExerciseCarousel(
+                    exerciseItems = history,
+                    onSeeAllClick = {
+                        navController.navigate("jejak-exercise")
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(35.dp))
             }

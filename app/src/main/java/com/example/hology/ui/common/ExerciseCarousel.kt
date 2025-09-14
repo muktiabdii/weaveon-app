@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,10 +29,16 @@ import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ExerciseCarousel(exerciseItems: List<ExerciseHistoryUi>) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+fun ExerciseCarousel(
+    exerciseItems: List<ExerciseHistoryUi>,
+    onSeeAllClick: () -> Unit = {}
+) {
+    val displayItems = exerciseItems.take(3)
+    val totalPages = displayItems.size + 1
+
+    val pagerState = rememberPagerState(pageCount = { totalPages })
+
+    Column(modifier = Modifier.fillMaxWidth()) {
 
         // section title
         Text(
@@ -42,9 +49,6 @@ fun ExerciseCarousel(exerciseItems: List<ExerciseHistoryUi>) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // carousel
-        val pagerState = rememberPagerState(pageCount = { exerciseItems.size })
 
         Box(
             modifier = Modifier
@@ -57,27 +61,42 @@ fun ExerciseCarousel(exerciseItems: List<ExerciseHistoryUi>) {
                 pageSpacing = (-30).dp,
                 contentPadding = PaddingValues(horizontal = 40.dp)
             ) { page ->
-                val pageOffset = ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
+                if (page < displayItems.size) {
+                    val pageOffset = ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
+                    val scale by animateFloatAsState(targetValue = if (pageOffset < 0.5) 1f else 0.9f)
+                    val alpha by animateFloatAsState(targetValue = if (pageOffset < 0.5) 1f else 0.5f)
 
-                // calculate scale animation
-                val scale by animateFloatAsState(targetValue = if (pageOffset < 0.5) 1f else 0.9f)
-                val alpha by animateFloatAsState(targetValue = if (pageOffset < 0.5) 1f else 0.5f)
-
-                Box(
-                    modifier = Modifier
-                        .zIndex(if (pageOffset < 0.5) 1f else 0f)
-                        .graphicsLayer {
-                            this.scaleX = scale
-                            this.scaleY = scale
-                            this.alpha = alpha
+                    Box(
+                        modifier = Modifier
+                            .zIndex(if (pageOffset < 0.5) 1f else 0f)
+                            .graphicsLayer {
+                                this.scaleX = scale
+                                this.scaleY = scale
+                                this.alpha = alpha
+                            }
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        ExerciseCarouselCard(
+                            exerciseItem = displayItems[page],
+                            isActive = page == pagerState.currentPage
+                        )
+                    }
+                } else {
+                    // item ke-4: tombol "Lihat Semua"
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Button(
+                            onClick = onSeeAllClick,
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Text(text = "Lihat Semua Exercise")
                         }
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                ) {
-                    ExerciseCarouselCard(
-                        exerciseItem = exerciseItems[page],
-                        isActive = page == pagerState.currentPage
-                    )
+                    }
                 }
             }
         }
@@ -89,7 +108,7 @@ fun ExerciseCarousel(exerciseItems: List<ExerciseHistoryUi>) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
             horizontalArrangement = Arrangement.Center
         ) {
-            repeat(exerciseItems.size) { index ->
+            repeat(totalPages) { index ->
                 val isSelected = index == pagerState.currentPage
                 val size by animateDpAsState(targetValue = if (isSelected) 10.dp else 8.dp)
                 val color = if (isSelected) Color(0xFF703D2A) else Color.Gray.copy(alpha = 0.3f)
