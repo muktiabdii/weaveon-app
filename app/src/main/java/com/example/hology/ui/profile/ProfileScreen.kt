@@ -39,99 +39,96 @@ fun ProfileScreen(
     val scrollState = rememberScrollState()
     val userState by viewModel.userState.collectAsState()
 
-    Scaffold(
-    ) { innerPadding ->
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Base,)
+            .padding(innerPadding)
+            .verticalScroll(scrollState)
+    ) {
+
+        // header
+        ProfileHeader(
+            username = userState.name,
+            email = userState.email
+        )
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Base,)
-                .padding(innerPadding)
-                .verticalScroll(scrollState)
+                .padding(top = 190.dp, start = 16.dp, end = 16.dp)
         ) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // header
-            ProfileHeader(
-                username = userState.name,
-                email = userState.email
+            Text(
+                text = "Pengaturan akun",
+                fontSize = 13.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                color = Primary06,
+                modifier = Modifier.padding(start = 14.dp, bottom = 8.dp)
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 190.dp, start = 16.dp, end = 16.dp)
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = "Pengaturan akun",
-                    fontSize = 13.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                    color = Primary06,
-                    modifier = Modifier.padding(start = 14.dp, bottom = 8.dp)
+            // account settings section
+            SettingsCard {
+                SettingsItem(
+                    icon = painterResource(id = R.drawable.ic_pencil),
+                    title = "Edit Profil",
+                    onClick = { navController.navigate("edit_profile") }
                 )
-
-                // account settings section
-                SettingsCard {
-                    SettingsItem(
-                        icon = painterResource(id = R.drawable.ic_pencil),
-                        title = "Edit Profil",
-                        onClick = { navController.navigate("edit_profile") }
-                    )
-                    Divider(modifier = Modifier.background(Primary04))
-                    SettingsItem(
-                        icon = painterResource(id = R.drawable.ic_lock_2),
-                        title = "Ganti Kata Sandi",
-                        onClick = {
-                            rootNavController.navigate("forgot-password") {
-                                popUpTo(0) { inclusive = true }
-                            }
+                Divider(modifier = Modifier.background(Primary04))
+                SettingsItem(
+                    icon = painterResource(id = R.drawable.ic_lock_2),
+                    title = "Ganti Kata Sandi",
+                    onClick = {
+                        rootNavController.navigate("forgot-password") {
+                            popUpTo(0) { inclusive = true }
                         }
-                    )
-                    Divider(modifier = Modifier.background(Primary04))
-                    SettingsItem(
-                        icon = painterResource(id = R.drawable.ic_archive),
-                        title = "Jejak Exercise",
-                        onClick = { navController.navigate("jejak-exercise") }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // other account settings section
-                Text(
-                    text = "Lainnya",
-                    fontSize = 13.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                    color = Primary06,
-                    modifier = Modifier.padding(start = 14.dp, bottom = 8.dp)
+                    }
                 )
-
-                SettingsCard {
-                    SettingsItem(
-                        icon = painterResource(id = R.drawable.ic_sign_out),
-                        title = "Keluar",
-                        onClick = {
-                            viewModel.logout()
-                            rootNavController.navigate("login") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    )
-                    Divider(modifier = Modifier.background(Primary04))
-                    SettingsItem(
-                        icon = painterResource(id = R.drawable.ic_trash),
-                        title = "Hapus Akun",
-                        onClick = {
-                            viewModel.deleteAccount()
-                            rootNavController.navigate("login") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(30.dp))
-
+                Divider(modifier = Modifier.background(Primary04))
+                SettingsItem(
+                    icon = painterResource(id = R.drawable.ic_archive),
+                    title = "Jejak Exercise",
+                    onClick = { navController.navigate("jejak-exercise") }
+                )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // other account settings section
+            Text(
+                text = "Lainnya",
+                fontSize = 13.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                color = Primary06,
+                modifier = Modifier.padding(start = 14.dp, bottom = 8.dp)
+            )
+
+            SettingsCard {
+                SettingsItem(
+                    icon = painterResource(id = R.drawable.ic_sign_out),
+                    title = "Keluar",
+                    onClick = {
+                        viewModel.logout()
+                        rootNavController.navigate("login") {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+                Divider(modifier = Modifier.background(Primary04))
+                SettingsItem(
+                    icon = painterResource(id = R.drawable.ic_trash),
+                    title = "Hapus Akun",
+                    onClick = {
+                        viewModel.deleteAccount()
+                        rootNavController.navigate("login") {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
         }
     }
 }

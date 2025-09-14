@@ -36,11 +36,6 @@ fun BottomNavBar(
 ) {
     Box(
         modifier = Modifier
-            .shadow(
-                elevation = 6.dp,
-                spotColor = Color(0x33000000),
-                ambientColor = Color(0x33000000)
-            )
             .fillMaxWidth()
             .height(80.dp)
             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))

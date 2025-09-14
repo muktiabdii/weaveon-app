@@ -55,169 +55,166 @@ fun HomeScreen(
         viewModel.loadExerciseHistory(user.uid, exerciseList)
     }
 
-    Scaffold(
-        containerColor = NeutralWhite
-    ) { innerPadding ->
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(NeutralWhite)
+            .verticalScroll(scrollState)
+            .padding(16.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.header_home_screen),
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.Crop
+        )
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(scrollState)
+                .padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.header_home_screen),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
-
-            Column(
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .padding(top = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
 
-                    // header
-                    Column {
-                        Text(
-                            text = "Hi, Bunda!",
-                            color = Secondary09,
-                            fontSize = 22.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_semibold))
-                        )
-                        Text(
-                            text = "Temani tumbuh si kecil, yuk!",
-                            color = Secondary07,
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_medium))
-                        )
-                    }
-
-                    // profile picture
-                    Image(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profile Picture",
-                        modifier = Modifier
-                            .size(50.dp)
-                            .clip(CircleShape)
-                            .background(NeutralWhite),
-                        contentScale = ContentScale.Crop
+                // header
+                Column {
+                    Text(
+                        text = "Hi, Bunda!",
+                        color = Secondary09,
+                        fontSize = 22.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_semibold))
+                    )
+                    Text(
+                        text = "Temani tumbuh si kecil, yuk!",
+                        color = Secondary07,
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium))
                     )
                 }
 
-                Spacer(modifier = Modifier.height(5.dp))
+                // profile picture
+                Image(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .background(NeutralWhite),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Image(
-                        painter = painterResource(id = R.drawable.bulp_3d),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(110.dp)
-                            .offset(x = (-12).dp, y = 48.dp)
-                            .zIndex(1f)
-                    )
+            Spacer(modifier = Modifier.height(5.dp))
 
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 32.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-                    ) {
-                        Box(modifier = Modifier.fillMaxWidth()) {
-                            Image(
-                                painter = painterResource(id = R.drawable.card_home_screen),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxWidth(),
-                                contentScale = ContentScale.Crop
-                            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(id = R.drawable.bulp_3d),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(110.dp)
+                        .offset(x = (-12).dp, y = 48.dp)
+                        .zIndex(1f)
+                )
 
-                            // konten
-                            Row{
-                                Spacer(modifier = Modifier.width(110.dp))
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.padding(top = 20.dp, end = 25.dp)
-                                ) {
-                                    Text(
-                                        text = "Tahukah kamu?",
-                                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                                        fontSize = 16.sp,
-                                        color = Primary09,
-                                        textAlign = TextAlign.Center
-                                    )
-                                    Spacer(modifier = Modifier.height(14.dp))
-                                    Text(
-                                        text = "Anak autis cenderung lebih mudah memahami gambar dibandingkan kata-kata.",
-                                        textAlign = TextAlign.Center,
-                                        lineHeight = 15.sp,
-                                        fontSize = 13.sp,
-                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                        color = Primary09
-                                    )
-                                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 32.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                ) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Image(
+                            painter = painterResource(id = R.drawable.card_home_screen),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxWidth(),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        // konten
+                        Row{
+                            Spacer(modifier = Modifier.width(110.dp))
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(top = 20.dp, end = 25.dp)
+                            ) {
+                                Text(
+                                    text = "Tahukah kamu?",
+                                    fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                    fontSize = 16.sp,
+                                    color = Primary09,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(14.dp))
+                                Text(
+                                    text = "Anak autis cenderung lebih mudah memahami gambar dibandingkan kata-kata.",
+                                    textAlign = TextAlign.Center,
+                                    lineHeight = 15.sp,
+                                    fontSize = 13.sp,
+                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                    color = Primary09
+                                )
                             }
                         }
                     }
                 }
+            }
 
-                Spacer(modifier = Modifier.height(35.dp))
+            Spacer(modifier = Modifier.height(35.dp))
 
-                // feature section
-                Text(
-                    text = "Fitur kami",
-                    fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                    fontSize = 18.sp,
-                    color = Primary09
-                )
+            // feature section
+            Text(
+                text = "Fitur kami",
+                fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                fontSize = 18.sp,
+                color = Primary09
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // wevy
-                    FeatureCard(
-                        title = "Wevy",
-                        description = "Ungkap potensi anak lewat rekaman aktivitas",
-                        icon = R.drawable.wevy_home,
-                        onClick = {
-                            navController.navigate("wevy")
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                    // exercise
-                    FeatureCard(
-                        title = "Exercise",
-                        description = "Kumpulan permainan untuk belajar sambil bermain",
-                        icon = R.drawable.brain_3d_2,
-                        onClick = {
-                            navController.navigate("exercise")
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(35.dp))
-
-                // exercise carousel
-                ExerciseCarousel(
-                    exerciseItems = history,
-                    onSeeAllClick = {
-                        navController.navigate("jejak-exercise")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // wevy
+                FeatureCard(
+                    title = "Wevy",
+                    description = "Ungkap potensi anak lewat rekaman aktivitas",
+                    icon = R.drawable.wevy_home,
+                    onClick = {
+                        navController.navigate("wevy")
                     }
                 )
 
-                Spacer(modifier = Modifier.height(35.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+
+                // exercise
+                FeatureCard(
+                    title = "Exercise",
+                    description = "Kumpulan permainan untuk belajar sambil bermain",
+                    icon = R.drawable.brain_3d_2,
+                    onClick = {
+                        navController.navigate("exercise")
+                    }
+                )
             }
+
+            Spacer(modifier = Modifier.height(35.dp))
+
+            // exercise carousel
+            ExerciseCarousel(
+                exerciseItems = history,
+                onSeeAllClick = {
+                    navController.navigate("jejak-exercise")
+                }
+            )
+
+            Spacer(modifier = Modifier.height(35.dp))
         }
     }
 }

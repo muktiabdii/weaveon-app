@@ -32,6 +32,7 @@ import com.example.hology.ui.profile.ProfileScreen
 import com.example.hology.ui.profile.UserViewModel
 import com.example.hology.ui.report.ReportScreen
 import com.example.hology.ui.report.ReportViewModel
+import com.example.hology.ui.theme.NeutralWhite
 import com.example.hology.ui.wevy.WevyActivityScreen
 import com.example.hology.ui.wevy.WevyDetailScreen
 import com.example.hology.ui.wevy.WevyRecordScreen
@@ -89,6 +90,7 @@ fun MainScreen(rootNavController: NavController) {
 
     // initiate BottomNavBar
     Scaffold(
+        containerColor = NeutralWhite,
         bottomBar = {
             if (currentRoute in listOf("home", "report", "profile")) {
                 BottomNavBar(navController = navController, selected = currentRoute ?: "home")
