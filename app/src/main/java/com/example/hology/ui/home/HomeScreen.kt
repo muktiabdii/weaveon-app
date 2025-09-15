@@ -60,7 +60,6 @@ fun HomeScreen(
             .fillMaxSize()
             .background(NeutralWhite)
             .verticalScroll(scrollState)
-            .padding(16.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.header_home_screen),
