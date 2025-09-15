@@ -32,11 +32,15 @@ import androidx.navigation.NavController
 import com.example.hology.R
 import com.example.hology.cache.UserData
 import com.example.hology.cache.exerciseList
+import com.example.hology.ui.common.BarChart
 import com.example.hology.ui.common.ExerciseCarousel
 import com.example.hology.ui.common.FeatureCard
 import com.example.hology.ui.exercise.ExerciseViewModel
+import com.example.hology.ui.report.GraphicState
+import com.example.hology.ui.report.ReportViewModel
 import com.example.hology.ui.theme.NeutralBlack
 import com.example.hology.ui.theme.NeutralWhite
+import com.example.hology.ui.theme.Primary03
 import com.example.hology.ui.theme.Primary09
 import com.example.hology.ui.theme.Secondary07
 import com.example.hology.ui.theme.Secondary09
@@ -44,15 +48,19 @@ import com.example.hology.ui.theme.Secondary09
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: ExerciseViewModel
+    exerciseViewModel: ExerciseViewModel,
+    reportViewModel: ReportViewModel
 ) {
     val scrollState = rememberScrollState()
-    val history by viewModel.history.collectAsState()
+
+    val graphicState by reportViewModel.graphicState.collectAsState()
+    val history by exerciseViewModel.history.collectAsState()
     val user = UserData
-    val exerciseList = exerciseList
+    val exercises = exerciseList
 
     LaunchedEffect(Unit) {
-        viewModel.loadExerciseHistory(user.uid, exerciseList)
+        exerciseViewModel.loadExerciseHistory(user.uid, exercises)
+        reportViewModel.getCategoryChartData(user.uid)
     }
 
     Box(
@@ -73,6 +81,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            // Header
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,8 +89,6 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
-                // header
                 Column {
                     Text(
                         text = "Hi, Bunda!",
@@ -97,20 +104,21 @@ fun HomeScreen(
                     )
                 }
 
-                // profile picture
-                Image(
+                // Profile picture
+                Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape)
                         .background(NeutralWhite),
-                    contentScale = ContentScale.Crop
+                    tint = Color.Gray
                 )
             }
 
             Spacer(modifier = Modifier.height(5.dp))
 
+            // Card info
             Box(modifier = Modifier.fillMaxWidth()) {
                 Image(
                     painter = painterResource(id = R.drawable.bulp_3d),
@@ -135,8 +143,7 @@ fun HomeScreen(
                             contentScale = ContentScale.Crop
                         )
 
-                        // konten
-                        Row{
+                        Row {
                             Spacer(modifier = Modifier.width(110.dp))
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -166,7 +173,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(35.dp))
 
-            // feature section
+            // Feature section
             Text(
                 text = "Fitur kami",
                 fontFamily = FontFamily(Font(R.font.poppins_semibold)),
@@ -180,37 +187,83 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // wevy
                 FeatureCard(
                     title = "Wevy",
                     description = "Ungkap potensi anak lewat rekaman aktivitas",
                     icon = R.drawable.wevy_home,
-                    onClick = {
-                        navController.navigate("wevy")
-                    }
+                    onClick = { navController.navigate("wevy") }
                 )
-
                 Spacer(modifier = Modifier.width(4.dp))
-
-                // exercise
                 FeatureCard(
                     title = "Exercise",
                     description = "Kumpulan permainan untuk belajar sambil bermain",
                     icon = R.drawable.brain_3d_2,
-                    onClick = {
-                        navController.navigate("exercise")
-                    }
+                    onClick = { navController.navigate("exercise") }
                 )
             }
 
             Spacer(modifier = Modifier.height(35.dp))
 
-            // exercise carousel
+            // Progress section
+            Text(
+                text = "Progress Statistik",
+                fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                fontSize = 18.sp,
+                color = Primary09
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when (graphicState) {
+                is GraphicState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Primary03, strokeWidth = 10.dp)
+                    }
+                }
+
+                is GraphicState.Success -> {
+                    val chartData = (graphicState as GraphicState.Success).data
+                    if (chartData.isEmpty()) {
+                        Text(
+                            text = "Belum ada aktivitas",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                            fontSize = 14.sp
+                        )
+                    } else {
+                        BarChart(
+                            modifier = Modifier.fillMaxWidth(),
+                            data = chartData
+                        )
+                    }
+                }
+
+                is GraphicState.Error -> {
+                    Text(
+                        text = (graphicState as GraphicState.Error).message,
+                        color = Color.Red,
+                        modifier = Modifier.padding(24.dp)
+                    )
+                }
+
+                GraphicState.Idle -> {}
+            }
+
+            Spacer(modifier = Modifier.height(35.dp))
+
+            // Exercise carousel
             ExerciseCarousel(
                 exerciseItems = history,
-                onSeeAllClick = {
-                    navController.navigate("jejak-exercise")
-                }
+                onSeeAllClick = { navController.navigate("jejak-exercise") }
             )
 
             Spacer(modifier = Modifier.height(35.dp))

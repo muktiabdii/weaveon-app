@@ -106,7 +106,7 @@ fun MainScreen(rootNavController: NavController) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home") {
-                HomeScreen(navController = navController, viewModel = exerciseViewModel)
+                HomeScreen(navController = navController, exerciseViewModel = exerciseViewModel, reportViewModel = reportViewModel)
             }
 
             composable("report") {

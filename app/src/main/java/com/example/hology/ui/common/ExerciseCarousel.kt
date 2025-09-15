@@ -61,6 +61,7 @@ fun ExerciseCarousel(
                 Text(
                     text = "Belum ada jejak exercise",
                     color = Color.Gray,
+                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
                     fontSize = 14.sp
                 )
             }

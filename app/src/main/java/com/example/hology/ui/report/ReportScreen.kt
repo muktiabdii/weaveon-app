@@ -142,14 +142,20 @@ fun ReportScreen(
                                         .fillMaxWidth()
                                         .padding(24.dp),
                                     textAlign = TextAlign.Center,
+                                    color = Color.Gray,
                                     fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                    color = NeutralBlack
+                                    fontSize = 14.sp
                                 )
                             }
                         }
 
                         else{
-                            item { BarChart(modifier = Modifier.fillMaxWidth(), data = chartData) }
+                            item {
+                                BarChart(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    data = chartData
+                                )
+                            }
 
                             item {
                                 Column(
@@ -325,8 +331,9 @@ fun ReportScreen(
                                 .fillMaxWidth()
                                 .padding(24.dp),
                             textAlign = TextAlign.Center,
+                            color = Color.Gray,
                             fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                            color = NeutralBlack
+                            fontSize = 14.sp
                         )
                     }
 
