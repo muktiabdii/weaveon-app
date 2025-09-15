@@ -1,14 +1,25 @@
 package com.example.hology.data.repository
 
+import android.content.Context
 import com.example.hology.cache.UserData
+import com.example.hology.data.datastore.ExercisePreferencesManager
 import com.example.hology.data.datastore.UserPreferencesManager
+import com.example.hology.data.datastore.WevyPreferencesManager
 import com.example.hology.data.remote.firebase.FirebaseProvider
 import com.example.hology.domain.model.User
 import com.example.hology.domain.repository.UserRepository
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
+import com.example.hology.R
 
-class UserRepositoryImpl(private val preferencesManager: UserPreferencesManager) : UserRepository {
+class UserRepositoryImpl(
+    private val userPreferencesManager: UserPreferencesManager,
+    private val exercisePreferencesManager: ExercisePreferencesManager,
+    private val wevyPreferencesManager: WevyPreferencesManager,
+    private val context: Context
+) : UserRepository {
 
     private val database = FirebaseProvider.database
     private val auth = FirebaseProvider.auth
@@ -21,19 +32,30 @@ class UserRepositoryImpl(private val preferencesManager: UserPreferencesManager)
 
     // function untuk mendapatkan user dari cache
     override suspend fun saveUserToCache(uid: String, name: String, email: String) {
-        preferencesManager.saveUser(uid, name, email)
+        userPreferencesManager.saveUser(uid, name, email)
         UserData.set(uid, name, email)
     }
 
     // function untuk mendapatkan user uid dari cache
     override fun getUserUidFlow(): Flow<String?> {
-        return preferencesManager.userUid
+        return userPreferencesManager.userUid
     }
 
     // function untuk menghapus user dari cache
     override suspend fun logout() {
-        preferencesManager.clearUser()
+        exercisePreferencesManager.clear()
+        wevyPreferencesManager.clear()
+        userPreferencesManager.clear()
         UserData.clear()
+
+        FirebaseProvider.auth.signOut()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        val googleSignInClient = GoogleSignIn.getClient(context, gso)
+        googleSignInClient.signOut()
     }
 
     // function untuk edit profile
@@ -49,7 +71,7 @@ class UserRepositoryImpl(private val preferencesManager: UserPreferencesManager)
             database.child("users").child(uid).updateChildren(userUpdates).await()
 
             // update di datastore
-            preferencesManager.saveUser(uid, name, email)
+            userPreferencesManager.saveUser(uid, name, email)
 
             // update di cache
             UserData.set(uid, name, email)
@@ -70,7 +92,9 @@ class UserRepositoryImpl(private val preferencesManager: UserPreferencesManager)
             database.child("users").child(uid).removeValue().await()
 
             // hapus user dari datastore
-            preferencesManager.clearUser()
+            exercisePreferencesManager.clear()
+            wevyPreferencesManager.clear()
+            userPreferencesManager.clear()
 
             // hapus user dari cache
             UserData.clear()

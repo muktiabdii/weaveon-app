@@ -50,7 +50,10 @@ fun MainScreen(rootNavController: NavController) {
 
     // initiate user
     val userRepo = UserRepositoryImpl(
-        preferencesManager = UserPreferencesManager(context)
+        userPreferencesManager = UserPreferencesManager(context),
+        exercisePreferencesManager = ExercisePreferencesManager(context),
+        wevyPreferencesManager = WevyPreferencesManager(context),
+        context = context
     )
     val userUseCase = UserUseCase(
         userRepository = userRepo

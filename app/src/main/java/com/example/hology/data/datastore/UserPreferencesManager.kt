@@ -30,7 +30,7 @@ class UserPreferencesManager(private val context: Context) {
     }
 
     // clear user info
-    suspend fun clearUser() {
+    suspend fun clear() {
         context.dataStore.edit { preferences ->
             preferences.remove(KEY_UID)
             preferences.remove(KEY_NAME)

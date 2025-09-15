@@ -10,7 +10,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hology.data.datastore.ExercisePreferencesManager
 import com.example.hology.data.datastore.UserPreferencesManager
+import com.example.hology.data.datastore.WevyPreferencesManager
 import com.example.hology.data.repository.AuthRepositoryImpl
 import com.example.hology.data.repository.UserRepositoryImpl
 import com.example.hology.domain.usecase.AuthUseCase
@@ -35,7 +37,12 @@ class MainActivity : ComponentActivity() {
             HologyTheme {
 
                 // insiate user
-                val userRepo = UserRepositoryImpl(UserPreferencesManager(this))
+                val userRepo = UserRepositoryImpl(
+                    UserPreferencesManager(this),
+                    ExercisePreferencesManager(this),
+                    WevyPreferencesManager(this),
+                    this
+                )
                 val userUseCase = UserUseCase(userRepo)
 
                 // insiate on boarding

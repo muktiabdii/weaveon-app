@@ -71,17 +71,21 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
     }
 
     // function logout
-    fun logout() {
+    fun logout(onComplete: (() -> Unit)? = null) {
         viewModelScope.launch {
             userUseCase.logout()
+            _userState.value = State()
+            onComplete?.invoke()
         }
     }
 
-    fun deleteAccount() {
+    fun deleteAccount(onComplete: (() -> Unit)? = null) {
         viewModelScope.launch {
             try {
                 val uid = _userState.value.uid
                 userUseCase.deleteAccount(uid)
+                _userState.value = State()
+                onComplete?.invoke()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

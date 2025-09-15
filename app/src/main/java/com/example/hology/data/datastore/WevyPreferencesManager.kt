@@ -41,4 +41,11 @@ class WevyPreferencesManager(private val context: Context) {
             )
         }
     }
+
+    // clear all preferences
+    suspend fun clear() {
+        context.dataStore.edit { prefs ->
+            prefs.clear()
+        }
+    }
 }

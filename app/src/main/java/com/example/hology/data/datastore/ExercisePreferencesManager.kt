@@ -13,7 +13,7 @@ private val Context.dataStore by preferencesDataStore("exercise_preferences")
 
 class ExercisePreferencesManager(private val context: Context) {
 
-    // fungsi helper untuk bikin key dinamis
+    // function to helper create dynamic key
     private fun doneKey(exerciseId: String, activityId: String) =
         booleanPreferencesKey("exercise_${exerciseId}_activity_${activityId}_done")
 
@@ -24,7 +24,7 @@ class ExercisePreferencesManager(private val context: Context) {
         }
     }
 
-    // ambil progress untuk 1 exercise (semua aktivitas)
+    // get exercise progress
     fun getExerciseProgress(exerciseId: String): Flow<ExerciseProgress> {
         return context.dataStore.data.map { prefs ->
             val activities = prefs.asMap()
@@ -40,6 +40,13 @@ class ExercisePreferencesManager(private val context: Context) {
                 exerciseId = exerciseId,
                 activities = activities
             )
+        }
+    }
+
+    // clear all preferences
+    suspend fun clear() {
+        context.dataStore.edit { prefs ->
+            prefs.clear()
         }
     }
 }

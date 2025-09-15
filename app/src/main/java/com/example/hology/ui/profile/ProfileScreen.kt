@@ -107,9 +107,10 @@ fun ProfileScreen(
                     icon = painterResource(id = R.drawable.ic_sign_out),
                     title = "Keluar",
                     onClick = {
-                        viewModel.logout()
-                        rootNavController.navigate("login") {
-                            popUpTo(0) { inclusive = true }
+                        viewModel.logout {
+                            rootNavController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
                         }
                     }
                 )
@@ -118,9 +119,10 @@ fun ProfileScreen(
                     icon = painterResource(id = R.drawable.ic_trash),
                     title = "Hapus Akun",
                     onClick = {
-                        viewModel.deleteAccount()
-                        rootNavController.navigate("login") {
-                            popUpTo(0) { inclusive = true }
+                        viewModel.deleteAccount {
+                            rootNavController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
                         }
                     }
                 )
