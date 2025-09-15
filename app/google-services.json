@@ -13,7 +13,20 @@
           "package_name": "com.example.hology"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "691221019391-64ndaj3o07psngd27m5crge0ilono1so.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hology",
+            "certificate_hash": "b155ca96e556ae878f47cf333e028e0396a3e3f4"
+          }
+        },
+        {
+          "client_id": "691221019391-1f2o4cmebnmejqreh0vgaitkmc975af1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBHE4xveAkNPSFtfA_xKkGq3jeBfnPrvPI"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691221019391-1f2o4cmebnmejqreh0vgaitkmc975af1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

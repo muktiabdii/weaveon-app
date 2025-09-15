@@ -42,8 +42,7 @@ fun ProfileScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Base,)
-            .padding(innerPadding)
+            .background(color = Base)
             .verticalScroll(scrollState)
     ) {
 

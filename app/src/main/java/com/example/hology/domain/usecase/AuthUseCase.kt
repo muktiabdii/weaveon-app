@@ -21,7 +21,6 @@ class AuthUseCase(private val authRepository: AuthRepository) {
         }
     }
 
-
     // function register
     fun register(name: String, email: String, password: String, passwordConfirmation: String, onResult: (Boolean, String?) -> Unit) {
         val validateRegister = validateRegister(name, email, password, passwordConfirmation)
@@ -32,6 +31,10 @@ class AuthUseCase(private val authRepository: AuthRepository) {
         authRepository.register(name.trim(), email.trim(), password.trim(), passwordConfirmation.trim(), onResult)
     }
 
+    // function sign in with google
+    suspend fun signInWithGoogle(idToken: String): Result<String> {
+        return runCatching { authRepository.signInWithGoogle(idToken) }
+    }
 
     // function forgot password
     fun forgotPassword(email: String, onResult: (Boolean, String?) -> Unit) {

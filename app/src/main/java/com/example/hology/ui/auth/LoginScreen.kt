@@ -1,6 +1,9 @@
 package com.example.hology.ui.auth
 
+import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +48,8 @@ import com.example.hology.ui.theme.Primary09
 import com.example.hology.ui.common.InputFormField
 import com.example.hology.ui.common.ActionButton
 import com.example.hology.ui.common.AuthSocialButton
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @Composable
 fun LoginScreen(
@@ -57,6 +62,19 @@ fun LoginScreen(
     val loginState by viewModel.loginState.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            val account = task.result
+            val idToken = account.idToken
+            if (idToken != null) {
+                viewModel.signInWithGoogleForLogin(idToken)
+            }
+        }
+    }
 
     when (loginState) {
         is AuthState.Success -> {
@@ -259,7 +277,17 @@ fun LoginScreen(
                     ) {
                         AuthSocialButton(
                             text = "Google",
-                            onClick = {},
+                            onClick = {
+                                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestIdToken("691221019391-1f2o4cmebnmejqreh0vgaitkmc975af1.apps.googleusercontent.com")
+                                    .requestEmail()
+                                    .build()
+                                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
+                                googleSignInClient.signOut().addOnCompleteListener {
+                                    launcher.launch(googleSignInClient.signInIntent)
+                                }
+                            },
                             leadingIcon = R.drawable.ic_google,
                             modifier = modifier.weight(1f)
                         )

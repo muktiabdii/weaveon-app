@@ -2,6 +2,7 @@ package com.example.hology.data.repository
 
 import com.example.hology.data.remote.firebase.FirebaseProvider
 import com.example.hology.domain.repository.AuthRepository
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImpl: AuthRepository {
@@ -70,6 +71,32 @@ class AuthRepositoryImpl: AuthRepository {
                 }
             }
     }
+
+    // function sign in with google
+    override suspend fun signInWithGoogle(idToken: String): String {
+        try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val result = auth.signInWithCredential(credential).await()
+            val uid = result.user?.uid ?: throw Exception("UID tidak ditemukan")
+
+            // simpan user ke database kalau baru pertama kali
+            val userRef = database.child("users").child(uid)
+            val snapshot = userRef.get().await()
+            if (!snapshot.exists()) {
+                val userData = hashMapOf(
+                    "uid" to uid,
+                    "name" to (result.user?.displayName ?: ""),
+                    "email" to (result.user?.email ?: "")
+                )
+                userRef.setValue(userData).await()
+            }
+
+            return uid
+        } catch (e: Exception) {
+            throw Exception(getLocalizedErrorMessage(e.message))
+        }
+    }
+
 
     // function forgot password
     override fun forgotPassword(

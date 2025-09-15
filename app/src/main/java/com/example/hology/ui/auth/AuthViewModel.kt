@@ -86,6 +86,38 @@ class AuthViewModel(
         }
     }
 
+    // function sign in with google for login
+    fun signInWithGoogleForLogin(idToken: String) {
+        viewModelScope.launch {
+            _loginState.value = AuthState.Loading
+            val result = authUseCase.signInWithGoogle(idToken)
+            result.onSuccess { uid ->
+                if (uid.isNotEmpty()) {
+                    loadUser(uid)
+                }
+                _loginState.value = AuthState.Success
+            }.onFailure { e ->
+                _loginState.value = AuthState.Error(e.message ?: "Login dengan Google gagal")
+            }
+        }
+    }
+
+    // function sign in with google for register
+    fun signInWithGoogleForRegister(idToken: String) {
+        viewModelScope.launch {
+            _registerState.value = AuthState.Loading
+            val result = authUseCase.signInWithGoogle(idToken)
+            result.onSuccess { uid ->
+                if (uid.isNotEmpty()) {
+                    loadUser(uid)
+                }
+                _registerState.value = AuthState.Success
+            }.onFailure { e ->
+                _registerState.value = AuthState.Error(e.message ?: "Register dengan Google gagal")
+            }
+        }
+    }
+
     // function forgot password
     fun forgotPassword(
         email: String

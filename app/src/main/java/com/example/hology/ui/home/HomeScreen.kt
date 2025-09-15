@@ -66,7 +66,7 @@ fun HomeScreen(
             painter = painterResource(id = R.drawable.header_home_screen),
             contentDescription = null,
             modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
         Column(
