@@ -11,6 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -27,6 +30,7 @@ import com.example.hology.ui.theme.Base
 import com.example.hology.ui.theme.Primary04
 import com.example.hology.ui.theme.Primary06
 import com.example.hology.R
+import com.example.hology.ui.common.ProfileDialog
 
 @Composable
 fun ProfileScreen(
@@ -38,6 +42,45 @@ fun ProfileScreen(
 
     val scrollState = rememberScrollState()
     val userState by viewModel.userState.collectAsState()
+
+    var showDialogLogout by remember { mutableStateOf(false) }
+    var showDialogDelete by remember { mutableStateOf(false) }
+
+    if (showDialogLogout) {
+        ProfileDialog(
+            title = "Apakah anda yakin ingin keluar?",
+            image = R.drawable.logout_3d,
+            action = "Ya",
+            onConfirmDelete = {
+                viewModel.logout {
+                    rootNavController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+                showDialogLogout = false
+            },
+            onCancel = { showDialogLogout = false },
+            onDismissRequest = { showDialogLogout = false }
+        )
+    }
+
+    if (showDialogDelete) {
+        ProfileDialog(
+            title = "Apakah anda yakin ingin menghapus akun?",
+            image = R.drawable.trash_3d,
+            action = "Ya",
+            onConfirmDelete = {
+                viewModel.deleteAccount {
+                    rootNavController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+                showDialogDelete = false
+            },
+            onCancel = { showDialogDelete = false },
+            onDismissRequest = { showDialogDelete = false }
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -106,25 +149,13 @@ fun ProfileScreen(
                 SettingsItem(
                     icon = painterResource(id = R.drawable.ic_sign_out),
                     title = "Keluar",
-                    onClick = {
-                        viewModel.logout {
-                            rootNavController.navigate("login") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    }
+                    onClick = { showDialogLogout = true }
                 )
                 Divider(modifier = Modifier.background(Primary04))
                 SettingsItem(
                     icon = painterResource(id = R.drawable.ic_trash),
                     title = "Hapus Akun",
-                    onClick = {
-                        viewModel.deleteAccount {
-                            rootNavController.navigate("login") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    }
+                    onClick = { showDialogDelete = true }
                 )
             }
 
