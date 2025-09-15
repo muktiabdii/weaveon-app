@@ -173,7 +173,7 @@ class WevyRepositoryImpl(private val preferences: WevyPreferencesManager) : Wevy
                 .child("wevy")
                 .get()
                 .await()
-            if (!snapshot.exists()) return Result.failure(Exception("No data found"))
+            if (!snapshot.exists()) return Result.failure(Exception("Belum ada aktivitas"))
             val history = mutableListOf<WevyHistoryItem>()
             for (wevySnapshot in snapshot.children) {
                 val wevyId = wevySnapshot.key ?: continue

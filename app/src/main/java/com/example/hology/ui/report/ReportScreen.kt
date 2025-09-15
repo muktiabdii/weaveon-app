@@ -134,100 +134,116 @@ fun ReportScreen(
                     is GraphicState.Success -> {
                         val chartData = (graphicState as GraphicState.Success).data
 
-                        item { BarChart(modifier = Modifier.fillMaxWidth(), data = chartData) }
-
-                        item {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 20.dp)
-                                    .padding(top = 16.dp)
-                            ) {
-                                // conclusion description
+                        if (chartData.isEmpty()) {
+                            item {
                                 Text(
-                                    text = "Deskripsi",
-                                    fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                                    fontSize = 16.sp,
-                                    color = Color(0xFF474828)
+                                    text = "Belum ada aktivitas",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(24.dp),
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                    color = NeutralBlack
                                 )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                Card(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                                    border = BorderStroke(1.dp, NeutralBlack)
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(14.dp)
-                                    ) {
-                                        Text(
-                                            text = reportText.conclusion,
-                                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                            fontSize = 14.sp,
-                                            lineHeight = 20.sp,
-                                            color = NeutralBlack
-                                        )
-                                    }
-                                }
-
-                                Spacer(modifier = Modifier.height(16.dp))
-
-                                // category description
-                                Text(
-                                    text = "🎯 ${reportCategory?.title ?: ""}",
-                                    fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                                    fontSize = 16.sp,
-                                    color = Color(0xFF474828)
-                                )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                Card(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                                    border = BorderStroke(1.dp, NeutralBlack)
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(14.dp)
-                                    ) {
-                                        Text(
-                                            text = reportCategory?.description ?: "",
-                                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                            fontSize = 14.sp,
-                                            lineHeight = 20.sp,
-                                            color = NeutralBlack
-                                        )
-                                    }
-                                }
                             }
                         }
 
-                        item {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 20.dp)
-                                    .padding(top = 38.dp, bottom = 8.dp),
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                Text(
-                                    text = "Kegiatan yang Direkomendasikan",
-                                    fontFamily = FontFamily(Font(R.font.poppins_semibold)),
-                                    fontSize = 16.sp,
-                                    color = Color(0xFF474828)
-                                )
+                        else{
+                            item { BarChart(modifier = Modifier.fillMaxWidth(), data = chartData) }
 
-                                reportCategory?.recommendedActivity?.forEach { recommendedActivity ->
-                                    RecommendedActivityCard(
-                                        title = recommendedActivity.title,
-                                        description = recommendedActivity.description,
-                                        imageRes = recommendedActivity.image
+                            item {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp)
+                                        .padding(top = 16.dp)
+                                ) {
+                                    // conclusion description
+                                    Text(
+                                        text = "Deskripsi",
+                                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                        fontSize = 16.sp,
+                                        color = Color(0xFF474828)
                                     )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                                        border = BorderStroke(1.dp, NeutralBlack)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(14.dp)
+                                        ) {
+                                            Text(
+                                                text = reportText.conclusion,
+                                                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                                fontSize = 14.sp,
+                                                lineHeight = 20.sp,
+                                                color = NeutralBlack
+                                            )
+                                        }
+                                    }
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    // category description
+                                    Text(
+                                        text = "🎯 ${reportCategory?.title ?: ""}",
+                                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                        fontSize = 16.sp,
+                                        color = Color(0xFF474828)
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                                        border = BorderStroke(1.dp, NeutralBlack)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(14.dp)
+                                        ) {
+                                            Text(
+                                                text = reportCategory?.description ?: "",
+                                                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                                fontSize = 14.sp,
+                                                lineHeight = 20.sp,
+                                                color = NeutralBlack
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            item {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp)
+                                        .padding(top = 38.dp, bottom = 8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Text(
+                                        text = "Kegiatan yang Direkomendasikan",
+                                        fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                                        fontSize = 16.sp,
+                                        color = Color(0xFF474828)
+                                    )
+
+                                    reportCategory?.recommendedActivity?.forEach { recommendedActivity ->
+                                        RecommendedActivityCard(
+                                            title = recommendedActivity.title,
+                                            description = recommendedActivity.description,
+                                            imageRes = recommendedActivity.image
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -305,7 +321,12 @@ fun ReportScreen(
                     is HistoryState.Error -> item {
                         Text(
                             text = (historyState as HistoryState.Error).message,
-                            color = Color.Red
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                            color = NeutralBlack
                         )
                     }
 
