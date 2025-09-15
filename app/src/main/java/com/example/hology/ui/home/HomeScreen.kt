@@ -227,7 +227,7 @@ fun HomeScreen(
                             .height(200.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = Primary03, strokeWidth = 10.dp)
+                        CircularProgressIndicator(color = Primary03, strokeWidth = 5.dp)
                     }
                 }
 

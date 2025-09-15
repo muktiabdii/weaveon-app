@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -153,13 +154,13 @@ fun BarChart(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, top = 45.dp, end = 15.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .padding(start = 30.dp, top = 45.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 data.forEach { chartItem ->
                     Box(
                         modifier = Modifier
-                            .weight(1f)
+                            .width(30.dp)
                             .fillMaxHeight(),
                         contentAlignment = Alignment.TopCenter
                     ) {
@@ -168,7 +169,7 @@ fun BarChart(
                             fontSize = 10.sp,
                             color = NeutralBlack,
                             fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                            textAlign = TextAlign.End,
+                            textAlign = TextAlign.Center,
                             maxLines = 1,
                             overflow = TextOverflow.Visible,
                             softWrap = false,
