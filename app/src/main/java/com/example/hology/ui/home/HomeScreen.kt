@@ -105,15 +105,20 @@ fun HomeScreen(
                 }
 
                 // Profile picture
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Profile Picture",
+                Box(
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape)
-                        .background(NeutralWhite),
-                    tint = Color.Gray
-                )
+                        .background(NeutralBlack),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Profile Picture",
+                        tint = Color.White,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(5.dp))
