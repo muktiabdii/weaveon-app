@@ -1,0 +1,139 @@
+package com.example.hology.ui.common
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.hology.R
+import com.example.hology.ui.theme.Green
+import com.example.hology.ui.theme.NeutralBlack
+import com.example.hology.ui.theme.NeutralWhite
+import com.example.hology.ui.theme.Primary03
+import com.example.hology.ui.theme.Primary04
+import com.example.hology.ui.theme.Red
+import com.example.hology.ui.theme.Secondary00
+import com.example.hology.ui.theme.Secondary02
+import com.example.hology.ui.theme.Secondary05
+import com.example.hology.ui.theme.Secondary08
+import com.example.hology.ui.theme.Secondary09
+import com.example.hology.ui.theme.Secondary10
+
+@Composable
+fun ActionResultDialog(
+    isSuccess: Boolean,
+    isLoading: Boolean = false,
+    title: String,
+    message: String,
+    buttonText: String,
+    onDismissRequest: () -> Unit,
+    onButtonClick: () -> Unit,
+    iconRes: Int? = null
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = { },
+        containerColor = Color(0xFFEAF9F9),
+        shape = RoundedCornerShape(16.dp),
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (isLoading) {
+
+                    // loading
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(size = 150.dp)
+                            .padding(bottom = 25.dp),
+                        color = Primary03,
+                        strokeWidth = 10.dp
+                    )
+                } else {
+
+                    // icon
+                    val finalIconRes = iconRes ?: if (isSuccess) {
+                        R.drawable.ic_success_3d
+                    } else {
+                        R.drawable.ic_failure_3d
+                    }
+
+                    Image(
+                        painter = painterResource(id = finalIconRes),
+                        contentDescription = if (isSuccess) "Success Icon" else "Failure Icon",
+                        modifier = Modifier
+                            .size(size = 150.dp)
+                            .padding(bottom = 37.dp)
+                    )
+                }
+
+                // title & message
+                if (!isLoading) {
+                    Text(
+                        text = title,
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_semibold)),
+                            color = NeutralBlack,
+                            lineHeight = 28.sp
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(15.dp))
+
+                    Text(
+                        text = message,
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                            color = Secondary10
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(25.dp))
+                } else {
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+
+                // button
+                Button(
+                    onClick = onButtonClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(43.dp),
+                    shape = RoundedCornerShape(30.dp),
+                    enabled = !isLoading,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Secondary05,
+                        contentColor = Color.White,
+                        disabledContainerColor = Secondary00,
+                        disabledContentColor = Secondary02
+                    )
+                ) {
+                    Text(
+                        text = buttonText,
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium))
+                        )
+                    )
+                }
+            }
+        }
+    )
+}
