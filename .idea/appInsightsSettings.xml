@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.hology" />
+                  <option name="mobileSdkAppId" value="1:691221019391:android:2644d2c66b85732d506aca" />
+                  <option name="projectId" value="weaveon-f5b5e" />
+                  <option name="projectNumber" value="691221019391" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
